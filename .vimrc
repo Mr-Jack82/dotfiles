@@ -16,10 +16,11 @@ endif
 Plug 'yggdroot/indentline'
 Plug 'junegunn/vim-easy-align'
 Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'gorodinskiy/vim-coloresque'
 Plug 'majutsushi/tagbar'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 
 if v:version >= 704
   "" Snippets
@@ -67,6 +68,8 @@ Plug 'prettier/vim-prettier', {
 
 " colorschemes
 Plug 'morhetz/gruvbox'
+Plug 'dracula/vim'
+Plug 'kaicataldo/material.vim'
 Plug 'fenetikm/falcon'
 " colorschemes for statusline
 Plug 'vim-airline/vim-airline-themes'
@@ -137,6 +140,40 @@ inoremap <silent><expr> <Esc> pumvisible() ? "<C-e><Esc>" : "<Esc>"
 " autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "***********************************<<END>>***********************************
 
+
+"*****************************************************************************
+"" Settings for vim-nerdtree-syntax-highlight
+" you can add these colors to your .vimrc to help customizing
+"*****************************************************************************
+let s:brown = "905532"
+let s:aqua =  "3AFFDB"
+let s:blue = "689FB6"
+let s:darkBlue = "44788E"
+let s:purple = "834F79"
+let s:lightPurple = "834F79"
+let s:red = "AE403F"
+let s:beige = "F5C06F"
+let s:yellow = "F09F17"
+let s:orange = "D4843E"
+let s:darkOrange = "F16529"
+let s:pink = "CB6F6F"
+let s:salmon = "EE6E73"
+let s:green = "8FAA54"
+let s:lightGreen = "31B53E"
+let s:white = "FFFFFF"
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+
+let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
+
+let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
+
+let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red " sets the color for files ending with _spec.rb
+"***********************************<<END>>***********************************
+
 " Prettier — An Opinionated Javascript Formatter
 autocmd FileType javascript set formatprg=prettier\ --stdin
 autocmd BufWritePre *.js :normal gggqG
@@ -146,7 +183,7 @@ if has('vim_starting')
 endif
 
 " Look and feel
-colorscheme falcon
+colorscheme dracula
 set termguicolors
 let g:falcon_airline = 1
 let g:airline_theme = 'falcon'
@@ -157,6 +194,7 @@ let g:mapleader=','               " use comma as <Leader> key instead of backsla
 set background=dark
 set autoread                      " Auto reload changed files
 set number relativenumber
+set encoding=UTF-8
 set expandtab
 set cmdheight=2                   " command line two lines high
 set tabstop=2
@@ -167,6 +205,9 @@ filetype on                       " Enable filetype detection
 filetype indent on                " Enable filetype-specific indenting
 filetype plugin on                " Enable filetype-specific plugins
 
+" Can be enabled or disabled
+let g:webdevicons_enable_nerdtree = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1 " Turn on folder icons 
 
 " Automatically cd into the directory that the file is in
 autocmd BufEnter * execute "chdir ".escape(expand("%:p:h"), ' ')
@@ -223,6 +264,8 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+nmap \d :ALEToggleBuffer<CR>
+nmap \f :ALEFix<CR>
 
 " IndentLine
 let g:indentLine_enabled = 1
@@ -233,20 +276,33 @@ let g:indentLine_faster = 1
 " Settings for Vim-Startify
 " autocmd VimEnter * if !argc() | Startify | NERDTree | wincmd w | endif
 
+" ALE
+let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign Title
+nmap ]w :ALENextWrap<CR>
+nmap [w :ALEPreviousWrap<CR>
+nmap <Leader>f <Plug>(ale_fix)
+augroup VimDiff
+  autocmd!
+  autocmd VimEnter,FilterWritePre * if &diff | ALEDisable | endif
+augroup END
+
 " Settings for Syntastic
 " syntastic
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
-let g:syntastic_auto_loc_list=1
-let g:syntastic_aggregate_errors = 1
+" let g:syntastic_always_populate_loc_list=1
+" let g:syntastic_error_symbol='✗'
+" let g:syntastic_warning_symbol='⚠'
+" let g:syntastic_style_error_symbol = '✗'
+" let g:syntastic_style_warning_symbol = '⚠'
+" let g:syntastic_auto_loc_list=1
+" let g:syntastic_aggregate_errors = 1
 
 " Syntastic in statusline
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 
 "*****************************************************************************
