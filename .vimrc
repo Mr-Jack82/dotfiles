@@ -33,7 +33,6 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -44,7 +43,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mhinz/vim-startify'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'scrooloose/nerdcommenter'
 Plug 'Raimondi/delimitMate'
+Plug 'ervandew/supertab'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 if has('nvim')
