@@ -76,8 +76,8 @@ endif
 Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 "" Vim-Session
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
+"Plug 'xolox/vim-misc'
+"Plug 'xolox/vim-session'
 
 if v:version >= 703
   Plug 'Shougo/vimshell.vim'
@@ -179,10 +179,10 @@ else
 endif
 
 " session management
-let g:session_directory = "~/.vim/session"
-let g:session_autoload = "no"
-let g:session_autosave = "no"
-let g:session_command_aliases = 1
+"let g:session_directory = "~/.vim/session"
+"let g:session_autoload = "no"
+"let g:session_autosave = "no"
+"let g:session_command_aliases = 1
 
 "*****************************************************************************
 "" Visual Settings
@@ -321,7 +321,7 @@ let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeWinSize = 50
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <silent> <F2> :NERDTreeFind<CR>
-map <C-n> :NERDTreeToggle<CR>
+map <C-y> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1     " Show hidden files in NERDTree
 
 " grep.vim
@@ -398,6 +398,8 @@ nmap ga <Plug>(EasyAlign)
 
 " Lunch easymotion
 map <Leader> <Plug>(easymotion-prefix)
+" When SaveSession is active use this
+"map l <Plug>(easymotion-s)
 
 "" EMMET config
 " redefine trigger key from '<c-y>,'
@@ -420,11 +422,26 @@ noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
+"" To avoid conflict with Deoplete
+func! Multiple_cursors_before()
+  if deoplete#is_enabled()
+    call deoplete#disable()
+    let g:deoplete_is_enable_before_multi_cursors = 1
+  else
+    let g:deoplete_is_enable_before_multi_cursors = 0
+  endif
+endfunc
+func! Multiple_cursors_after()
+  if g:deoplete_is_enable_before_multi_cursors
+    call deoplete#enable()
+  endif
+endfunc
+
 " session management
-nnoremap <leader>so :OpenSession<Space>
-nnoremap <leader>ss :SaveSession<Space>
-nnoremap <leader>sd :DeleteSession<CR>
-nnoremap <leader>sc :CloseSession<CR>
+"nnoremap <leader>so :OpenSession<Space>
+"nnoremap <leader>ss :SaveSession<Space>
+"nnoremap <leader>sd :DeleteSession<CR>
+"nnoremap <leader>sc :CloseSession<CR>
 
 "" Tabs
 nnoremap <Tab> gt
@@ -496,48 +513,17 @@ endif
 "*****************************************************************************
 
 "*****************************************************************************
-" deoplete tab-complete
-" use <tab> for completion
-"*****************************************************************************
-function! TabWrap()
-    if pumvisible()
-        return "\<C-N>"
-    elseif strpart( getline('.'), 0, col('.') - 1 ) =~ '^\s*$'
-        return "\<tab>"
-    elseif &omnifunc !~ ''
-        return "\<C-X>\<C-O>"
-    else
-        return "\<C-N>"
-    endif
-endfunction
-
-" power tab
-imap <silent><expr><tab> TabWrap()
-
-" Enter: complete&close popup if visible (so next Enter works); else: break undo
-inoremap <silent><expr> <Cr> pumvisible() ?
-            \ deoplete#mappings#close_popup() : "<C-g>u<Cr>"
-
-" Ctrl-Space: summon FULL (synced) autocompletion
-inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
-
-" Escape: exit autocompletion, go to Normal mode
-inoremap <silent><expr> <Esc> pumvisible() ? "<C-e><Esc>" : "<Esc>"
-"***********************************<<END>>***********************************
-
-
-"*****************************************************************************
-" Another variation of <Tab> completion in Deoplete
+" <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
-" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
-" autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+ autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "***********************************<<END>>***********************************
 
 " Dev icons
 let g:webdevicons_enable_nerdtree = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1 " Turn on folder icons 
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1 " Turn on folder icons
 let g:DevIconsEnableFoldersOpenClose = 1
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 
