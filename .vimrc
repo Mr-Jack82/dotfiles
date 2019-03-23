@@ -314,6 +314,8 @@ augroup VimDiff
   autocmd VimEnter,FilterWritePre * if &diff | ALEDisable | endif
 augroup END
 
+let g:airline#extensions#ale#enabled = 1
+
 "*****************************************************************************
 "" This is for statusline
 "*****************************************************************************
@@ -333,7 +335,57 @@ augroup END
 "set statusline=%{LinterStatus()}
 "*****************************************************************************
 
-let g:airline#extensions#ale#enabled = 1
+"*****************************************************************************
+"" ALE integration for lightline
+"*****************************************************************************
+let g:lightline = {
+      \ 'colorscheme': 'PaperColor light',
+      \ 'active': {
+\   'left': [['mode', 'paste'], ['filename', 'modified']],
+\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+\ },
+\ 'component_expand': {
+\   'linter_warnings': 'LightlineLinterWarnings',
+\   'linter_errors': 'LightlineLinterErrors',
+\   'linter_ok': 'LightlineLinterOK'
+\ },
+\ 'component_type': {
+\   'readonly': 'error',
+\   'linter_warnings': 'warning',
+\   'linter_errors': 'error'
+\ },
+\ }
+
+" function! LightlineLinterWarnings() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d ◆', all_non_errors)
+" endfunction
+
+" function! LightlineLinterErrors() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
+" endfunction
+
+" function! LightlineLinterOK() abort
+"   let l:counts = ale#statusline#Count(bufnr(''))
+"   let l:all_errors = l:counts.error + l:counts.style_error
+"   let l:all_non_errors = l:counts.total - l:all_errors
+"   return l:counts.total == 0 ? '✓ ' : ''
+" endfunction
+
+" autocmd User ALELint call s:MaybeUpdateLightline()
+
+" " Update and show lightline but only if it's visible (e.g., not in Goyo)
+" function! s:MaybeUpdateLightline()
+"   if exists('#lightline')
+"     call lightline#update()
+"   end
+" endfunction
+"*****************************************************************************
 
 "" NERDTree configuration
 let g:NERDTreeChDirMode=2
@@ -422,6 +474,22 @@ nmap ga <Plug>(EasyAlign)
 
 " Lunch easymotion
 map <Leader> <Plug>(easymotion-prefix)
+" When SaveSession is active use this
+"map l <Plug>(easymotion-s)
+
+"*****************************************************************************
+"" When statusline or lightline is active
+"*****************************************************************************
+"" vim-wintabs
+"map <C-H> <Plug>(wintabs_previous)
+"map <C-L> <Plug>(wintabs_next)
+"map <C-T>c <Plug>(wintabs_close)
+"map <C-T>u <Plug>(wintabs_undo)
+"map <C-T>o <Plug>(wintabs_only)
+"map <C-W>c <Plug>(wintabs_close_window)
+"map <C-W>o <Plug>(wintabs_only_window)
+"command! Tabc WintabsCloseVimtab
+"command! Tabo WintabsOnlyVimtab
 
 "" EMMET config
 " redefine trigger key from '<c-y>,'
@@ -520,43 +588,12 @@ endif
 "*****************************************************************************
 
 "*****************************************************************************
-" deoplete tab-complete
-" use <tab> for completion
-"*****************************************************************************
-function! TabWrap()
-    if pumvisible()
-        return "\<C-N>"
-    elseif strpart( getline('.'), 0, col('.') - 1 ) =~ '^\s*$'
-        return "\<tab>"
-    elseif &omnifunc !~ ''
-        return "\<C-X>\<C-O>"
-    else
-        return "\<C-N>"
-    endif
-endfunction
-
-" power tab
-imap <silent><expr><tab> TabWrap()
-
-" Enter: complete&close popup if visible (so next Enter works); else: break undo
-inoremap <silent><expr> <Cr> pumvisible() ?
-            \ deoplete#mappings#close_popup() : "<C-g>u<Cr>"
-
-" Ctrl-Space: summon FULL (synced) autocompletion
-inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
-
-" Escape: exit autocompletion, go to Normal mode
-inoremap <silent><expr> <Esc> pumvisible() ? "<C-e><Esc>" : "<Esc>"
-"***********************************<<END>>***********************************
-
-
-"*****************************************************************************
 " Another variation of <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
-" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
-" autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "***********************************<<END>>***********************************
 
 " Dev icons
@@ -700,9 +737,9 @@ else
   let g:airline_symbols.linenr = ''
 endif
 
-" Statusline
+"" Statusline
 
-" :h mode() to see all modes
+"" :h mode() to see all modes
 
 "let g:currentmode={
     "\ 'n'      : 'NORMAL ',
