@@ -33,7 +33,6 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -44,7 +43,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mhinz/vim-startify'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'scrooloose/nerdcommenter'
 Plug 'Raimondi/delimitMate'
+Plug 'ervandew/supertab'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 if has('nvim')
@@ -184,10 +186,10 @@ else
 endif
 
 " session management
-let g:session_directory = "~/.vim/session"
-let g:session_autoload = "no"
-let g:session_autosave = "no"
-let g:session_command_aliases = 1
+"let g:session_directory = "~/.vim/session"
+"let g:session_autoload = "no"
+"let g:session_autosave = "no"
+"let g:session_command_aliases = 1
 
 "*****************************************************************************
 "" Visual Settings
@@ -476,6 +478,7 @@ nmap ga <Plug>(EasyAlign)
 map <Leader> <Plug>(easymotion-prefix)
 " When SaveSession is active use this
 "map l <Plug>(easymotion-s)
+<<<<<<< HEAD
 
 "*****************************************************************************
 "" When statusline or lightline is active
@@ -490,6 +493,8 @@ map <Leader> <Plug>(easymotion-prefix)
 "map <C-W>o <Plug>(wintabs_only_window)
 "command! Tabc WintabsCloseVimtab
 "command! Tabo WintabsOnlyVimtab
+=======
+>>>>>>> f8d9f2cf9f7c9440537899c051cb6b763cd50542
 
 "" EMMET config
 " redefine trigger key from '<c-y>,'
@@ -511,6 +516,21 @@ noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
+
+"" To avoid conflict with Deoplete
+func! Multiple_cursors_before()
+  if deoplete#is_enabled()
+    call deoplete#disable()
+    let g:deoplete_is_enable_before_multi_cursors = 1
+  else
+    let g:deoplete_is_enable_before_multi_cursors = 0
+  endif
+endfunc
+func! Multiple_cursors_after()
+  if g:deoplete_is_enable_before_multi_cursors
+    call deoplete#enable()
+  endif
+endfunc
 
 " session management
 "nnoremap <leader>so :OpenSession<Space>
@@ -588,17 +608,26 @@ endif
 "*****************************************************************************
 
 "*****************************************************************************
+<<<<<<< HEAD
 " Another variation of <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
 autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+=======
+" <Tab> completion in Deoplete
+"*****************************************************************************
+" deoplete tab-complete
+ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" tern
+ autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+>>>>>>> f8d9f2cf9f7c9440537899c051cb6b763cd50542
 "***********************************<<END>>***********************************
 
 " Dev icons
 let g:webdevicons_enable_nerdtree = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1 " Turn on folder icons 
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1 " Turn on folder icons
 let g:DevIconsEnableFoldersOpenClose = 1
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 
