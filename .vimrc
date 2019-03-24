@@ -145,6 +145,9 @@ set bomb
 set binary
 set ttyfast
 
+" NO --INSERT-- messages
+set noshowmode
+
 "" Fix backspace indent
 set backspace=indent,eol,start
 
@@ -370,6 +373,7 @@ augroup vimrc-remember-cursor-position
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 
+
 "" txt
 augroup vimrc-wrapping
   autocmd!
@@ -516,9 +520,9 @@ endif
 " <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
- inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
- autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "***********************************<<END>>***********************************
 
 " Dev icons
