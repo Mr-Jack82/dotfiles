@@ -343,23 +343,23 @@ let g:airline#extensions#ale#enabled = 1
 "*****************************************************************************
 "" ALE integration for lightline
 "*****************************************************************************
-let g:lightline = {
-      \ 'colorscheme': 'PaperColor light',
-      \ 'active': {
-\   'left': [['mode', 'paste'], ['filename', 'modified']],
-\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
-\ },
-\ 'component_expand': {
-\   'linter_warnings': 'LightlineLinterWarnings',
-\   'linter_errors': 'LightlineLinterErrors',
-\   'linter_ok': 'LightlineLinterOK'
-\ },
-\ 'component_type': {
-\   'readonly': 'error',
-\   'linter_warnings': 'warning',
-\   'linter_errors': 'error'
-\ },
-\ }
+"let g:lightline = {
+      "\ 'colorscheme': 'PaperColor light',
+      "\ 'active': {
+"\   'left': [['mode', 'paste'], ['filename', 'modified']],
+"\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+"\ },
+"\ 'component_expand': {
+"\   'linter_warnings': 'LightlineLinterWarnings',
+"\   'linter_errors': 'LightlineLinterErrors',
+"\   'linter_ok': 'LightlineLinterOK'
+"\ },
+"\ 'component_type': {
+"\   'readonly': 'error',
+"\   'linter_warnings': 'warning',
+"\   'linter_errors': 'error'
+"\ },
+"\ }
 
 " function! LightlineLinterWarnings() abort
 "   let l:counts = ale#statusline#Count(bufnr(''))
@@ -595,25 +595,12 @@ endif
 "*****************************************************************************
 
 "*****************************************************************************
-<<<<<<< HEAD
-" Another variation of <Tab> completion in Deoplete
-"*****************************************************************************
-" deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" tern
-autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
-=======
 " <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
-<<<<<<< HEAD
 autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
-=======
- autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
->>>>>>> f8d9f2cf9f7c9440537899c051cb6b763cd50542
->>>>>>> ff708e6c0df662a371f6449ddfee45c6a93a798a
 "***********************************<<END>>***********************************
 
 " Dev icons
