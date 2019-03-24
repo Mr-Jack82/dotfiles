@@ -105,3 +105,5 @@ POWERLEVEL9K_MODE="nerdfont-complete"
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi
+
+bindkey -v
