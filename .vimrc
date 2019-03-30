@@ -49,14 +49,17 @@ Plug 'Raimondi/delimitMate'
 Plug 'ervandew/supertab'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'valloric/youcompleteme'
+
+"if has('nvim')
+  "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+  "Plug 'Shougo/deoplete.nvim'
+  "Plug 'roxma/nvim-yarp'
+  "Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+
 " Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'junegunn/vim-easy-align'
@@ -322,7 +325,7 @@ augroup END
 let g:airline#extensions#ale#enabled = 1
 
 "*****************************************************************************
-"" This is for statusline
+"" This is for statusline ALE
 "*****************************************************************************
 "function! LinterStatus() abort
     "let l:counts = ale#statusline#Count(bufnr(''))
@@ -404,6 +407,9 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <silent> <F2> :NERDTreeFind<CR>
 map <C-y> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1     " Show hidden files in NERDTree
+
+" Youcompleteme global config file
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
@@ -505,19 +511,19 @@ noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
 "" To avoid conflict with Deoplete
-func! Multiple_cursors_before()
-  if deoplete#is_enabled()
-    call deoplete#disable()
-    let g:deoplete_is_enable_before_multi_cursors = 1
-  else
-    let g:deoplete_is_enable_before_multi_cursors = 0
-  endif
-endfunc
-func! Multiple_cursors_after()
-  if g:deoplete_is_enable_before_multi_cursors
-    call deoplete#enable()
-  endif
-endfunc
+"func! Multiple_cursors_before()
+  "if deoplete#is_enabled()
+    "call deoplete#disable()
+    "let g:deoplete_is_enable_before_multi_cursors = 1
+  "else
+    "let g:deoplete_is_enable_before_multi_cursors = 0
+  "endif
+"endfunc
+"func! Multiple_cursors_after()
+  "if g:deoplete_is_enable_before_multi_cursors
+    "call deoplete#enable()
+  "endif
+"endfunc
 
 " session management
 "nnoremap <leader>so :OpenSession<Space>
@@ -570,37 +576,37 @@ let g:UltiSnipsEditSplit="vertical"
 "*****************************************************************************
 "" Use Deoplete
 "*****************************************************************************
-let g:deoplete#enable_at_startup = 1 
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
-" let g:deoplete#disable_auto_complete = 1
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+"let g:deoplete#enable_at_startup = 1
+"if !exists('g:deoplete#omni#input_patterns')
+  "let g:deoplete#omni#input_patterns = {}
+"endif
+"" let g:deoplete#disable_auto_complete = 1
+"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" omnifuncs
-augroup omnifuncs
-  autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup end
-" tern
-if exists('g:plugs["tern_for_vim"]')
-  let g:tern_show_argument_hints = 'on_hold'
-  let g:tern_show_signature_in_pum = 1
-  autocmd FileType javascript setlocal omnifunc=tern#Complete
-endif
+"" omnifuncs
+"augroup omnifuncs
+  "autocmd!
+  "autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"augroup end
+"" tern
+"if exists('g:plugs["tern_for_vim"]')
+  "let g:tern_show_argument_hints = 'on_hold'
+  "let g:tern_show_signature_in_pum = 1
+  "autocmd FileType javascript setlocal omnifunc=tern#Complete
+"endif
 "*****************************************************************************
 
 "*****************************************************************************
 " <Tab> completion in Deoplete
 "*****************************************************************************
 " deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" tern
-autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+"" tern
+"autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "***********************************<<END>>***********************************
 
 " Dev icons
@@ -671,8 +677,24 @@ vmap > >gv
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
+" Absolute movement for word-wrapped lines.
+nnoremap j gj
+nnoremap k gk
+
 "" Open current line on GitHub
 nnoremap <Leader>o :.Gbrowse<CR>
+
+" UltiSnips: Compatibility with YouCompleteMe via SuperTab.
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" Select suggestion with <CR> not <C-Y>
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
 "*****************************************************************************
 "" Custom configs
