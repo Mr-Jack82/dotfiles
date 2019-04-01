@@ -8,6 +8,7 @@
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+(require 'use-package)
 
 (defconst private-dir  (expand-file-name "private" user-emacs-directory))
 (defconst temp-dir (format "%s/cache" private-dir)
@@ -65,6 +66,9 @@
  backup-directory-alist            `((".*" . ,(concat temp-dir "/backup/")))
  auto-save-file-name-transforms    `((".*" ,(concat temp-dir "/auto-save-list/") t)))
 
+(unless (file-exists-p (concat temp-dir "/auto-save-list"))
+		       (make-directory (concat temp-dir "/auto-save-list") :parents))
+
 (fset 'yes-or-no-p 'y-or-n-p)
 (global-auto-revert-mode t)
 
@@ -79,9 +83,6 @@
 
 ;; Delete trailing whitespace before save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; Wraping by words
-(global-visual-line-mode t)
 
 (provide 'base)
 ;;; base ends here
