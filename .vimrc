@@ -43,6 +43,26 @@ Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mhinz/vim-startify'
+
+"function! InstallDeps(info)
+    "if a:info.status == 'installed' || a:info.force
+        "let extensions = ['coc-emmet',     \
+                          "'coc-highlight', \
+                          "'coc-html',      \
+                          "'coc-css',       \
+                          "'coc-vetur',     \
+                          "'coc-eslint',      \
+                          "'coc-yaml',      \
+                          "'coc-snippets',  \
+                          "'coc-tsserver',  \
+                          "'coc-json'       \
+                          "]
+        "call coc#util#install()
+        "call coc#util#install_extension(extensions)
+    "endif
+"endfunction
+"Plug 'neoclide/coc.nvim', {'tag': '*', 'do': function('InstallDeps')}  " COC - Completiton
+
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Raimondi/delimitMate'
@@ -236,7 +256,6 @@ else
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
 
-  
   if $COLORTERM == 'gnome-terminal'
     set term=gnome-256color
   else
@@ -244,7 +263,7 @@ else
       set term=xterm-256color
     endif
   endif
-  
+
 endif
 
 
@@ -325,7 +344,7 @@ augroup END
 let g:airline#extensions#ale#enabled = 1
 
 "*****************************************************************************
-"" This is for statusline ALE
+"" ALE integration for statusline
 "*****************************************************************************
 "function! LinterStatus() abort
     "let l:counts = ale#statusline#Count(bufnr(''))
@@ -416,6 +435,32 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
+
+"" COC
+"set cmdheight=2                                 " Better display for messages
+"set updatetime=300                              " Smaller updatetime for CursorHold & CursorHoldI
+"set shortmess+=c                                " don't give |ins-completion-menu| messages.
+"set signcolumn=yes                              " always show signcolumns
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+"function! s:show_documentation()
+  "if &filetype == 'vim'
+    "execute 'h '.expand('<cword>')
+  "else
+    "call CocAction('doHover')
+  "endif
+"endfunction
+"autocmd CursorHold * silent call CocActionAsync('highlight')                   " Highlight symbol under cursor on CursorHold
+"augroup mygroup
+  "autocmd!
+  "autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected') " Setup formatexpr specified filetype(s).
+  "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')     " Update signature help on jump placeholder
+"augroup end
+"command! -nargs=0 Format :call CocAction('format')                             " Use `:Format` for format current buffer
+"command! -nargs=? Fold :call     CocAction('fold', <f-args>)                   " Use `:Fold` for fold current buffer
+"autocmd FileType json syntax match Comment +\/\/.\+$+                          " COC JSON - better comment rendering
 
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
