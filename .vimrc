@@ -124,6 +124,7 @@ Plug 'honza/vim-snippets'
 " colorschemes
 Plug 'morhetz/gruvbox'
 Plug 'dracula/vim'
+Plug 'troyfletcher/vim-colors-synthwave'
 Plug 'kaicataldo/material.vim'
 Plug 'fenetikm/falcon'
 Plug 'tomasr/molokai'
@@ -235,7 +236,7 @@ highlight lCursor guifg=NONE guibg=Cyan
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-  colorscheme dracula
+  colorscheme synthwave
 endif
 
 set mousemodel=popup
