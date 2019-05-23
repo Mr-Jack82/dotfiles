@@ -125,6 +125,7 @@ Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 Plug 'dracula/vim'
 Plug 'troyfletcher/vim-colors-synthwave'
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'kaicataldo/material.vim'
 Plug 'fenetikm/falcon'
 Plug 'tomasr/molokai'
@@ -236,7 +237,7 @@ highlight lCursor guifg=NONE guibg=Cyan
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-  colorscheme synthwave
+  colorscheme palenight
 endif
 
 set mousemodel=popup
@@ -302,9 +303,10 @@ if exists("*fugitive#statusline")
 endif
 
 " vim-airline
-let g:falcon_airline = 1
-let g:airline_theme = 'falcon'
-" let g:airline_theme = 'powerlineish'
+"let g:falcon_airline = 1
+"let g:airline_theme = 'falcon'
+"let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'kolor'
 
 if has('syntastic')
         let g:airline#extensions#syntastic#enabled = 1
