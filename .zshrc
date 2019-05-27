@@ -68,6 +68,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
 alias cdi='cd `ls | peco`'
 
+alias rm='rm -i'
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
