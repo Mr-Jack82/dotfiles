@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/vitaly/.oh-my-zsh"
+  export ZSH="/home/leeroy/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -26,8 +26,14 @@ ZSH_THEME="bira"
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
 
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
+
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -62,7 +68,7 @@ ZSH_THEME="bira"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fasd zsh-peco-history sudo npm node zsh-syntax-highlighting history-substring-search colored-man-pages zsh-autosuggestions)
+plugins=(git fasd zsh-peco-history sudo npm node fast-syntax-highlighting history-substring-search colored-man-pages zsh-autosuggestions)
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
@@ -71,6 +77,8 @@ alias cdi='cd `ls | peco`'
 alias rm='rm -i'
 
 source $ZSH/oh-my-zsh.sh
+
+
 
 # User configuration
 
@@ -89,9 +97,6 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -100,12 +105,9 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
+# source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
 
 POWERLEVEL9K_MODE="nerdfont-complete"
 
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
-fi
 
 bindkey -v
