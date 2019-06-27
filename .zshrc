@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/leeroy/.oh-my-zsh"
+export ZSH="/home/leeroy/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -68,16 +68,17 @@ ZSH_THEME="bira"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git 
-    fasd 
-    zsh-peco-history 
-    sudo 
-    npm 
-    node 
-    fast-syntax-highlighting 
-    history-substring-search 
-    colored-man-pages 
-    zsh-autosuggestions)
+plugins=(git
+	fasd
+	zsh-peco-history
+	sudo
+	npm
+	node
+	fast-syntax-highlighting
+	history-substring-search
+	colored-man-pages
+	zsh-autosuggestions
+    vi-mode)
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
@@ -85,13 +86,16 @@ alias cdi='cd `ls | peco`'
 
 alias rm='rm -i'
 
+alias grep='grep --color=auto'
+
 source $ZSH/oh-my-zsh.sh
-
-
 
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+
+export LESS='-R'
+export LESSOPEN='|~/.lessfilter %s'
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -114,9 +118,23 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-# source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
 
-POWERLEVEL9K_MODE="nerdfont-complete"
+#Enable Vi mode
+#bindkey -v
 
+#bindkey '^P' up-history
+#bindkey '^N' down-history
+#bindkey '^?' backward-delete-char
+#bindkey '^h' backward-delete-char
+#bindkey '^w' backward-kill-word
+#bindkey '^r' history-incremental-search-backward
 
-bindkey -v
+#function zle-line-init zle-keymap-select {
+    #VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+    #RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}$(git_custom_status) $EPS1"
+    #zle reset-prompt
+#}
+
+#zle -N zle-line-init
+#zle -N zle-keymap-select
+#export KEYTIMEOUT=1
