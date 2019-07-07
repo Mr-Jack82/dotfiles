@@ -1,0 +1,41 @@
+set realname = "Виталий Шевченко"
+set use_from = yes
+set editor='vim -c "set spell spelllang=en_us,ru_ru"'
+# see the headers when editing
+# set edit_headers
+# sort by newest conversation first.
+set sort = reverse-threads
+set sort_aux = last-date-received
+
+# confirmation skipping
+set fast_reply=yes          # when replying, don't prompt for address
+set include=yes             # include original text on reply?
+set forward_quote=yes       # include original text on forward?
+set delete=yes              # don't ask for delete confirmation
+
+##########Gmail settings#############
+set from = blackjack358@gmail.com
+set imap_user = blackjack358@gmail.com
+set imap_pass = googlenewsbox
+set smtp_url = smtp://blackjack358smtp.gmail.com:587/
+set smtp_pass = googlenewsbox
+
+# don't let your firewall kill your idle connection
+set imap_keepalive = 900
+
+# do not copy sent mail
+set copy = no
+set move = no
+
+set folder = imaps://imap.gmail.com:993
+set spoolfile = +INBOX                  # or +[Gmail]/Important
+set postponed = +[Gmail]/Drafts
+set record = =Отправленные
+
+# cache
+set header_cache    = ~/.mutt/cache/headers
+set message_cachedir    = ~/.mutt/cace/bodies
+set certificate_file    = ~/.mutt/certificates
+
+set ssl_starttls = yes
+set ssl_force_tls = yes
