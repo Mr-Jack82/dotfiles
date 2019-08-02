@@ -1,15 +1,14 @@
-" vim-bootstrap b0a75e4
 
-"*****************************************************************************
-"" Vim-PLug core
-"*****************************************************************************
+"************************************************************************
+"" Vim-plug core
+"************************************************************************
 if has('vim_starting')
   set nocompatible               " Be iMproved
 endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "html,javascript,php"
+let g:vim_bootstrap_langs = "html,javascript,php,python,typescript"
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
 if !filereadable(vimplug_exists)
@@ -19,7 +18,7 @@ if !filereadable(vimplug_exists)
   endif
   echo "Installing Vim-Plug..."
   echo ""
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   let g:not_finish_vimplug = "yes"
 
   autocmd VimEnter * PlugInstall
@@ -28,65 +27,40 @@ endif
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
 
-"*****************************************************************************
+"************************************************************************
 "" Plug install packages
-"*****************************************************************************
+"************************************************************************
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'jiangmiao/auto-pairs'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-scripts/grep.vim'
-Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/CSApprox'
+Plug 'Raimondi/delimitMate'
+Plug 'majutsushi/tagbar'
+Plug 'w0rp/ale'
+Plug 'Yggdroot/indentLine'
+Plug 'avelino/vim-bootstrap-updater'
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
+
+" My plugins
+Plug 'wellle/targets.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'easymotion/vim-easymotion'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mhinz/vim-startify'
-
-"function! InstallDeps(info)
-    "if a:info.status == 'installed' || a:info.force
-        "let extensions = ['coc-emmet',     \
-                          "'coc-highlight', \
-                          "'coc-html',      \
-                          "'coc-css',       \
-                          "'coc-vetur',     \
-                          "'coc-eslint',      \
-                          "'coc-yaml',      \
-                          "'coc-snippets',  \
-                          "'coc-tsserver',  \
-                          "'coc-json'       \
-                          "]
-        "call coc#util#install()
-        "call coc#util#install_extension(extensions)
-    "endif
-"endfunction
-"Plug 'neoclide/coc.nvim', {'tag': '*', 'do': function('InstallDeps')}  " COC - Completiton
-
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
-Plug 'Raimondi/delimitMate'
 Plug 'ervandew/supertab'
-Plug 'w0rp/ale'
-Plug 'majutsushi/tagbar'
 Plug 'valloric/youcompleteme'
-
-"if has('nvim')
-  "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"else
-  "Plug 'Shougo/deoplete.nvim'
-  "Plug 'roxma/nvim-yarp'
-  "Plug 'roxma/vim-hug-neovim-rpc'
-"endif
-"Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
-
-" Plug 'scrooloose/syntastic'
-Plug 'Yggdroot/indentLine'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
-Plug 'avelino/vim-bootstrap-updater'
-Plug 'sheerun/vim-polyglot'
+" Plug 'scrooloose/syntastic'
+
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else
@@ -103,15 +77,8 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 "Plug 'xolox/vim-misc'
 "Plug 'xolox/vim-session'
 
-if v:version >= 703
-  Plug 'Shougo/vimshell.vim'
-endif
-
-if v:version >= 704
-  "" Snippets
-  Plug 'SirVer/ultisnips'
-endif
-
+"" Snippets
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 "" Tabline for lightline and statusline
@@ -153,6 +120,17 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'arnaud-lb/vim-php-namespace'
 
 
+" python
+"" Python Bundle
+Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+
+
+" typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
+
+
 "*****************************************************************************
 "*****************************************************************************
 
@@ -163,13 +141,14 @@ endif
 
 call plug#end()
 
-" Required:
+" Required
 filetype plugin indent on
 
 
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
+"
 "" Encoding
 set encoding=utf-8
 set fileencoding=utf-8
@@ -183,8 +162,13 @@ set noshowmode
 
 "" Fix backspace indent
 set backspace=indent,eol,start
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 
-"" Tabs. May be overriten by autocmd rules
+"Ivisible character colors
+highlight NonText guifg=#5f5fff
+highlight SpecialKey guifg=#5f5fff
+
+"" Tabs. May be overridden by autocmd rules
 set tabstop=4
 set softtabstop=0
 set shiftwidth=4
@@ -232,13 +216,14 @@ set showcmd                       " Show (partial) command in status line.
 set wildmenu
 set history=1000
 set relativenumber
-set termguicolors
+"set termguicolors
 highlight lCursor guifg=NONE guibg=Cyan
 
-let no_buffers_menu=1
+let no_buffer_menu=1
 if !exists('g:not_finish_vimplug')
   colorscheme palenight
 endif
+"silent! colorscheme palenight
 
 set mousemodel=popup
 set t_Co=256
@@ -253,12 +238,6 @@ if has("gui_running")
 else
   let g:CSApprox_loaded = 1
 
-  " IndentLine
-  let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 0
-  let g:indentLine_char = '┆'
-  let g:indentLine_faster = 1
-
   if $COLORTERM == 'gnome-terminal'
     set term=gnome-256color
   else
@@ -266,21 +245,25 @@ else
       set term=xterm-256color
     endif
   endif
-
+  
 endif
 
+  " IndentLine
+  let g:indentLine_enabled = 1
+  let g:indentLine_concealcursor = 0
+  let g:indentLine_char = '┆'
+  let g:indentLine_faster = 1
 
 if &term =~ '256color'
   set t_ut=
 endif
-
 
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=5
 
 "" Status bar
-set laststatus=2
+"set laststatus=2
 set cmdheight=2
 
 "" Use modeline overrides
@@ -291,7 +274,7 @@ set title
 set titleold="Terminal"
 set titlestring=%F
 
-set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+"set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
@@ -309,10 +292,11 @@ endif
 let g:airline_theme = 'kolor'
 
 if has('syntastic')
-        let g:airline#extensions#syntastic#enabled = 1
+    let g:airline#extensions#syntastic#enabled = 1
 endif
 
 let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
@@ -344,8 +328,6 @@ augroup VimDiff
   autocmd!
   autocmd VimEnter,FilterWritePre * if &diff | ALEDisable | endif
 augroup END
-
-let g:airline#extensions#ale#enabled = 1
 
 "*****************************************************************************
 "" ALE integration for statusline
@@ -440,42 +422,18 @@ let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
 
-"" COC
-"set cmdheight=2                                 " Better display for messages
-"set updatetime=300                              " Smaller updatetime for CursorHold & CursorHoldI
-"set shortmess+=c                                " don't give |ins-completion-menu| messages.
-"set signcolumn=yes                              " always show signcolumns
-"function! s:check_back_space() abort
-  "let col = col('.') - 1
-  "return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-"function! s:show_documentation()
-  "if &filetype == 'vim'
-    "execute 'h '.expand('<cword>')
-  "else
-    "call CocAction('doHover')
-  "endif
-"endfunction
-"autocmd CursorHold * silent call CocActionAsync('highlight')                   " Highlight symbol under cursor on CursorHold
-"augroup mygroup
-  "autocmd!
-  "autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected') " Setup formatexpr specified filetype(s).
-  "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')     " Update signature help on jump placeholder
-"augroup end
-"command! -nargs=0 Format :call CocAction('format')                             " Use `:Format` for format current buffer
-"command! -nargs=? Fold :call     CocAction('fold', <f-args>)                   " Use `:Fold` for fold current buffer
-"autocmd FileType json syntax match Comment +\/\/.\+$+                          " COC JSON - better comment rendering
+" terminal emulation
+nnoremap <silent> <leader>sh :terminal<CR>
 
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
 let g:vimshell_prompt =  '$ '
 
-" terminal emulation
-if g:vim_bootstrap_editor == 'nvim'
-  nnoremap <silent> <leader>sh :terminal<CR>
-else
-  nnoremap <silent> <leader>sh :VimShellCreate<CR>
-endif
+"*****************************************************************************
+"" Commands
+"*****************************************************************************
+" remove trailing whitespaces
+command! FixWhitespace :%s/\s\+$//e
 
 "*****************************************************************************
 "" Functions
@@ -505,7 +463,6 @@ augroup vimrc-remember-cursor-position
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
-
 
 "" txt
 augroup vimrc-wrapping
@@ -543,7 +500,7 @@ map <Leader> <Plug>(easymotion-prefix)
 let g:user_emmet_leader_key=','
 
 " Exiting from Insert mode to Normal mode quick and ease
-inoremap kj <Esc>
+"inoremap kj <Esc>
 
 "" Split
 noremap <Leader>h :<C-u>split<CR>
@@ -558,21 +515,6 @@ noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
-
-"" To avoid conflict with Deoplete
-"func! Multiple_cursors_before()
-  "if deoplete#is_enabled()
-    "call deoplete#disable()
-    "let g:deoplete_is_enable_before_multi_cursors = 1
-  "else
-    "let g:deoplete_is_enable_before_multi_cursors = 0
-  "endif
-"endfunc
-"func! Multiple_cursors_after()
-  "if g:deoplete_is_enable_before_multi_cursors
-    "call deoplete#enable()
-  "endif
-"endfunc
 
 " session management
 "nnoremap <leader>so :OpenSession<Space>
@@ -615,6 +557,8 @@ endif
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :FZF -m<CR>
+"Recovery commands from history through FZF
+nmap <leader>y :History:<CR>
 
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -622,41 +566,8 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
 
-"*****************************************************************************
-"" Use Deoplete
-"*****************************************************************************
-"let g:deoplete#enable_at_startup = 1
-"if !exists('g:deoplete#omni#input_patterns')
-  "let g:deoplete#omni#input_patterns = {}
-"endif
-"" let g:deoplete#disable_auto_complete = 1
-"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-"" omnifuncs
-"augroup omnifuncs
-  "autocmd!
-  "autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"augroup end
-"" tern
-"if exists('g:plugs["tern_for_vim"]')
-  "let g:tern_show_argument_hints = 'on_hold'
-  "let g:tern_show_signature_in_pum = 1
-  "autocmd FileType javascript setlocal omnifunc=tern#Complete
-"endif
-"*****************************************************************************
-
-"*****************************************************************************
-" <Tab> completion in Deoplete
-"*****************************************************************************
-" deoplete tab-complete
-"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-"" tern
-"autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
-"***********************************<<END>>***********************************
+" ale
+let g:ale_linters = {}
 
 " Dev icons
 let g:webdevicons_enable_nerdtree = 1
@@ -686,8 +597,8 @@ if has('autocmd')
 endif
 
 "" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
+if has ('unnamedplus')
+	set clipboard=unnamed,unnamedplus
 endif
 
 noremap YY "+y<CR>
@@ -760,11 +671,49 @@ let g:javascript_enable_domhtmlcss = 1
 " vim-javascript
 augroup vimrc-javascript
   autocmd!
-  autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4
+  autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl expandtab softtabstop=4
 augroup END
 
 
 " php
+
+
+" python
+" vim-python
+augroup vimrc-python
+  autocmd!
+  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+      \ formatoptions+=croq softtabstop=4
+      \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" jedi-vim
+let g:jedi#popup_on_dot = 0
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "0"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#smart_auto_mappings = 0
+
+" ale
+:call extend(g:ale_linters, {
+    \'python': ['flake8'], })
+
+" vim-airline
+let g:airline#extensions#virtualenv#enabled = 1
+
+" Syntax highlight
+" Default highlight is better than polyglot
+let g:polyglot_disabled = ['python']
+let python_highlight_all = 1
+
+
+" typescript
+let g:yats_host_keyword = 1
+
 
 
 "*****************************************************************************
@@ -779,31 +728,37 @@ endif
 "" Convenience variables
 "*****************************************************************************
 
-" vim-airline
+" Force Airline to refresh after setup so settings work
+":autocmd!
+":autocmd VimEnter * :AirlineRefresh
+
+"" vim-airline
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#bufferline#enabled = 1
+
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
 
-if !exists('g:airline_powerline_fonts')
-  let g:airline#extensions#tabline#left_sep = ' '
-  let g:airline#extensions#tabline#left_alt_sep = '|'
-  let g:airline_left_sep          = '▶'
-  let g:airline_left_alt_sep      = '»'
-  let g:airline_right_sep         = '◀'
-  let g:airline_right_alt_sep     = '«'
-  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
-  let g:airline#extensions#readonly#symbol   = '⊘'
-  let g:airline#extensions#linecolumn#prefix = '¶'
-  let g:airline#extensions#paste#symbol      = 'ρ'
-  let g:airline_symbols.linenr    = '␊'
-  let g:airline_symbols.branch    = '⎇'
-  let g:airline_symbols.paste     = 'ρ'
-  let g:airline_symbols.paste     = 'Þ'
-  let g:airline_symbols.paste     = '∥'
+" unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
   let g:airline_symbols.whitespace = 'Ξ'
-else
-  let g:airline#extensions#tabline#left_sep = ''
-  let g:airline#extensions#tabline#left_alt_sep = ''
 
   " powerline symbols
   let g:airline_left_sep = ''
@@ -811,9 +766,10 @@ else
   let g:airline_right_sep = ''
   let g:airline_right_alt_sep = ''
   let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = ''
-endif
+  let g:airline_symbols.readonly = '⊘'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
+
 
 "" Statusline
 
