@@ -41,7 +41,7 @@ set nocursorline
 set noruler
 
 " Only one line for command line
-set cmdheight=1
+set cmdheight=2
 
 " === Completion Settings === "
 
@@ -257,8 +257,8 @@ catch
 endtry
 
 " Vim airline theme
-" let g:airline_theme='space'
-silent! colorscheme dracula
+let g:airline_theme='space'
+" silent! colorscheme kolor
 
 " Add custom highlights in method that is executed every time a
 " colorscheme is sourced
@@ -285,7 +285,9 @@ set splitbelow
 set noshowmode
 
 " Set floating window to be slightly transparent
-set winbl=10
+" From denite.vim docs: To use "floating", you need to use neovim 0.4.0+
+" (|nvim_open_win()|). neovim 0.3(includes 0.3.7) does not work.
+" set winbl=10
 
 " coc.nvim color changes
 hi! link CocErrorSign WarningMsg
