@@ -1,3 +1,7 @@
+" source of this config is https://github.com/ctaylo21/jarvis
+" also read his article "A guide to modern Web Development with (Neo)vim"
+" https://www.freecodecamp.org/news/a-guide-to-modern-web-development-with-neo-vim-333f7efbf8e2/
+
 " ============================================================================ "
 " ===                               PLUGINS                                === "
 " ============================================================================ "
@@ -24,8 +28,21 @@ call plug#begin('~/.config/nvim/plugged')
 " Trailing whitespace highlighting & automatic fixing
 Plug 'ntpeters/vim-better-whitespace'
 
+" Multiple cursors like in Sublime Text
+Plug 'terryma/vim-multiple-cursors'
+
+" Vim plugin for intensely orgasmic commenting
+Plug 'scrooloose/nerdcommenter'
+
+" A Vim alignment plugin
+Plug 'junegunn/vim-easy-align'
+
+" Surround.vim: quoting/parenthesizing made simple
+Plug 'tpope/vim-surround'
+
 " auto-close plugin
-Plug 'rstacruz/vim-closer'
+" Plug 'rstacruz/vim-closer'
+Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'
