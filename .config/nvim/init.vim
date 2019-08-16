@@ -1,6 +1,10 @@
 scriptencoding utf-8
 source ~/.config/nvim/plugins.vim
 
+" source of this config is https://github.com/ctaylo21/jarvis
+" also read his article "A guide to modern Web Development with (Neo)vim"
+" https://www.freecodecamp.org/news/a-guide-to-modern-web-development-with-neo-vim-333f7efbf8e2/
+
 " ============================================================================ "
 " ===                           EDITING OPTIONS                            === "
 " ============================================================================ "
@@ -8,14 +12,31 @@ source ~/.config/nvim/plugins.vim
 " Remap leader key to ,
 let g:mapleader=','
 
-" Disable line numbers
-set nonumber
+" Enable line numbers
+set number
 
-" Don't show last command
-set noshowcmd
+" Show the line number relative to the line with the cursor in front of
+" each line.
+set relativenumber
+
+" Show (partial) command in statusline
+set showcmd
 
 " Yank and paste with the system clipboard
 set clipboard=unnamed
+
+" Remember last cursor position
+augroup remember-cursor-position
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+    \ |   exe "normal! g`\""
+    \ | endif
+augroup END
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
 
 " Hides buffers instead of closing them
 set hidden
@@ -241,6 +262,20 @@ let g:used_javascript_libs = 'underscore,requirejs,chai,jquery'
 " === Signify === "
 let g:signify_sign_delete = '-'
 
+" === EasyAlign === "
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" === NERD Commenter === "
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
@@ -341,7 +376,7 @@ endfunction
 "   <leader>t - Browse list of files in current directory
 "   <leader>g - Search current directory for occurences of given term and close window if no results
 "   <leader>j - Search current directory for occurences of word under cursor
-nmap ; :Denite buffer<CR>
+nmap <Leader>b :Denite buffer<CR>
 nmap <leader>t :DeniteProjectDir file/rec<CR>
 nnoremap <leader>g :<C-u>Denite grep:. -no-empty<CR>
 nnoremap <leader>j :<C-u>DeniteCursorWord grep:.<CR>
@@ -408,13 +443,17 @@ nmap <leader>y :StripWhitespace<CR>
 
 " === Search shorcuts === "
 "   <leader>h - Find and replace
-"   <leader>/ - Claer highlighted search terms while preserving history
+"   <leader>/ - Clear highlighted search terms while preserving history
 map <leader>h :%s///<left><left>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 " === Easy-motion shortcuts ==="
 "   <leader>w - Easy-motion highlights first word letters bi-directionally
 map <leader>w <Plug>(easymotion-bd-w)
+
+" <leader>s - Easy-motion highlights {char} to bidirection (forward and
+" backward at the same time.)
+map <Leader> <Plug>(easymotion-prefix)
 
 " Allows you to save files you opened without write permissions via sudo
 cmap w!! w !sudo tee %
