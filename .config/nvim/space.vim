@@ -1,3 +1,7 @@
+" source of this config is https://github.com/ctaylo21/jarvis
+" also read his article "A guide to modern Web Development with (Neo)vim"
+" https://www.freecodecamp.org/news/a-guide-to-modern-web-development-with-neo-vim-333f7efbf8e2/
+
 " vim-airline template by chartoin (http://github.com/chartoin)
 " Base 16 Oceanic Next Scheme by Chris Kempson (http://chriskempson.com)
 " Base 16 Oceanic Next Vim Airline Scheme
