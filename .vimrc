@@ -207,19 +207,46 @@ endif
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
+" Enable syntax highlighting.
 syntax on
+
+" Show the cursor position.
 set ruler
-set lazyredraw                    " don't redraw when don't have to
-set timeoutlen=1000 ttimeoutlen=0 " Remove timeout when hitting escape
+
+" don't redraw when don't have to.
+set lazyredraw
+
+" Remove timeout when hitting escape.
+set timeoutlen=1000 ttimeoutlen=0
+
+" Shows numbers in front of each line.
 set number
-set showcmd                       " Show (partial) command in status line.
-set wildmenu
-set history=1000
+
+" Show the line number relative to the line with the cursor in front of
+" each line.
 set relativenumber
-"set termguicolors
+
+" If on, Vim will wrap long lines at a character.
+" set linebreak
+
+" Show (partial) command in status line.
+set showcmd
+
+" Shows a menu when using tab completion.
+set wildmenu
+
+" Copy indent from current line when starting a new line.
+set autoindent
+
+" Do smart autoindenting when starting a new line.
+set smartindent
+
+" Keep 1000 items in the history.
+set history=1000
+set termguicolors
 highlight lCursor guifg=NONE guibg=Cyan
 
-let no_buffer_menu=1
+let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
   colorscheme palenight
 endif
@@ -260,6 +287,8 @@ endif
 
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
+
+" Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
 
 "" Status bar
@@ -273,6 +302,18 @@ set modelines=10
 set title
 set titleold="Terminal"
 set titlestring=%F
+
+" Change shape of Vim cursor onto vertical line in insert mode
+if has("autocmd")
+  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
+  au InsertEnter,InsertChange *
+    \ if v:insertmode == 'i' | 
+    \   silent execute '!echo -ne "\e[6 q"' | redraw! |
+    \ elseif v:insertmode == 'r' |
+    \   silent execute '!echo -ne "\e[4 q"' | redraw! |
+    \ endif
+  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+endif
 
 "set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 
@@ -655,6 +696,10 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " Select suggestion with <CR> not <C-Y>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
+" === NERD Commenter === "
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
 
 "*****************************************************************************
 "" Custom configs
