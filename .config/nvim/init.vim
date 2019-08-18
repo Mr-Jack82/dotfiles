@@ -27,11 +27,22 @@ set clipboard=unnamed
 
 " Remember last cursor position
 augroup remember-cursor-position
+  autocmd!
   autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit'
     \ |   exe "normal! g`\""
     \ | endif
 augroup END
+
+"" Clean search (highlight)
+nnoremap <silent> <leader><space> :noh<cr>
+
+"" Vmap for maintain Visual Mode after shifting > and <
+vmap < <gv
+vmap > >gv
+
+" Minimal number of screen lines to keep above and below the cursor.
+set scrolloff=5
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
