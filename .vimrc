@@ -299,6 +299,12 @@ set cmdheight=2
 set modeline
 set modelines=10
 
+"" Undo - Save beyond closing Persistent undo
+set undofile                        " Allow persistent undo.
+set undodir=~/.vim/undodir          " Store undo files here. Make the folder.
+set undoreload=10000
+set undolevels=100
+
 set title
 set titleold="Terminal"
 set titlestring=%F
@@ -653,13 +659,13 @@ if has('macunix')
 endif
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
+" noremap <leader>z :bp<CR>
+" noremap <leader>q :bp<CR>
+" noremap <leader>x :bn<CR>
+" noremap <leader>w :bn<CR>
 
 "" Close buffer
-noremap <leader>c :bd<CR>
+" noremap <leader>c :bd<CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
@@ -779,41 +785,42 @@ endif
 
 "" vim-airline
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#bufferline#enabled = 1
 
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
+" if !exists('g:airline_symbols')
+  " let g:airline_symbols = {}
+" endif
 
-" unicode symbols
-  let g:airline_left_sep = '»'
-  let g:airline_left_sep = '▶'
-  let g:airline_right_sep = '«'
-  let g:airline_right_sep = '◀'
-  let g:airline_symbols.crypt = '🔒'
-  let g:airline_symbols.linenr = '☰'
-  let g:airline_symbols.linenr = '␊'
-  let g:airline_symbols.linenr = '␤'
-  let g:airline_symbols.linenr = '¶'
-  let g:airline_symbols.maxlinenr = ''
-  let g:airline_symbols.maxlinenr = '㏑'
-  let g:airline_symbols.branch = '⎇'
-  let g:airline_symbols.paste = 'ρ'
-  let g:airline_symbols.paste = 'Þ'
-  let g:airline_symbols.paste = '∥'
-  let g:airline_symbols.spell = 'Ꞩ'
-  let g:airline_symbols.notexists = 'Ɇ'
-  let g:airline_symbols.whitespace = 'Ξ'
+" " unicode symbols
+  " let g:airline_left_sep = '»'
+  " let g:airline_left_sep = '▶'
+  " let g:airline_right_sep = '«'
+  " let g:airline_right_sep = '◀'
+  " let g:airline_symbols.crypt = '🔒'
+  " let g:airline_symbols.linenr = '☰'
+  " let g:airline_symbols.linenr = '␊'
+  " let g:airline_symbols.linenr = '␤'
+  " let g:airline_symbols.linenr = '¶'
+  " let g:airline_symbols.maxlinenr = ''
+  " let g:airline_symbols.maxlinenr = '㏑'
+  " let g:airline_symbols.branch = '⎇'
+  " let g:airline_symbols.paste = 'ρ'
+  " let g:airline_symbols.paste = 'Þ'
+  " let g:airline_symbols.paste = '∥'
+  " let g:airline_symbols.spell = 'Ꞩ'
+  " let g:airline_symbols.notexists = 'Ɇ'
+  " let g:airline_symbols.whitespace = 'Ξ'
 
-  " powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = '⊘'
-  let g:airline_symbols.linenr = '☰'
-  let g:airline_symbols.maxlinenr = ''
+  " " powerline symbols
+  " let g:airline_left_sep = ''
+  " let g:airline_left_alt_sep = ''
+  " let g:airline_right_sep = ''
+  " let g:airline_right_alt_sep = ''
+  " let g:airline_symbols.branch = ''
+  " let g:airline_symbols.readonly = '⊘'
+  " let g:airline_symbols.linenr = '☰'
+  " let g:airline_symbols.maxlinenr = ''
 
 
 "" Statusline
