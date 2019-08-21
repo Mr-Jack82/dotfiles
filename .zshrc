@@ -83,10 +83,9 @@ plugins=(git
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
 alias cdi='cd `ls | peco`'
-
 alias rm='rm -i'
-
 alias grep='grep --color=auto'
+alias l.='ls -d .* --color=tty'
 
 source $ZSH/oh-my-zsh.sh
 
@@ -96,6 +95,9 @@ source $ZSH/oh-my-zsh.sh
 
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
+
+LC_ALL=ru_RU.UTF-8
+export LC_ALL
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
