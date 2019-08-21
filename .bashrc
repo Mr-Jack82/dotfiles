@@ -90,11 +90,16 @@ fi
 
 unset use_color safe_term match_lhs sh
 
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
+alias l.='ls -d .* --color=auto'        # show hidden files
+alias ll='ls -l --color=auto'           # show directory contents in verbose format
+alias cp="cp -i"                        # confirm before overwriting something
+alias df='df -h'                        # human-readable sizes
+alias free='free -m'                    # show sizes in MB
 alias np='nano -w PKGBUILD'
 alias more=less
+
+export HISTCONTROL=ignoredups           # ignore duplicates in command history
+export HISTSIZE=1000                    # increase the volume of history
 
 xhost +local:root > /dev/null 2>&1
 
