@@ -205,6 +205,7 @@ try
 
 " === Vim airline ==== "
 " Enable extensions
+let g:airline#extensions#bufferline#enabled = 1
 let g:airline_extensions = ['branch', 'hunks', 'coc']
 
 " Update section z to just have line number
@@ -494,9 +495,6 @@ set smartcase
 
 " Automatically re-read file if a change was detected outside of vim
 set autoread
-
-" Enable line numbers
-set number
 
 " Set backups
 if has('persistent_undo')
