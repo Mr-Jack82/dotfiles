@@ -15,7 +15,7 @@ Xft.lcdfilter:  lcddefault
 ! --------------------------------
 URxvt.depth:                            32
 URxvt*termName:                         screen-256color
-URxvt*geometry:                         240x84
+URxvt*geometry:                         90x25
 URxvt.loginShell:                       true
 URxvt*scrollColor:                      #777777
 URxvt.scrollStyle:                      rxvt
