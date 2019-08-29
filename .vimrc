@@ -192,6 +192,9 @@ set noswapfile
 
 set fileformats=unix,dos,mac
 
+" This will cause Vim to treat all numerals as decimal (for ctrl-a/ctrl-x)
+set nrformats=
+
 if exists('$SHELL')
     set shell=$SHELL
 else
@@ -234,6 +237,7 @@ set showcmd
 
 " Shows a menu when using tab completion.
 set wildmenu
+set wildmode=full
 
 " Copy indent from current line when starting a new line.
 set autoindent
@@ -604,6 +608,7 @@ endif
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :FZF -m<CR>
+
 "Recovery commands from history through FZF
 nmap <leader>y :History:<CR>
 
@@ -632,6 +637,9 @@ if has('syntastic')
         let g:syntastic_auto_loc_list=1
         let g:syntastic_aggregate_errors = 1
 endif
+
+" Make {motion} text uppercase in INSERT mode.
+map! <C-F> <Esc>gUiw`]a
 
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
