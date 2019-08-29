@@ -40,6 +40,9 @@ nnoremap <silent> <leader><space> :noh<cr>
 " Make {motion} text uppercase in INSERT mode.
 map! <C-F> <Esc>gUiw`]a
 
+" Easy expansion of the active file directory
+cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
+
 " >>> Instead of that use a dot '.' command <<<
 "" Vmap for maintain Visual Mode after shifting > and <
 " vmap < <gv
