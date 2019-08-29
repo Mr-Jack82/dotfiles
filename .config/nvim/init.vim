@@ -19,7 +19,7 @@ set number
 " each line.
 set relativenumber
 
-" Show (partial) command in statusline
+" Show (partial) command in the last line of the screen.
 set showcmd
 
 " Yank and paste with the system clipboard
@@ -37,9 +37,13 @@ augroup END
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
 
+" Make {motion} text uppercase in INSERT mode.
+map! <C-F> <Esc>gUiw`]a
+
+" >>> Instead of that use a dot '.' command <<<
 "" Vmap for maintain Visual Mode after shifting > and <
-vmap < <gv
-vmap > >gv
+" vmap < <gv
+" vmap > >gv
 
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
