@@ -59,6 +59,7 @@ Plug 'valloric/youcompleteme'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
+Plug 'tpope/vim-repeat'
 " Plug 'scrooloose/syntastic'
 
 if isdirectory('/usr/local/opt/fzf')
@@ -508,6 +509,9 @@ augroup END
 
 " Automatically cd into the directory that the file is in
 autocmd BufEnter * execute "chdir ".escape(expand("%:p:h"), ' ')
+
+" Change directory to the file being edited.
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 "" Remember cursor position
 augroup vimrc-remember-cursor-position
