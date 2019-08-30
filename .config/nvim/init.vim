@@ -40,6 +40,12 @@ nnoremap <silent> <leader><space> :noh<cr>
 " Make {motion} text uppercase in INSERT mode.
 map! <C-F> <Esc>gUiw`]a
 
+" Enable mouse support in all modes.
+set mouse=a
+
+" Setting up vertical split separator as in Tmux.
+set fillchars+=vert:│
+
 " Easy expansion of the active file directory
 cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
 map <leader>ew :e %%
