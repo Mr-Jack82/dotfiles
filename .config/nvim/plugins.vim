@@ -40,6 +40,9 @@ Plug 'junegunn/vim-easy-align'
 " Surround.vim: quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
+" repeat.vim: enable repeating supported plugin maps with "."
+Plug 'tpope/vim-repeat'
+
 " auto-close plugin
 " Plug 'rstacruz/vim-closer'
 Plug 'jiangmiao/auto-pairs'
