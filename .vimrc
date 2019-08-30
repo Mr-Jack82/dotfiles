@@ -236,6 +236,9 @@ set relativenumber
 " Show (partial) command in status line.
 set showcmd
 
+" Enable mouse support in all modes.
+set mouse=a
+
 " Shows a menu when using tab completion.
 set wildmenu
 set wildmode=full
