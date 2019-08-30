@@ -42,6 +42,10 @@ map! <C-F> <Esc>gUiw`]a
 
 " Easy expansion of the active file directory
 cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
+map <leader>ew :e %%
+map <leader>es :sp %%
+map <leader>ev :vsp %%
+map <leader>et :tabe %%
 
 " >>> Instead of that use a dot '.' command <<<
 "" Vmap for maintain Visual Mode after shifting > and <
