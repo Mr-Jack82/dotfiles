@@ -178,6 +178,9 @@ set expandtab
 "" Map leader to ,
 let mapleader=','
 
+" Repeat latest f, t, F or T in opposite direction
+noremap \ ,
+
 "" Enable hidden buffers
 set hidden
 
@@ -263,7 +266,7 @@ endif
 set mousemodel=popup
 set t_Co=256
 set guioptions=egmrti
-set gfn=Monospace\ 10
+set guifont=Monospace\ 10
 
 if has("gui_running")
   if has("gui_mac") || has("gui_macvim")
@@ -272,6 +275,12 @@ if has("gui_running")
   endif
 else
   let g:CSApprox_loaded = 1
+
+  " IndentLine
+  let g:indentLine_enabled = 1
+  let g:indentLine_concealcursor = 0
+  let g:indentLine_char = '┆'
+  let g:indentLine_faster = 1
 
   if $COLORTERM == 'gnome-terminal'
     set term=gnome-256color
@@ -283,18 +292,13 @@ else
   
 endif
 
-  " IndentLine
-  let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 0
-  let g:indentLine_char = '┆'
-  let g:indentLine_faster = 1
 
 if &term =~ '256color'
   set t_ut=
 endif
 
 "" Disable the blinking cursor.
-set gcr=a:blinkon0
+set guicursor=a:blinkon0
 
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
@@ -345,16 +349,15 @@ endif
 "let g:airline_theme = 'falcon'
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'kolor'
-
-if has('syntastic')
-    let g:airline#extensions#syntastic#enabled = 1
-endif
-
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
+
+if has('syntastic')
+    let g:airline#extensions#syntastic#enabled = 1
+endif
 
 "*****************************************************************************
 "" Abbreviations
@@ -803,39 +806,39 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 " let g:airline#extensions#bufferline#enabled = 1
 
-" if !exists('g:airline_symbols')
-  " let g:airline_symbols = {}
-" endif
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
 
-" " unicode symbols
-  " let g:airline_left_sep = '»'
-  " let g:airline_left_sep = '▶'
-  " let g:airline_right_sep = '«'
-  " let g:airline_right_sep = '◀'
-  " let g:airline_symbols.crypt = '🔒'
-  " let g:airline_symbols.linenr = '☰'
-  " let g:airline_symbols.linenr = '␊'
-  " let g:airline_symbols.linenr = '␤'
-  " let g:airline_symbols.linenr = '¶'
-  " let g:airline_symbols.maxlinenr = ''
-  " let g:airline_symbols.maxlinenr = '㏑'
-  " let g:airline_symbols.branch = '⎇'
-  " let g:airline_symbols.paste = 'ρ'
-  " let g:airline_symbols.paste = 'Þ'
-  " let g:airline_symbols.paste = '∥'
-  " let g:airline_symbols.spell = 'Ꞩ'
-  " let g:airline_symbols.notexists = 'Ɇ'
-  " let g:airline_symbols.whitespace = 'Ξ'
+" unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
+  let g:airline_symbols.whitespace = 'Ξ'
 
-  " " powerline symbols
-  " let g:airline_left_sep = ''
-  " let g:airline_left_alt_sep = ''
-  " let g:airline_right_sep = ''
-  " let g:airline_right_alt_sep = ''
-  " let g:airline_symbols.branch = ''
-  " let g:airline_symbols.readonly = '⊘'
-  " let g:airline_symbols.linenr = '☰'
-  " let g:airline_symbols.maxlinenr = ''
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = '⊘'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
 
 
 "" Statusline
