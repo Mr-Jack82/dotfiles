@@ -43,6 +43,9 @@ map! <C-F> <Esc>gUiw`]a
 " Enable mouse support in all modes.
 set mouse=a
 
+" Repeat latest f, t, F or T in opposite direction
+noremap \ ,
+
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
 
