@@ -34,40 +34,17 @@ augroup remember-cursor-position
     \ | endif
 augroup END
 
-"" Clean search (highlight)
-nnoremap <silent> <leader><space> :noh<cr>
-
-" Make {motion} text uppercase in INSERT mode.
-map! <C-F> <Esc>gUiw`]a
-
 " Enable mouse support in all modes.
 set mouse=a
 
-" Repeat latest f, t, F or T in opposite direction
-noremap \ ,
+" Enable matchit plugin.
+runtime macros/matchit.vim
 
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
 
-" Easy expansion of the active file directory
-cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
-map <leader>ew :e %%
-map <leader>es :sp %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
-
-" >>> Instead of that use a dot '.' command <<<
-"" Vmap for maintain Visual Mode after shifting > and <
-" vmap < <gv
-" vmap > >gv
-
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
-
-" Search mappings: These will make it so that going to the next one in a
-" search will center on the line it's found in.
-nnoremap n nzzzv
-nnoremap N Nzzzv
 
 " Hides buffers instead of closing them
 set hidden
@@ -487,17 +464,49 @@ map <leader>w <Plug>(easymotion-bd-w)
 " backward at the same time.)
 map <Leader> <Plug>(easymotion-prefix)
 
-" Allows you to save files you opened without write permissions via sudo
-cmap w!! w !sudo tee %
-
 " === vim-jsdoc shortcuts ==="
 " Generate jsdoc for function under cursor
 nmap <leader>z :JsDoc<CR>
+
+" === Little usability improvements ==="
+
+" Allows you to save files you opened without write permissions via sudo
+cmap w!! w !sudo tee %
 
 " Delete current visual selection and dump in black hole buffer before pasting
 " Used when you want to paste over something without it getting copied to
 " Vim's default buffer
 vnoremap <leader>p "_dP
+
+"" Clean search (highlight)
+nnoremap <silent> <leader><space> :noh<cr>
+
+" Make {motion} text uppercase in INSERT mode.
+map! <C-F> <Esc>gUiw`]a
+
+" When change some text delete the source without affecting the normal
+" registers ("_ is a "black hole" register).
+nnoremap c "_c
+
+" Repeat latest f, t, F or T in opposite direction
+noremap \ ,
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Easy expansion of the active file directory
+cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
+map <leader>ew :e %%
+map <leader>es :sp %%
+map <leader>ev :vsp %%
+map <leader>et :tabe %%
+
+" >>> Instead of that use a dot '.' command <<<
+"" Vmap for maintain Visual Mode after shifting > and <
+" vmap < <gv
+" vmap > >gv
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
