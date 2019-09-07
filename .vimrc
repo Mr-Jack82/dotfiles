@@ -161,6 +161,10 @@ set ttyfast
 " NO --INSERT-- messages
 set noshowmode
 
+" When change some text delete the source without affecting the normal
+" registers ("_ is a "black hole" register).
+nnoremap c "_c
+
 "" Fix backspace indent
 set backspace=indent,eol,start
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
@@ -268,8 +272,8 @@ set t_Co=256
 set guioptions=egmrti
 set guifont=Monospace\ 10
 
-if has("gui_running")
-  if has("gui_mac") || has("gui_macvim")
+if has('gui_running')
+  if has('gui_mac') || has('gui_macvim')
     set guifont=Menlo:h12
     set transparency=7
   endif
@@ -322,7 +326,7 @@ set titleold="Terminal"
 set titlestring=%F
 
 " Change shape of Vim cursor onto vertical line in insert mode
-if has("autocmd")
+if has('autocmd')
   au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
   au InsertEnter,InsertChange *
     \ if v:insertmode == 'i' | 
@@ -340,7 +344,7 @@ endif
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
-if exists("*fugitive#statusline")
+if exists('*fugitive#statusline')
   set statusline+=%{fugitive#statusline()}
 endif
 
@@ -499,7 +503,7 @@ command! FixWhitespace :%s/\s\+$//e
 if !exists('*s:setupWrapping')
   function s:setupWrapping()
     set wrap
-    set wm=2
+    set wrapmargin=2
     set textwidth=79
   endfunction
 endif
@@ -514,7 +518,10 @@ augroup vimrc-sync-fromstart
 augroup END
 
 " Automatically cd into the directory that the file is in
+augroup vimrc-autocd-into-directory
+    autocmd!
 autocmd BufEnter * execute "chdir ".escape(expand("%:p:h"), ' ')
+augroup END
 
 " Change directory to the file being edited.
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
@@ -623,10 +630,10 @@ nnoremap <silent> <leader>e :FZF -m<CR>
 nmap <leader>y :History:<CR>
 
 " snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<c-b>'
+let g:UltiSnipsEditSplit='vertical'
 
 " ale
 let g:ale_linters = {}
@@ -714,9 +721,9 @@ let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " Select suggestion with <CR> not <C-Y>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
@@ -731,7 +738,10 @@ let g:NERDSpaceDelims = 1
 
 " html
 " for html files, 2 spaces
-autocmd Filetype html setlocal ts=2 sw=2 expandtab
+augroup vimrc-html
+    autocmd!
+autocmd Filetype html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+augroup END
 
 
 " javascript
@@ -758,13 +768,13 @@ augroup END
 
 " jedi-vim
 let g:jedi#popup_on_dot = 0
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = "<C-Space>"
+let g:jedi#goto_assignments_command = '<leader>g'
+let g:jedi#goto_definitions_command = '<leader>d'
+let g:jedi#documentation_command = 'K'
+let g:jedi#usages_command = '<leader>n'
+let g:jedi#rename_command = '<leader>r'
+let g:jedi#show_call_signatures = '0'
+let g:jedi#completions_command = '<C-Space>'
 let g:jedi#smart_auto_mappings = 0
 
 " ale
