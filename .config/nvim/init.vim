@@ -50,14 +50,27 @@ set scrolloff=5
 set hidden
 
 " === TAB/Space settings === "
-" Insert spaces when TAB is pressed.
-set expandtab
 
-" Change number of spaces that a <Tab> counts for during editing ops
-set softtabstop=2
+" default indentation: 4 spaces
+ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
-" Indentation amount for < and > commands.
-set shiftwidth=2
+ " Only do this part when compiled with support for autocommands
+if has("autocmd")
+  " Enable file type detection
+  filetype on
+
+  " Syntax of these languages is fussy over tabs Vs spaces
+  autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+  autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+
+  " Customisations based on house-style (arbitrary)
+  autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+  autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+  autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+
+  " Treat .rss files as XML
+  autocmd BufNewFile,BufRead *.rss setfiletype xml
+endif
 
 " do not wrap long lines by default
 set nowrap
