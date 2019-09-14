@@ -37,6 +37,9 @@ augroup END
 " Enable mouse support in all modes.
 set mouse=a
 
+" Enable loading the plugin files for specific file types
+filetype plugin on
+
 " Enable matchit plugin.
 runtime macros/matchit.vim
 
@@ -56,6 +59,7 @@ set hidden
 
  " Only do this part when compiled with support for autocommands
 if has("autocmd")
+
   " Enable file type detection
   filetype on
 
