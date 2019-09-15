@@ -503,7 +503,7 @@ map! <C-F> <Esc>gUiw`]a
 
 " When change some text delete the source without affecting the normal
 " registers ("_ is a "black hole" register).
-nnoremap c "_c
+" nnoreMap c "_c
 
 " Repeat latest f, t, F or T in opposite direction
 noremap \ ,
@@ -524,6 +524,18 @@ map <leader>et :tabe %%
 "" Vmap for maintain Visual Mode after shifting > and <
 " vmap < <gv
 " vmap > >gv
+
+" Search for the Current Selection (Redux)
+" from Practical Vim, 2nd edition book by Drew Neil
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+
+function! s:VSetSearch(cmdtype)
+    let temp = @s
+    norm! gv"sy
+    let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+    let @s = temp
+endfunction
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
