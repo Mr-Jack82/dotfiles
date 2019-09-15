@@ -18,10 +18,10 @@
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     type = cat-file -t
     dump = cat-file -p
-	commend = commit --amend --no-edit
-	please = push --force-with-lease
-	stsh = stash --keep-index
-	staash = stash --include-untracked
-	staaash = stash --all
+	commend = commit --amend --no-edit  # sticks all indexed files to latest commit
+	please = push --force-with-lease    # check a local copy before rewrite
+	stsh = stash --keep-index           # stash only unstaged changes to tracked files
+	staash = stash --include-untracked  # stash any changes to tracked files
+	staaash = stash --all               # stash ignored, untracked, and tracked files
 [push]
 	default = upstream
