@@ -11,12 +11,17 @@
 [color]
 	ui = true
 [alias]
-        co = checkout
-        ci = commit
-        st = status
-        br = branch
-        hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        type = cat-file -t
-        dump = cat-file -p
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    type = cat-file -t
+    dump = cat-file -p
+	commend = commit --amend --no-edit
+	please = push --force-with-lease
+	stsh = stash --keep-index
+	staash = stash --include-untracked
+	staaash = stash --all
 [push]
 	default = upstream
