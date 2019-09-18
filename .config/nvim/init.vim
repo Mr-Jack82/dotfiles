@@ -348,7 +348,10 @@ set noshowmode
 " Set floating window to be slightly transparent
 " From denite.vim docs: To use "floating", you need to use neovim 0.4.0+
 " (|nvim_open_win()|). neovim 0.3(includes 0.3.7) does not work.
-set winbl=10
+set winblend=10
+
+" Set a WildMenu in old style
+set wildoptions=""
 
 " coc.nvim color changes
 hi! link CocErrorSign WarningMsg
