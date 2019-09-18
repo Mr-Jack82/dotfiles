@@ -348,7 +348,7 @@ set noshowmode
 " Set floating window to be slightly transparent
 " From denite.vim docs: To use "floating", you need to use neovim 0.4.0+
 " (|nvim_open_win()|). neovim 0.3(includes 0.3.7) does not work.
-" set winbl=10
+set winbl=10
 
 " coc.nvim color changes
 hi! link CocErrorSign WarningMsg
@@ -536,6 +536,11 @@ function! s:VSetSearch(cmdtype)
     let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
     let @s = temp
 endfunction
+
+" Keep the flags from the previous substitute command for normal
+" and visual mode
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
