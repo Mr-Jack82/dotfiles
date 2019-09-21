@@ -74,6 +74,9 @@ if has("autocmd")
 
   " Treat .rss files as XML
   autocmd BufNewFile,BufRead *.rss setfiletype xml
+
+  " Enable syntax highlight for *.log files
+  autocmd BufNewFile,BufReadPost *.log :set filetype=messages
 endif
 
 " do not wrap long lines by default
