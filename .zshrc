@@ -78,7 +78,8 @@ plugins=(git
 	history-substring-search
 	colored-man-pages
 	zsh-autosuggestions
-    vi-mode)
+    vi-mode
+    zsh-nvm)
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
@@ -140,3 +141,4 @@ export LC_ALL
 #zle -N zle-line-init
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
+alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
