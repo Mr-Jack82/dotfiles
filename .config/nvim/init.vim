@@ -23,7 +23,7 @@ set relativenumber
 set showcmd
 
 " Yank and paste with the system clipboard
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " Remember last cursor position
 augroup remember-cursor-position
