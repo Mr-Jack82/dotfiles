@@ -37,7 +37,7 @@ Plug 'scrooloose/nerdcommenter'
 " A Vim alignment plugin
 Plug 'junegunn/vim-easy-align'
 
-" Surround.vim: quoting/parenthesizing made simple
+" Quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
 " Enable repeating supported plugin maps with "."
@@ -52,6 +52,7 @@ Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-unimpaired'
 
 " Intellisense Engine
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
