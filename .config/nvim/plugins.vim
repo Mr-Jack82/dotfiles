@@ -32,7 +32,8 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'terryma/vim-multiple-cursors'
 
 " Vim plugin for intensely orgasmic commenting
-Plug 'scrooloose/nerdcommenter'
+" Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-commentary'
 
 " A Vim alignment plugin
 Plug 'junegunn/vim-easy-align'
