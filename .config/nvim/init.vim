@@ -554,11 +554,16 @@ endfunction
 nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
-" Mapping for switching buffers
+" >>> Use unimpaired.vim keybindings <<<
 " nnoremap <silent> [b :bprevious<CR>
 " nnoremap <silent> ]b :bnext<CR>
 " nnoremap <silent> [B :bfirst<CR>
 " nnoremap <silent> ]B :blast<CR>
+
+" Automaticaly jupm to end of pasted text
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
