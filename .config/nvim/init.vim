@@ -52,6 +52,12 @@ set scrolloff=5
 " Hides buffers instead of closing them
 set hidden
 
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" always show signcolumns
+set signcolumn=yes
+
 " === TAB/Space settings === "
 
 " default indentation: 4 spaces
@@ -549,10 +555,10 @@ nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
 " Mapping for switching buffers
-nnoremap <silent> [b :bprevious<CR>
-nnoremap <silent> ]b :bnext<CR>
-nnoremap <silent> [B :bfirst<CR>
-nnoremap <silent> ]B :blast<CR>
+" nnoremap <silent> [b :bprevious<CR>
+" nnoremap <silent> ]b :bnext<CR>
+" nnoremap <silent> [B :bfirst<CR>
+" nnoremap <silent> ]B :blast<CR>
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
