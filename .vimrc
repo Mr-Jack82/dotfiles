@@ -145,6 +145,8 @@ call plug#end()
 " Required
 filetype plugin indent on
 
+" Enable loading the indent file for specific file types
+filetype plugin on
 
 "*****************************************************************************
 "" Basic Setup
@@ -490,6 +492,9 @@ nnoremap <silent> <leader>sh :terminal<CR>
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
 let g:vimshell_prompt =  '$ '
+
+" Enable matchit plugin
+packadd! matchit
 
 "*****************************************************************************
 "" Commands
