@@ -8,7 +8,7 @@ export ZSH="/home/leeroy/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="bira"
+ZSH_THEME=""
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -87,12 +87,14 @@ alias cdi='cd `ls | peco`'
 alias rm='rm -i'
 alias grep='grep --color=auto'
 alias l.='ls -d .* --color=tty'
-
-source $ZSH/oh-my-zsh.sh
+alias l='colorls --group-directories-first --almost-all'
+alias ll='colorls --group-directories-first --almost-all --long'
 
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+
+source $ZSH/oh-my-zsh.sh
 
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
@@ -142,3 +144,12 @@ export LC_ALL
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
+fpath=($fpath "/home/leeroy/.zfunctions")
+
+  # Set Spaceship ZSH as a prompt
+  autoload -U promptinit; promptinit
+  prompt spaceship
+  SPACESHIP_PACKAGE_SHOW=false
+  SPACESHIP_NODE_SHOW=false
+  SPACESHIP_GIT_STATUS_STASHED=''
+fpath=($fpath "/home/leeroy/.zfunctions")
