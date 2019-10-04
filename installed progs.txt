@@ -175,7 +175,7 @@ nodejs
 noto-fonts-extra
 npm
 ntfs-3g
-nvidia-lts
+nvidia-dkms
 okular
 openssh
 os-prober
@@ -212,6 +212,7 @@ plasma-workspace-wallpapers
 plasma5-applets-redshift-control
 polkit-kde-agent
 powerdevil
+powerline-fonts
 procps-ng
 psmisc
 pulseaudio
@@ -263,6 +264,7 @@ ttf-carlito
 ttf-dejavu
 ttf-droid
 ttf-envy-code-r
+ttf-fira-code
 ttf-font-awesome
 ttf-font-awesome-4
 ttf-gentium
