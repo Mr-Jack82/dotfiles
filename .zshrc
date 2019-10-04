@@ -143,6 +143,10 @@ export LC_ALL
 #zle -N zle-line-init
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
+
+# Enable true color support for terminals
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
+
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 fpath=($fpath "/home/leeroy/.zfunctions")
 
