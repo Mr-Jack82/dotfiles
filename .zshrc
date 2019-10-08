@@ -144,6 +144,12 @@ export LC_ALL
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
 
+# Enable command auto-correction.
+ENABLE_CORRECTION="true"
+
+# Display red dots whilst for completion.
+COMPLETION_WAITING_DOTS="true"
+
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files'
 
