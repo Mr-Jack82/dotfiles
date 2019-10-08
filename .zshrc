@@ -144,6 +144,13 @@ export LC_ALL
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
 
+# TMUX
+# Automatically start tmux
+ZSH_TMUX_AUTOSTART=true
+
+# Automatically connect to a previous session if it exists
+ZSH_TMUX_AUTOCONNECT=true
+
 # Enable command auto-correction.
 ENABLE_CORRECTION="true"
 
