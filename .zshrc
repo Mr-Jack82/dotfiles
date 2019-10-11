@@ -239,4 +239,5 @@ fpath=($fpath "/home/leeroy/.zfunctions")
   SPACESHIP_PACKAGE_SHOW=false
   SPACESHIP_NODE_SHOW=false
   SPACESHIP_GIT_STATUS_STASHED=''
+  SPACESHIP_PHP_SHOW=false
 fpath=($fpath "/home/leeroy/.zfunctions")
