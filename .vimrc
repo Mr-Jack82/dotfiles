@@ -53,13 +53,14 @@ Plug 'easymotion/vim-easymotion'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mhinz/vim-startify'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'scrooloose/nerdcommenter'
+" Plug 'scrooloose/nerdcommenter'
 Plug 'ervandew/supertab'
 Plug 'valloric/youcompleteme'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-commentary'
 " Plug 'scrooloose/syntastic'
 
 if isdirectory('/usr/local/opt/fzf')
@@ -79,7 +80,7 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 "Plug 'xolox/vim-session'
 
 "" Snippets
-Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips', { 'on': [] }
 Plug 'honza/vim-snippets'
 
 "" Tabline for lightline and statusline
@@ -136,7 +137,7 @@ Plug 'HerringtonDarkholme/yats.vim'
 "*****************************************************************************
 
 "" Include user's extra bundle
-if filereadable(expand("~/.vimrc.local.bundles"))
+if filereadable(expand('~/.vimrc.local.bundles'))
   source ~/.vimrc.local.bundles
 endif
 
@@ -634,11 +635,22 @@ nnoremap <silent> <leader>e :FZF -m<CR>
 "Recovery commands from history through FZF
 nmap <leader>y :History:<CR>
 
-" snippets
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<tab>'
-let g:UltiSnipsJumpBackwardTrigger='<c-b>'
+" UltiSnips
+let g:UltiSnipsExpandTrigger='<C-j>'
+let g:UltiSnipsJumpForwardTrigger='<C-j>'
+let g:UltiSnipsJumpBackwardTrigger='<C-k>'
 let g:UltiSnipsEditSplit='vertical'
+
+inoremap <silent> <C-j> <C-r>=LoadUltiSnipsAndExpand()<CR>
+
+function! LoadUltiSnipsAndExpand()
+    let l:curpos = getcurpos()
+    execute plug#load('ultisnips')
+    call cursor(l:curpos[1], l:curpos[2])
+    call UltiSnips#ExpandSnippet()
+    return ""
+endfunction
+################################################################################
 
 " ale
 let g:ale_linters = {}
@@ -726,9 +738,9 @@ let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " Select suggestion with <CR> not <C-Y>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
