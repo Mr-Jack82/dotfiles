@@ -311,6 +311,11 @@ nmap ga <Plug>(EasyAlign)
 " Use compact syntax for prettified multi-line comments
 " let g:NERDCompactSexyComs = 1
 
+" === vim-auto-save === "
+let g:auto_save        = 1
+let g:auto_save_silent = 1
+let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
