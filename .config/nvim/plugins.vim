@@ -41,6 +41,9 @@ Plug 'junegunn/vim-easy-align'
 " Quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
+" Automatically save changes to disk in Vim
+Plug '907th/vim-auto-save'
+
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
 
