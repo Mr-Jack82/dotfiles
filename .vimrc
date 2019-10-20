@@ -650,7 +650,10 @@ function! LoadUltiSnipsAndExpand()
     call UltiSnips#ExpandSnippet()
     return ""
 endfunction
-################################################################################
+" ##############################################################################
+
+" Auto-save when text is changed
+autocmd TextChanged,InsertLeave <buffer> silent write
 
 " ale
 let g:ale_linters = {}
