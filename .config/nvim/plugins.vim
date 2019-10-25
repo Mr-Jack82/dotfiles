@@ -41,6 +41,9 @@ Plug 'junegunn/vim-easy-align'
 " Quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
+" ghetto HTML/XML mappings (formerly allml.vim)
+Plug 'tpope/vim-ragtag'
+
 " Automatically save changes to disk in Vim
 Plug '907th/vim-auto-save'
 
