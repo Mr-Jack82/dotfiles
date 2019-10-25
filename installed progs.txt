@@ -13,10 +13,12 @@ audacity
 autoconf
 automake
 avocode
+base
 bash
 bash-completion
 binutils
 bison
+bitlbee
 bleachbit
 bluedevil
 bomi-git
@@ -24,6 +26,7 @@ brackets
 breeze
 breeze-gtk
 bzip2
+calcurse
 calibre
 ccze
 cmake
@@ -62,10 +65,12 @@ fzf
 gawk
 gcc
 gcc-libs
+gentium-plus-font
 gettext
 gimp
 git
 gitkraken
+glances
 glibc
 gnome-tweaks
 gnome-web-photo
@@ -93,9 +98,11 @@ hwinfo
 icdiff
 icedtea-web
 inetutils
+insomnia
 intel-ucode
 iproute2
 iputils
+irssi
 jdk-openjdk
 jfsutils
 jq
@@ -112,6 +119,7 @@ keychain
 kgamma5
 khotkeys
 kinfocenter
+kitty
 kmail
 kmenuedit
 kmines
@@ -149,6 +157,7 @@ logrotate
 lshw
 lsof
 lvm2
+lynx
 m4
 make
 man-db
@@ -158,6 +167,7 @@ meld
 milou
 mlocate
 mopidy
+most
 mpv
 msmtp
 mythes-en
@@ -175,6 +185,7 @@ nodejs
 noto-fonts-extra
 npm
 ntfs-3g
+numlockx
 nvidia-dkms
 okular
 openssh
@@ -200,6 +211,7 @@ perl-json-xs
 persepolis
 pkgconf
 pkgstats
+plan9port
 plasma-browser-integration
 plasma-desktop
 plasma-integration
@@ -229,12 +241,14 @@ rsync
 ruby
 rxvt-unicode-patched
 s-nail
+scribus
 scrot
 sddm-kcm
 sed
 shadow
 shutter
 sierrabreeze-kwin-decoration-git
+sl
 snapd
 spectacle
 squashfs-tools
@@ -255,6 +269,7 @@ the_silver_searcher
 thunderbird
 tk
 tmux
+tmuxinator
 tor-browser
 transmission-qt
 ttf-anonymous-pro
@@ -267,7 +282,6 @@ ttf-envy-code-r
 ttf-fira-code
 ttf-font-awesome
 ttf-font-awesome-4
-ttf-gentium
 ttf-inconsolata
 ttf-liberation
 ttf-linux-libertine
@@ -289,6 +303,7 @@ vi
 vifm
 vimpager
 vlc
+vtop
 w3m
 wavpack
 weechat
