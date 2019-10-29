@@ -55,12 +55,17 @@ Plug 'mhinz/vim-startify'
 Plug 'terryma/vim-multiple-cursors'
 " Plug 'scrooloose/nerdcommenter'
 Plug 'ervandew/supertab'
-Plug 'valloric/youcompleteme'
+" Plug 'valloric/youcompleteme'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+
+" Completion plugins
+Plug 'ajh17/VimCompletesMe'
+Plug 'natebosch/vim-lsc'
+
 " Plug 'scrooloose/syntastic'
 
 if isdirectory('/usr/local/opt/fzf')
@@ -98,6 +103,7 @@ Plug 'drewtempelmeyer/palenight.vim'
 Plug 'kaicataldo/material.vim'
 Plug 'fenetikm/falcon'
 Plug 'tomasr/molokai'
+Plug 'Badacadabra/vim-archery'
 
 "*****************************************************************************
 "" Custom bundles
@@ -266,7 +272,7 @@ highlight lCursor guifg=NONE guibg=Cyan
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-  colorscheme palenight
+  colorscheme dracula
 endif
 "silent! colorscheme palenight
 
