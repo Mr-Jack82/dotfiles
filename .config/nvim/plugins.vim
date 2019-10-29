@@ -110,6 +110,7 @@ Plug 'scrooloose/nerdtree'
 " Colorscheme
 Plug 'mhartington/oceanic-next'
 Plug 'dracula/vim'
+Plug 'Badacadabra/vim-archery'
 
 " Customized vim status line
 Plug 'vim-airline/vim-airline'
