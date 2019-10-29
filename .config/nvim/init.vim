@@ -104,6 +104,9 @@ set cmdheight=2
 " or 'The only match'
 set shortmess+=c
 
+" Do smart autoindenting when starting a new line.
+set smartindent
+
 " ============================================================================ "
 " ===                           PLUGIN SETUP                               === "
 " ============================================================================ "
@@ -198,10 +201,10 @@ inoremap <silent><expr> <TAB>
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " === NeoSnippet === "
-" Map <C-k> as shortcut to activate snippet if available
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
+" Map <C-j> as shortcut to activate snippet if available
+imap <C-j> <Plug>(neosnippet_expand_or_jump)
+smap <C-j> <Plug>(neosnippet_expand_or_jump)
+xmap <C-j> <Plug>(neosnippet_expand_target)
 
 " Load custom snippets from snippets folder
 let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
@@ -312,7 +315,7 @@ nmap ga <Plug>(EasyAlign)
 " let g:NERDCompactSexyComs = 1
 
 " === vim-auto-save === "
-let g:auto_save        = 1
+" let g:auto_save        = 1
 let g:auto_save_silent = 1
 let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
 
