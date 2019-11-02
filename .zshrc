@@ -177,6 +177,13 @@ export LC_ALL
 #zle -N zle-keymap-select
 #export KEYTIMEOUT=1
 
+# Re-source the shell configuration with ease
+reread_zshrc () {
+      . ~/.zshrc
+  }
+zle -N reread_zshrc
+bindkey '^Xr' reread_zshrc
+
 # TMUX
 # Automatically start tmux
 ZSH_TMUX_AUTOSTART=true
