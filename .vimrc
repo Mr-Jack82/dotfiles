@@ -104,6 +104,7 @@ Plug 'kaicataldo/material.vim'
 Plug 'fenetikm/falcon'
 Plug 'tomasr/molokai'
 Plug 'Badacadabra/vim-archery'
+Plug 'chriskempson/base16-vim'
 
 "*****************************************************************************
 "" Custom bundles
@@ -272,7 +273,7 @@ highlight lCursor guifg=NONE guibg=Cyan
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-  colorscheme dracula
+  colorscheme base16-snazzy
 endif
 "silent! colorscheme palenight
 
