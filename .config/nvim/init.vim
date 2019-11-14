@@ -40,8 +40,10 @@ set mouse=a
 " Enable loading the plugin files for specific file types
 filetype plugin on
 
-" Enable matchit plugin.
-runtime macros/matchit.vim
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
 
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
@@ -318,6 +320,11 @@ nmap ga <Plug>(EasyAlign)
 " let g:auto_save        = 1
 let g:auto_save_silent = 1
 let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
+
+
+" === vim-repeat === "
+" This is an example from Github page and needed to edit properly
+silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " ============================================================================ "
 " ===                                UI                                    === "
