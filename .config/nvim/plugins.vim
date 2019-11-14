@@ -33,6 +33,8 @@ Plug 'terryma/vim-multiple-cursors'
 
 " Vim plugin for intensely orgasmic commenting
 " Plug 'scrooloose/nerdcommenter'
+
+" Comment stuff out
 Plug 'tpope/vim-commentary'
 
 " A Vim alignment plugin
@@ -44,11 +46,17 @@ Plug 'tpope/vim-surround'
 " ghetto HTML/XML mappings (formerly allml.vim)
 Plug 'tpope/vim-ragtag'
 
+" Heuristically set buffer options
+Plug 'tpope/vim-sleuth'
+
 " Automatically save changes to disk in Vim
 Plug '907th/vim-auto-save'
 
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
+
+" A Vim Plugin for indicating changes as colored bars using signs.
+Plug 'chrisbra/changesPlugin'
 
 " Easily search for, substitute, and abbreviate multiple variants of a word
 Plug 'tpope/vim-abolish'
