@@ -83,6 +83,35 @@ if has("autocmd")
   " Treat .rss files as XML
   autocmd BufNewFile,BufRead *.rss setfiletype xml
 
+" Set tabstop, softtabstop and shiftwidth to the same value
+" from vimcast.org #2 Tabs and Spaces
+command! -nargs=* Stab call Stab()
+function! Stab()
+  let l:tabstop = 1 * input('set tabstop = softtabstop = shiftwidth = ')
+  if l:tabstop > 0
+    let &l:sts = l:tabstop
+    let &l:ts = l:tabstop
+    let &l:sw = l:tabstop
+  endif
+  call SummarizeTabs()
+endfunction
+
+function! SummarizeTabs()
+  try
+    echohl ModeMsg
+    echon 'tabstop='.&l:ts
+    echon 'shiftwidth='.&l:sw
+    echon 'softtabstop='.&l:sts
+    if &l:et
+      echon ' expandtab'
+    else
+      echon ' noexpandtab'
+    endif
+  finally
+    echohl None
+  endtry
+endfunction
+
   " Enable syntax highlight for *.log files
   autocmd BufNewFile,BufReadPost *.log :set filetype=messages
 endif
@@ -227,6 +256,12 @@ let g:NERDTreeDirArrowCollapsible = '⬎'
 
 " Hide certain files and directories from NERDTree
 let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
+
+" Automaticaly delete the buffer of the file you just deleted with NerdTree
+let NERDTreeAutoDeleteBuffer = 1
+
+" Automaticaly close NerdTree when you open a file
+let NERDTreeQuitOnOpen = 1
 
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 try
@@ -575,7 +610,7 @@ xnoremap & :&&<CR>
 " nnoremap <silent> [B :bfirst<CR>
 " nnoremap <silent> ]B :blast<CR>
 
-" Automaticaly jupm to end of pasted text
+" Automaticaly jump to end of pasted text
 vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
@@ -586,6 +621,11 @@ nnoremap <silent> p p`]
 
 " Automaticaly close nvim if NERDTree is only thing left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Automaticaly open NERDTree when you're starting vim/nvim with no command
+" line arguments
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " === Search === "
 " ignore case when searching
