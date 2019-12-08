@@ -184,6 +184,17 @@ reread_zshrc () {
 zle -N reread_zshrc
 bindkey '^Xr' reread_zshrc
 
+# Start tmux on very shell login
+# from Arch wiki https://bit.ly/2pq7rre
+# if [[ -z "$TMUX" ]]; then
+#     ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get id of a deattached sesssion
+#     if [[ -z "$ID" ]]; then # if not available create a new one
+#         tmux new-sesssion
+#     else
+#         tmux attach-sesssion -t "$ID" # if available attach to it
+#     fi
+# fi
+
 # TMUX
 # Automatically start tmux
 ZSH_TMUX_AUTOSTART=true
