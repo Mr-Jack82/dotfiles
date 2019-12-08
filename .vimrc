@@ -61,6 +61,7 @@ Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-vinegar'
 
 " Completion plugins
 Plug 'ajh17/VimCompletesMe'
