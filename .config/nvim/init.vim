@@ -576,7 +576,7 @@ nnoremap n nzzzv
 nnoremap N Nzzzv
 
 " Easy expansion of the active file directory
-cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
 map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
