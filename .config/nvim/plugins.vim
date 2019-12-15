@@ -128,5 +128,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
+" vim plugin for automatic keyboard layout switching in insert mode
+Plug 'lyokha/vim-xkbswitch'
+
 " Initialize plugin system
 call plug#end()
