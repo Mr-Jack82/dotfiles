@@ -361,6 +361,11 @@ let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
 " This is an example from Github page and needed to edit properly
 silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
+" === vim-xkbswitch === "
+let g:XkbSwitchEnabled   = 1
+let g:XkbSwitchIMappings = ['ru']
+" let g:XkbSwitchLib       = '/usr/lib/libxkbswitch.so'
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
