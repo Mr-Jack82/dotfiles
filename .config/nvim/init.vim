@@ -635,6 +635,19 @@ nmap <M-4> g$
 nmap <M-6> g^
 nmap <M-0> g^
 
+" Visually select the text that was last edited/pasted
+nmap gV `[v`]
+
+" Move selected text Up and Down
+" from Vimcast #26 Bubbling text
+" >>>Note that "[e, ]e" and other work only if vim-unimpaired is installed<<<
+" Bubble single lines
+nmap <C-Up> [e
+nmap <C-Down> ]e
+" Bubble multiple lines
+vmap <C-Up> [egv
+vmap <C-Down> ]egv
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
