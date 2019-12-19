@@ -67,7 +67,12 @@ Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'
+
+" Pairs of handy bracket mappings
 Plug 'tpope/vim-unimpaired'
+
+" A vim plugin to display the indention levels with thin vertical lines
+Plug 'Yggdroot/indentLine'
 
 " Intellisense Engine
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
