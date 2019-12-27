@@ -74,6 +74,9 @@ Plug 'tpope/vim-unimpaired'
 " A vim plugin to display the indention levels with thin vertical lines
 Plug 'Yggdroot/indentLine'
 
+" The undo history visualizer for Vim
+Plug 'mbbill/undotree'
+
 " Intellisense Engine
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 

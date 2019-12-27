@@ -369,6 +369,9 @@ let g:XkbSwitchIMappings = ['ru']
 " === indentLine === "
 let g:indentLine_char = '┊'
 
+" === undotree === "
+let g:undotree_WindowLayout = 3
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
@@ -554,6 +557,9 @@ map <Leader> <Plug>(easymotion-prefix)
 " === vim-jsdoc shortcuts ==="
 " Generate jsdoc for function under cursor
 nmap <leader>z :JsDoc<CR>
+
+" === undotree ==="
+nnoremap <Leader>u :UndotreeToggle<cr>
 
 " === Little usability improvements ==="
 
