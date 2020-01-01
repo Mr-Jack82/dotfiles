@@ -372,6 +372,17 @@ let g:indentLine_char = '┊'
 " === undotree === "
 let g:undotree_WindowLayout = 3
 
+" === fugitive === "
+" Auto-clean fugitive buffers
+autocmd BufReadPost fugitive://* set bufhidden=delete
+
+" Use '..' to go up the history of Git commits, but only for buffers
+" containing a git blob or tree
+autocmd User fugitive
+  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+  \     nnoremap <buffer> .. :edit %:h<cr> |
+  \ endif
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
@@ -658,7 +669,7 @@ vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
 " Easier way to use of :ls command
-nnoremap <Leader>ls :ls<cr>:b
+nnoremap <Leader>l :ls<cr>:b
 
 " ============================================================================ "
 " ===                                 MISC.                                === "
