@@ -121,7 +121,7 @@ Plug 'othree/yajs.vim'
 
 " === UI === "
 " File explorer
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 
 " Colorscheme
 Plug 'mhartington/oceanic-next'
