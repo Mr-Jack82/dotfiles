@@ -338,6 +338,9 @@ let g:used_javascript_libs = 'underscore,requirejs,chai,jquery'
 let g:signify_sign_delete = '-'
 
 " === EasyAlign === "
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
@@ -352,9 +355,9 @@ nmap ga <Plug>(EasyAlign)
 " let g:NERDCompactSexyComs = 1
 
 " === vim-auto-save === "
-" let g:auto_save        = 1
+let g:auto_save        = 1
 let g:auto_save_silent = 1
-let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
+let g:auto_save_events = ["TextChanged", "FocusLost"]
 
 
 " === vim-repeat === "
@@ -684,7 +687,7 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " === Search === "
-" Neovim provides an option, inccommand, to live preview the
+" Turning On Neovim built-in feature inccommand, to live preview the
 " :substitute command
 if has("nvim")
   set inccommand=nosplit
