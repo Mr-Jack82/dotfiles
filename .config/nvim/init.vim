@@ -372,6 +372,9 @@ let g:XkbSwitchIMappings = ['ru']
 " === indentLine === "
 let g:indentLine_char = '┊'
 
+" This option works fine for .json file
+" let g:indentLine_concealcursor = ""
+
 " === undotree === "
 let g:undotree_WindowLayout = 3
 
