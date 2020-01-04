@@ -677,6 +677,9 @@ vmap <C-Down> ]egv
 " Easier way to use of :ls command
 nnoremap <Leader>l :ls<cr>:b
 
+" Shortcut to save
+nmap <Leader>, :w<CR>
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
