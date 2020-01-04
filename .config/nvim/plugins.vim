@@ -116,12 +116,16 @@ Plug 'chr4/nginx.vim'
 " Syntax highlighting for javascript libraries
 Plug 'othree/javascript-libraries-syntax.vim'
 
+" A better JSON for Vim: distinct highlighting of keywords
+" vs values, JSON-specific (non-JS) warnings, quote concealing
+Plug 'elzr/vim-json'
+
 " Improved syntax highlighting and indentation
 Plug 'othree/yajs.vim'
 
 " === UI === "
 " File explorer
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'scrooloose/nerdtree'
 
 " Colorscheme
 Plug 'mhartington/oceanic-next'
