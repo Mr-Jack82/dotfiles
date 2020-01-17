@@ -77,6 +77,12 @@ Plug 'Yggdroot/indentLine'
 " The undo history visualizer for Vim
 Plug 'mbbill/undotree'
 
+" vim match-up: even better % fist_oncoming navigate and highlight
+" matching words fist_oncoming modern matchit and matchparen replacement
+Plug 'andymass/vim-matchup', { 'for':
+    \  ['dart', 'eruby', 'html', 'javascript', 'json', 'xml']
+    \}
+
 " Intellisense Engine
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
