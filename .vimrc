@@ -236,8 +236,9 @@ endif
 " Remember last cursor position.
 if has("autocmd")
     autocmd BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$")
-        \ | exe "normal! g'\""
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
 endif
 
 " Change cursor shape onto vertical line in insert mode
@@ -646,10 +647,10 @@ let g:matchup_matchpref            = {
 " endfunction
 
 " === vim-startify === "
-" let g:startify_commands = [
-"         \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
-"         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
-"         \ ]
+let g:startify_commands = [
+        \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
+        \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
+        \ ]
 
 " ============================================================================ "
 " ===                                UI                                    === "
@@ -963,3 +964,6 @@ set undofile
 " Keep 1000 items in the history
 set history=1000
 
+" Clear all registers with :WipeReg command
+command! WipeReg for i in range(34,122) | silent!
+      \ call setreg(nr2char(i), []) | endfor
