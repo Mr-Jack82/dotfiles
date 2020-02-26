@@ -28,10 +28,10 @@ set clipboard=unnamedplus
 " Remember last cursor position
 augroup remember-cursor-position
   autocmd!
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-    \ |   exe "normal! g`\""
-    \ | endif
+    autocmd BufReadPost *
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
 augroup END
 
 " Enable mouse support in all modes.
@@ -358,7 +358,13 @@ nmap ga <Plug>(EasyAlign)
 " === vim-auto-save === "
 let g:auto_save        = 1
 let g:auto_save_silent = 1
-let g:auto_save_events = ["TextChanged", "FocusLost"]
+let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
+
+" Disable auto save for javascript files
+augroup ft_javascript
+  au!
+  au FileType javascript let b:auto_save = 0
+augroup END
 
 
 " === vim-repeat === "
@@ -582,7 +588,8 @@ nnoremap <Leader>u :UndotreeToggle<cr>
 " === Little usability improvements ==="
 
 " Allows you to save files you opened without write permissions via sudo
-cmap w!! w !sudo tee %
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+" cmap w!! w !sudo tee %
 
 " Delete current visual selection and dump in black hole buffer before pasting
 " Used when you want to paste over something without it getting copied to
@@ -676,7 +683,7 @@ vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
 " Easier way to use of :ls command
-nnoremap <Leader>l :ls<cr>:b
+nnoremap <Leader>l :ls<cr>:b<Space>
 
 " Shortcut to save
 nmap <Leader>, :w<CR>
@@ -723,3 +730,7 @@ set noswapfile
 if exists('g:loaded_webdevicons')
   call webdevicons#refresh()
 endif
+
+" Clear all registers with :WipeReg command
+command! WipeReg for i in range(34,122) | silent!
+      \ call setreg(nr2char(i), []) | endfor
