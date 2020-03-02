@@ -321,6 +321,9 @@ if has("autocmd")
   " Treat .rss files as XML
   autocmd BufNewFile,BufRead *.rss setfiletype xml
 
+  " Treat .ejs (embedded javascript) file as HTML
+  autocmd BufNewFile,BufRead *.ejs set filetype=html
+
 " Set tabstop, softtabstop and shiftwidth to the same value
 " from vimcast.org #2 Tabs and Spaces
 command! -nargs=* Stab call Stab()
