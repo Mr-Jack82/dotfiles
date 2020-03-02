@@ -83,6 +83,9 @@ if has("autocmd")
   " Treat .rss files as XML
   autocmd BufNewFile,BufRead *.rss setfiletype xml
 
+  " Treat .ejs (embedded javascript) file as HTML
+  autocmd BufNewFile,BufRead *.ejs set filetype=html
+
 " Set tabstop, softtabstop and shiftwidth to the same value
 " from vimcast.org #2 Tabs and Spaces
 command! -nargs=* Stab call Stab()
@@ -369,7 +372,10 @@ augroup END
 
 " === vim-repeat === "
 " This is an example from Github page and needed to edit properly
-silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+" from Vimcast #61
+nnoremap <silent> <Plug>TransposeCharacters xp
+      \:call repeat#set("\<Plug>TransposeCharacters")<CR>
+nmap cp <Plug>TransposeCharacters
 
 " === vim-xkbswitch === "
 let g:XkbSwitchEnabled   = 1
