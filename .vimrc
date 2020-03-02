@@ -241,11 +241,24 @@ if has("autocmd")
       \ | endif
 endif
 
+" to change the cursor in different modes use this:
+" from https://habr.com/ru/post/468265/
+set ttimeoutlen=10          " Reduce the delay in entering escape sequences
+let &t_SI.="\e[5 q"         " SI = INSERT mode
+let &t_SR.="\e[3 q"         " SR = REPLACE mode
+let &t_EI.="\e[1 q"         " EI = NORMAL mode
+" Where 1 is the flashing rectangle
+" 2 - regular rectangle
+" 3 - flashing underline
+" 4 - just underline
+" 5 - flashing vertical bar
+" 6 - just a vertical bar
+
 " Change cursor shape onto vertical line in insert mode
 " for Konsole in KDE 4 (from vim.fandom.com/wiki)
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+" let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+" let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+" let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " It may be useful to run external programs from vim
 " e.g. :Silent htop
