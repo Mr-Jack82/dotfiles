@@ -24,6 +24,9 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
+" Minimalist Vim Plugin Manager
+Plug 'junegunn/vim-plug'
+
 " === Editing Plugins === "
 " Trailing whitespace highlighting & automatic fixing
 Plug 'ntpeters/vim-better-whitespace'
@@ -76,6 +79,9 @@ Plug 'Yggdroot/indentLine'
 
 " The undo history visualizer for Vim
 Plug 'mbbill/undotree'
+
+" Easy text exchange operator for Vim
+Plug 'tommcdo/vim-exchange'
 
 " vim match-up: even better % fist_oncoming navigate and highlight
 " matching words fist_oncoming modern matchit and matchparen replacement
