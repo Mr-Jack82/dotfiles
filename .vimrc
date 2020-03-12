@@ -152,6 +152,9 @@ Plug 'mhinz/vim-startify'
 " Silly game for Vim 8.2
 Plug 'vim/killersheep'
 
+" Fast file navigation for VIM
+Plug 'wincent/command-t'
+
 " Rainbow Parentheses Improved, shorter code, no level limit,
 " smooth and fast, powerful configuration.
 Plug 'luochen1990/rainbow'
