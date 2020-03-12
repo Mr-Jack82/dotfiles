@@ -121,7 +121,7 @@ alias grep='grep --color=auto'
 alias l.='ls -d .* --color=tty'
 alias l='colorls --group-directories-first --almost-all'
 alias ll='colorls --group-directories-first --almost-all --long'
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # User configuration
 
@@ -279,6 +279,9 @@ export EDITOR='nvim'
 
 # Enable true color support for terminals
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+# Add JDK/bin folder to be able to use jshell
+export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
 
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 fpath=($fpath "/home/leeroy/.zfunctions")
