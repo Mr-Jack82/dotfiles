@@ -75,7 +75,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'mbbill/undotree'
 
 " BufExplorer Plugin for Vim
-Plug 'jlanzarotta/bufexplorer'
+" Plug 'jlanzarotta/bufexplorer'
 
 " Helps you win at grep.
 Plug 'mhinz/vim-grepper'
@@ -153,7 +153,9 @@ Plug 'mhinz/vim-startify'
 Plug 'vim/killersheep'
 
 " Fast file navigation for VIM
-Plug 'wincent/command-t'
+Plug 'wincent/command-t', {
+  \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
+  \ }
 
 " Rainbow Parentheses Improved, shorter code, no level limit,
 " smooth and fast, powerful configuration.
@@ -671,12 +673,26 @@ let g:startify_commands = [
         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
         \ ]
 
+" === command-t === "
+" Brings up the Command-T buffer window, except that matches
+" are shown in MRU (most recently used) order.
+nmap <silent> <Leader>r <Plug>(CommandTMRU)
+" bring up the Command-T jumplist window
+nmap <silent> <Bslash>j <Plug>(CommandTJump)
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
 
 " Enable true color support
-set termguicolors
+" for more details see :h xterm-true-color
+" NOTE: the "^[" is a single character. You enter it by pressing
+" Ctrl+v and then ESC or use \<Esc> instead
+if exists('+termguicolors')
+  let &t_8f = "[38;2;%lu;%lu;%lum"
+  let &t_8b = "[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 
 " Editor theme
 set background=dark
