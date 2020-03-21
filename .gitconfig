@@ -6,6 +6,7 @@
 	autocrlf = input
 	safecrlf = true
 	quotepath = off
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [merge]
 	tool = vimdiff
 [mergetool "fugutive"]
@@ -37,3 +38,15 @@
 	staaash = stash --all               # stash ignored, untracked, and tracked files
 [push]
 	default = upstream
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 52
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
