@@ -282,6 +282,9 @@ export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 # Add JDK/bin folder to be able to use jshell
 export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
+# Add 'local/bin' folder to the PATH to be able to use
+# custom scripts
+export PATH=$PATH:~/.local/bin
 
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 fpath=($fpath "/home/leeroy/.zfunctions")
