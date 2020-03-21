@@ -122,6 +122,7 @@ alias l.='ls -d .* --color=tty'
 alias l='colorls --group-directories-first --almost-all'
 alias ll='colorls --group-directories-first --almost-all --long'
 alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias ldir='ls -d */'
 
 # User configuration
 
