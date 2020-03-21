@@ -195,12 +195,10 @@ let s:denite_options = {'default' : {
 \ 'auto_resize': 1,
 \ 'source_names': 'short',
 \ 'prompt': 'λ:',
-\ 'statusline': 0,
-\ 'highlight_matched_char': 'WildMenu',
+\ 'highlight_matched_char': 'QuickFixLine',
 \ 'highlight_matched_range': 'Visual',
 \ 'highlight_window_background': 'Visual',
-\ 'highlight_filter_background': 'StatusLine',
-\ 'highlight_prompt': 'StatusLine',
+\ 'highlight_filter_background': 'DiffAdd',
 \ 'winrow': 1,
 \ 'vertical_preview': 1
 \ }}
@@ -298,19 +296,13 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 " Custom setup that removes filetype/whitespace from default vim airline bar
 let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
 
-let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-
-let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
-
-" Configure error/warning section to use coc.nvim
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-
-" Hide the Nerdtree status line to avoid clutter
-let g:NERDTreeStatusline = ''
-
-" Disable vim-airline in preview mode
-let g:airline_exclude_preview = 1
+" Customize vim airline per filetype
+" 'nerdtree'  - Hide nerdtree status line
+" 'list'      - Only show file type plus current line number out of total
+let g:airline_filetype_overrides = {
+  \ 'nerdtree': [ get(g:, 'NERDTreeStatusline', ''), '' ],
+  \ 'list': [ '%y', '%l/%L' ],
+  \ }
 
 " Enable powerline fonts
 let g:airline_powerline_fonts = 1
@@ -424,32 +416,9 @@ command! PU PlugUpdate | PlugUpgrade
 " Enable true color support
 set termguicolors
 
-" Editor theme
-set background=dark
-try
-  colorscheme OceanicNext
-catch
-  colorscheme slate
-endtry
-
 " Vim airline theme
 let g:airline_theme='space'
 " silent! colorscheme kolor
-
-" Add custom highlights in method that is executed every time a
-" colorscheme is sourced
-" See https://gist.github.com/romainl/379904f91fa40533175dfaec4c833f2f for
-" details
-function! MyHighlights() abort
-  " Hightlight trailing whitespace
-  highlight Trail ctermbg=red guibg=red
-  call matchadd('Trail', '\s\+$', 100)
-endfunction
-
-augroup MyColors
-  autocmd!
-  autocmd ColorScheme * call MyHighlights()
-augroup END
 
 " Change vertical split character to be a space (essentially hide it)
 set fillchars+=vert:.
@@ -468,35 +437,54 @@ set winblend=10
 " Set a WildMenu in old style
 set wildoptions=""
 
-" coc.nvim color changes
-hi! link CocErrorSign WarningMsg
-hi! link CocWarningSign Number
-hi! link CocInfoSign Type
+" ============================================================================ "
+" ===                      CUSTOM COLORSCHEME CHANGES                      === "
+" ============================================================================ "
+"
+" Add custom highlights in method that is executed every time a
+" colorscheme is sourced
+" See https://gist.github.com/romainl/379904f91fa40533175dfaec4c833f2f for
+" details
+function! TrailingSpaceHighlights() abort
+  " Hightlight trailing whitespace
+  highlight Trail ctermbg=red guibg=red
+  call matchadd('Trail', '\s\+$', 100)
+endfunction
 
-" Make background transparent for many things
-hi! Normal ctermbg=NONE guibg=NONE
-hi! NonText ctermbg=NONE guibg=NONE
-hi! LineNr ctermfg=NONE guibg=NONE
-hi! SignColumn ctermfg=NONE guibg=NONE
-hi! StatusLine guifg=#16252b guibg=#6699CC
-hi! StatusLineNC guifg=#16252b guibg=#16252b
+function! s:custom_jarvis_colors()
+    " coc.nvim color changes
+    hi! link CocErrorSign WarningMsg
+    hi! link CocWarningSign Number
+    hi! link CocInfoSign Type
 
-" Try to hide vertical spit and end of buffer symbol
-hi! VertSplit gui=NONE guifg=#17252c guibg=#17252c
-hi! EndOfBuffer ctermbg=NONE ctermfg=NONE guibg=#17252c guifg=#17252c
+    " Make background transparent for many things
+    hi! Normal ctermbg=NONE guibg=NONE
+    hi! NonText ctermbg=NONE guibg=NONE
+    hi! LineNr ctermfg=NONE guibg=NONE
+    hi! SignColumn ctermfg=NONE guibg=NONE
+    hi! StatusLine guifg=#16252b guibg=#6699CC
+    hi! StatusLineNC guifg=#16252b guibg=#16252b
 
-" Customize NERDTree directory
-hi! NERDTreeCWD guifg=#99c794
+    " Try to hide vertical spit and end of buffer symbol
+    hi! VertSplit gui=NONE guifg=#17252c guibg=#17252c
+    hi! EndOfBuffer ctermbg=NONE ctermfg=NONE guibg=#17252c guifg=#17252c
 
-" Make background color transparent for git changes
-hi! SignifySignAdd guibg=NONE
-hi! SignifySignDelete guibg=NONE
-hi! SignifySignChange guibg=NONE
+    " Customize NERDTree directory
+    hi! NERDTreeCWD guifg=#99c794
 
-" Highlight git change signs
-hi! SignifySignAdd guifg=#99c794
-hi! SignifySignDelete guifg=#ec5f67
-hi! SignifySignChange guifg=#c594c5
+    " Make background color transparent for git changes
+    hi! SignifySignAdd guibg=NONE
+    hi! SignifySignDelete guibg=NONE
+    hi! SignifySignChange guibg=NONE
+
+    " Highlight git change signs
+    hi! SignifySignAdd guifg=#99c794
+    hi! SignifySignDelete guifg=#ec5f67
+    hi! SignifySignChange guifg=#c594c5
+endfunction
+
+autocmd! ColorScheme * call TrailingSpaceHighlights()
+autocmd! ColorScheme OceanicNext call s:custom_jarvis_colors()
 
 " Call method on window enter
 augroup WindowManagement
@@ -511,6 +499,13 @@ function! Handle_Win_Enter()
   endif
 endfunction
 
+" Editor theme
+set background=dark
+try
+  colorscheme OceanicNext
+catch
+  colorscheme slate
+endtry
 " ============================================================================ "
 " ===                             KEY MAPPINGS                             === "
 " ============================================================================ "
@@ -529,6 +524,9 @@ nnoremap <Bslash>j :<C-u>DeniteCursorWord grep:.<CR>
 "   <C-o>         - Switch to normal mode inside of search results
 "   <Esc>         - Exit denite window in any mode
 "   <CR>          - Open currently selected file in any mode
+"   <C-t>         - Open currently selected file in a new tab
+"   <C-v>         - Open currently selected file a vertical split
+"   <C-h>         - Open currently selected file in a horizontal split
 autocmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o>
@@ -539,6 +537,12 @@ function! s:denite_filter_my_settings() abort
   \ denite#do_map('quit')
   inoremap <silent><buffer><expr> <CR>
   \ denite#do_map('do_action')
+  inoremap <silent><buffer><expr> <C-t>
+  \ denite#do_map('do_action', 'tabopen')
+  inoremap <silent><buffer><expr> <C-v>
+  \ denite#do_map('do_action', 'vsplit')
+  inoremap <silent><buffer><expr> <C-h>
+  \ denite#do_map('do_action', 'split')
 endfunction
 
 " Define mappings while in denite window
@@ -547,6 +551,9 @@ endfunction
 "   d           - Delete currenly selected file
 "   p           - Preview currently selected file
 "   <C-o> or i  - Switch to insert mode inside of filter prompt
+"   <C-t>       - Open currently selected file in a new tab
+"   <C-v>       - Open currently selected file a vertical split
+"   <C-h>       - Open currently selected file in a horizontal split
 autocmd FileType denite call s:denite_my_settings()
 function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> <CR>
@@ -563,6 +570,12 @@ function! s:denite_my_settings() abort
   \ denite#do_map('open_filter_buffer')
   nnoremap <silent><buffer><expr> <C-o>
   \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <C-t>
+  \ denite#do_map('do_action', 'tabopen')
+  nnoremap <silent><buffer><expr> <C-v>
+  \ denite#do_map('do_action', 'vsplit')
+  nnoremap <silent><buffer><expr> <C-h>
+  \ denite#do_map('do_action', 'split')
 endfunction
 
 " === Nerdtree shorcuts === "
