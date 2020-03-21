@@ -290,9 +290,39 @@ export PATH=$PATH:~/.local/bin
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 fpath=($fpath "/home/leeroy/.zfunctions")
 
+SPACESHIP_PROMPT_ORDER=(
+  time          # Time stamps section
+  user          # Username section
+  host          # Hostname section
+  dir           # Current directory section
+  git           # Git section (git_branch + git_status)
+  package       # Package version
+  node          # Node.js section
+  exec_time     # Execution time
+  line_sep      # Line break
+  battery       # Battery level and status
+  vi_mode       # Vi-mode indicator
+  jobs          # Background jobs indicator
+  exit_code     # Exit code section
+  char          # Prompt character
+)
+
   # Set Spaceship ZSH as a prompt
   autoload -U promptinit; promptinit
   prompt spaceship
+
+  # USER
+  SPACESHIP_USER_SHOW=always
+  SPACESHIP_USER_COLOR="166"
+
+  # HOST
+  SPACESHIP_HOST_SHOW=always
+  SPACESHIP_HOST_COLOR="226"
+
+  # DIR
+  SPACESHIP_DIR_SHOW=true
+  SPACESHIP_DIR_COLOR="071"
+
   SPACESHIP_PACKAGE_SHOW=false
   SPACESHIP_NODE_SHOW=false
   SPACESHIP_GIT_STATUS_STASHED=''
