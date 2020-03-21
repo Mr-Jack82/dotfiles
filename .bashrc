@@ -159,3 +159,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Add JDK/bin folder to be able to use jshell
 export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
+# Add 'local/bin' folder to the PATH to be able to use
+# custom scripts
+export PATH=$PATH:~/.local/bin
