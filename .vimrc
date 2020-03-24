@@ -467,6 +467,12 @@ let g:NERDTreeDirArrowCollapsible = '⬎'
 " Hide certain files and directories from NERDTree
 let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
 
+" Automatically delete the buffer of the file you just deleted with NerdTree
+let NERDTreeAutoDeleteBuffer = 1
+
+" Automatically close NerdTree when you open a file
+let NERDTreeQuitOnOpen = 1
+
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 endtry
 
