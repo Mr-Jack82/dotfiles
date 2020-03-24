@@ -18,8 +18,11 @@ if !filereadable(vimplug_exists)
   silent exec '!\curl -fLo ' . vimplug_exists . ' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   let g:not_finish_vimplug = 'yes'
 
-  autocmd VimEnter * PlugInstall
+augroup pluginstall
+    autocmd!
+    autocmd VimEnter * PlugInstall
 endif
+augroup END
 
 " Initialize vim-plug.
 call plug#begin('~/.vim/plugged')
@@ -239,12 +242,13 @@ else
 endif
 
 " Remember last cursor position.
-if has("autocmd")
+augroup remember-cursor-position
+  autocmd!
     autocmd BufReadPost *
       \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
       \ |   exe "normal! g`\""
       \ | endif
-endif
+augroup END
 
 " to change the cursor in different modes use this:
 " from https://habr.com/ru/post/468265/
@@ -309,25 +313,27 @@ cnoremap w!! w !sudo tee % > /dev/null
  set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
  " Only do this part when compiled with support for autocommands
-if has("autocmd")
+augroup Tabs-and-spaces
+    if has("autocmd")
 
-  " Enable file type detection
-  filetype on
+        " Enable file type detection
+        filetype on
 
-  " Syntax of these languages is fussy over tabs Vs spaces
-  autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
-  autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+        " Syntax of these languages is fussy over tabs Vs spaces
+        autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+        autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
-  " Customisations based on house-style (arbitrary)
-  autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-  autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-  autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+        " Customisations based on house-style (arbitrary)
+        autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+        autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+        autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
-  " Treat .rss files as XML
-  autocmd BufNewFile,BufRead *.rss setfiletype xml
+        " Treat .rss files as XML
+        autocmd BufNewFile,BufRead *.rss setfiletype xml
 
-  " Treat .ejs (embedded javascript) file as HTML
-  autocmd BufNewFile,BufRead *.ejs set filetype=html
+        " Treat .ejs (embedded javascript) file as HTML
+        autocmd BufNewFile,BufRead *.ejs set filetype=html
+augroup END
 
 " Set tabstop, softtabstop and shiftwidth to the same value
 " from vimcast.org #2 Tabs and Spaces
@@ -358,9 +364,12 @@ function! SummarizeTabs()
   endtry
 endfunction
 
-  " Enable syntax highlight for *.log files
-  autocmd BufNewFile,BufReadPost *.log :set filetype=messages
-endif
+" Enable syntax highlight for *.log files
+augroup log-messages
+    autocmd!
+    autocmd BufNewFile,BufReadPost *.log :set filetype=messages
+  endif
+augroup END
 
 " do not wrap long lines by default
 set nowrap
@@ -430,9 +439,11 @@ endif
 set pumheight=20
 
 " Source the vimrc file after saving it
-if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
-endif
+augroup source-after-save
+    if has("autocmd")
+        autocmd bufwritepost .vimrc source $MYVIMRC
+    endif
+augroup END
 
 " Match angle brackets
 set matchpairs+=<:>
@@ -917,7 +928,10 @@ onoremap <silent> il :<c-u>normal! g_v^<cr>
 " ============================================================================ "
 
 " Automaticaly close nvim if NERDTree is only thing left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup close-Nerdtree
+    autocmd!
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " === Search === "
 " Highlight search results
@@ -944,8 +958,10 @@ xnoremap <silent> <Leader>c "sy:let @/=@s<CR>cgn
 nnoremap <Enter> gnzz
 xmap <Enter> .<Esc>gnzz
 xnoremap ! <Esc>ngnzz
-autocmd! BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-autocmd! CmdwinEnter *        nnoremap <buffer> <CR> <CR>
+augroup quickfix
+  autocmd! BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+  autocmd! CmdwinEnter *        nnoremap <buffer> <CR> <CR>
+augroup END
 
 " Find & Replace in the Current File
 nnoremap <Bslash>s :let @s='\<'.expand('<cword>').'\>'<CR>:%s/<C-r>s//<Left>

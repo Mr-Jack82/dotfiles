@@ -66,25 +66,27 @@ set signcolumn=yes
  set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
  " Only do this part when compiled with support for autocommands
-if has("autocmd")
+augroup tabs-and-spaces
+  if has("autocmd")
 
-  " Enable file type detection
-  filetype on
+    " Enable file type detection
+    filetype on
 
-  " Syntax of these languages is fussy over tabs Vs spaces
-  autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
-  autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    " Syntax of these languages is fussy over tabs Vs spaces
+    autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+    autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
-  " Customisations based on house-style (arbitrary)
-  autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-  autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-  autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+    " Customisations based on house-style (arbitrary)
+    autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
-  " Treat .rss files as XML
-  autocmd BufNewFile,BufRead *.rss setfiletype xml
+    " Treat .rss files as XML
+    autocmd BufNewFile,BufRead *.rss setfiletype xml
 
-  " Treat .ejs (embedded javascript) file as HTML
-  autocmd BufNewFile,BufRead *.ejs set filetype=html
+    " Treat .ejs (embedded javascript) file as HTML
+    autocmd BufNewFile,BufRead *.ejs set filetype=html
+augroup END
 
 " Set tabstop, softtabstop and shiftwidth to the same value
 " from vimcast.org #2 Tabs and Spaces
@@ -116,8 +118,11 @@ function! SummarizeTabs()
 endfunction
 
   " Enable syntax highlight for *.log files
+augroup log-messages
+  autocmd!
   autocmd BufNewFile,BufReadPost *.log :set filetype=messages
 endif
+augroup END
 
 " do not wrap long lines by default
 set nowrap
@@ -396,14 +401,20 @@ let g:undotree_WindowLayout = 3
 
 " === fugitive === "
 " Auto-clean fugitive buffers
-autocmd BufReadPost fugitive://* set bufhidden=delete
+augroup auto-clean-fugitive
+  autocmd!
+  autocmd BufReadPost fugitive://* set bufhidden=delete
+augroup END
 
 " Use '..' to go up the history of Git commits, but only for buffers
 " containing a git blob or tree
-autocmd User fugitive
-  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-  \     nnoremap <buffer> .. :edit %:h<cr> |
-  \ endif
+augroup go-up-fugitive
+  autocmd!
+  autocmd User fugitive
+        \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+        \     nnoremap <buffer> .. :edit %:h<cr> |
+        \ endif
+augroup END
 
 " Vim-Plug shortcut for update all plugins and upgrade itself
 " (:PU instead of :PlugUpdate | PlugUpgrade)
@@ -483,8 +494,10 @@ function! s:custom_jarvis_colors()
     hi! SignifySignChange guifg=#c594c5
 endfunction
 
-autocmd! ColorScheme * call TrailingSpaceHighlights()
-autocmd! ColorScheme OceanicNext call s:custom_jarvis_colors()
+augroup trailing-space-highlight
+  autocmd! ColorScheme * call TrailingSpaceHighlights()
+  autocmd! ColorScheme OceanicNext call s:custom_jarvis_colors()
+augroup END
 
 " Call method on window enter
 augroup WindowManagement
@@ -527,7 +540,10 @@ nnoremap <Bslash>j :<C-u>DeniteCursorWord grep:.<CR>
 "   <C-t>         - Open currently selected file in a new tab
 "   <C-v>         - Open currently selected file a vertical split
 "   <C-h>         - Open currently selected file in a horizontal split
-autocmd FileType denite-filter call s:denite_filter_my_settings()
+augroup denite-filter
+  autocmd!
+  autocmd FileType denite-filter call s:denite_filter_my_settings()
+augroup END
 function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o>
   \ <Plug>(denite_filter_quit)
@@ -554,7 +570,10 @@ endfunction
 "   <C-t>       - Open currently selected file in a new tab
 "   <C-v>       - Open currently selected file a vertical split
 "   <C-h>       - Open currently selected file in a horizontal split
-autocmd FileType denite call s:denite_my_settings()
+augroup denite-settings
+  autocmd!
+  autocmd FileType denite call s:denite_my_settings()
+augroup END
 function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> <CR>
   \ denite#do_map('do_action')
@@ -735,12 +754,18 @@ nmap <Leader>, :w<CR>
 " ============================================================================ "
 
 " Automaticaly close nvim if NERDTree is only thing left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup close-nerdtree
+  autocmd!
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " Automaticaly open NERDTree when you're starting vim/nvim with no command
 " line arguments
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+augroup open-nerdtree
+  autocmd!
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+augroup END
 
 " === Search === "
 " Turning On Neovim built-in feature inccommand, to live preview the
