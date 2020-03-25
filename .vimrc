@@ -28,9 +28,6 @@ Plug 'tpope/vim-commentary'
 " A Vim alignment plugin
 Plug 'junegunn/vim-easy-align'
 
-" Vim script for text filtering and alignment
-Plug 'godlygeek/tabular'
-
 " Quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
@@ -554,21 +551,6 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-
-" === Tabular === "
-" *from vimcasts №29 Aligning text with Tabular.vim
-inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>
-
-function! s:align()
-  let p = '^\s*|\s.*\s|\s*$'
-  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-    Tabularize/|/l1
-    normal! 0
-    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-  endif
-endfunction
 
 " === undotree === "
 let g:undotree_HighlightChangeWithSign = 0
