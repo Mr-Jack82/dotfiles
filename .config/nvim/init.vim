@@ -299,7 +299,10 @@ let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " Custom setup that removes filetype/whitespace from default vim airline bar
-let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
+let g:airline#extensions#default#layout = [
+  \ ['a', 'b', 'c'],
+  \ ['x', 'z', 'error', 'warning',]
+  \ ]
 
 " Customize vim airline per filetype
 " 'nerdtree'  - Hide nerdtree status line
