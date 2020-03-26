@@ -277,7 +277,7 @@ endif
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
 
-" Minamal number of screen lines to keep above and below the cursor.
+" Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
 
 " Hides buffers instead of closing them.
@@ -292,9 +292,6 @@ set signcolumn=yes
 " Search relative to current file + directory
 " Provides tab-completion for all file-related tasks
 set path=.,**
-
-" Save read-only buffer
-cnoremap w!! w !sudo tee % > /dev/null
 
 " === TAB/Space settings === "
 " default indentation: 4 spaces
