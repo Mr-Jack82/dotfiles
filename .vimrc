@@ -496,21 +496,15 @@ let g:airline#extensions#default#layout = [
     \ [ 'x', 'z', 'error', 'warning' ]
     \ ]
 
+" Customize vim airline per filetype
+" 'nerdtree'  - Hide nerdtree status line
+" 'list'      - Only show file type plus current line number out of total
+let g:airline_filetype_overrides = {
+  \ 'nerdtree': [ get(g:, 'NERDTreeStatusline', ''), '' ],
+  \ 'list': [ '%y', '%l/%L' ],
+  \ }
+
 let g:airline#extensions#ale#enabled = 1
-
-" let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-
-" let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
-
-" Configure error/warining section to use coc.nvim
-" let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-" let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-
-" Hide the Nerdtree status line to avoid clutter
-let g:NERDTreeStatusline = ''
-
-" Disable vim-airline in preview mode
-let g:airline_exclude_preview = 1
 
 " Enable powerline fonts
 let g:airline_powerline_fonts = 1
