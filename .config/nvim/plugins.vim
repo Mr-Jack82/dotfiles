@@ -90,7 +90,7 @@ Plug 'andymass/vim-matchup', { 'for':
     \}
 
 " Intellisense Engine
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 
 " Tmux/Neovim movement integration
 Plug 'christoomey/vim-tmux-navigator'
