@@ -84,7 +84,16 @@ Plug 'google/vim-searchindex'
 " Plug 'ajh17/VimCompletesMe'
 
 " Chained completion that works the way you want!
-Plug 'lifepillar/vim-mucomplete'
+" Plug 'lifepillar/vim-mucomplete'
+
+" Vim client for TabNine https://tabnine.com/
+Plug 'codota/tabnine-vim'
+
+" Neo-snippet plugin
+Plug 'Shougo/neosnippet.vim'
+
+" The standard snippets repository for neosnippet
+Plug 'Shougo/neosnippet-snippets'
 
 " A vim plugin for communicating with a language server
 Plug 'natebosch/vim-lsc'
@@ -217,7 +226,7 @@ set showcmd
 set belloff=all
 
 " Wrap logn lines *with* indentation
-set breakindent
+" set breakindent
 
 " No backup files
 set noswapfile
@@ -295,7 +304,7 @@ set path=.,**
 
 " === TAB/Space settings === "
 " default indentation: 4 spaces
- set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
  " Only do this part when compiled with support for autocommands
 augroup Tabs-and-spaces
@@ -661,6 +670,15 @@ nmap <silent> <Leader>r <Plug>(CommandTMRU)
 " bring up the Command-T jumplist window
 nmap <silent> <Bslash>j <Plug>(CommandTJump)
 
+" === NeoSnippet === "
+" Map <C-j> as shortcut to activate snippet if available
+imap <C-j> <Plug>(neosnippet_expand_or_jump)
+smap <C-j> <Plug>(neosnippet_expand_or_jump)
+xmap <C-j> <Plug>(neosnippet_expand_target)
+
+" Hide conceal markers
+let g:neosnippet#enable_conceal_markers = 0
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
@@ -778,6 +796,9 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 " <leader>s - Easy-motion highlights {char} to bidirection (forward and
 " backward at the same time.)
 map <Leader> <Plug>(easymotion-prefix)
+
+" Lazy targeting
+let g:EasyMotion_smartcase = 1
 
 " === undotree ==="
 nnoremap <Leader>u :UndotreeToggle<cr>
