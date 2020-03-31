@@ -249,6 +249,33 @@ else
   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+function! HasEslintConfig()
+  for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
+    if globpath('.', name) != ''
+      return 1
+    endif
+  endfor
+endfunction
+
+" Turn off eslint when cannot find eslintrc
+call coc#config('eslint.enable', HasEslintConfig())
+
+let g:coc_global_extensions=[
+    \ 'coc-tsserver',
+    \ 'coc-prettier',
+    \ 'coc-css',
+    \ 'coc-json',
+    \ 'coc-emmet',
+    \ 'coc-eslint',
+    \ 'coc-highlight',
+    \ 'coc-vimlsp',
+    \ 'coc-sh',
+    \ 'coc-tslint-plugin',
+    \ ]
+
 " === NeoSnippet === "
 " Map <C-j> as shortcut to activate snippet if available
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
@@ -641,6 +668,9 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 " <leader>s - Easy-motion highlights {char} to bidirection (forward and
 " backward at the same time.)
 map <Leader> <Plug>(easymotion-prefix)
+
+" Lazy targeting
+let g:EasyMotion_smartcase = 1
 
 " === vim-jsdoc shortcuts ==="
 " Generate jsdoc for function under cursor
