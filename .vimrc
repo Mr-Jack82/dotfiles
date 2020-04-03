@@ -111,6 +111,9 @@ Plug 'tpope/vim-fugitive'
 " Typescript syntax highlighting
 Plug 'HerringtonDarkholme/yats.vim'
 
+" HTML5 omnicomplete and syntax
+Plug 'othree/html5.vim'
+
 " ReactJS JSX syntax highlighting
 Plug 'mxw/vim-jsx'
 
@@ -310,23 +313,23 @@ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 augroup Tabs-and-spaces
     if has("autocmd")
 
-        " Enable file type detection
-        filetype on
+    " Enable file type detection
+    filetype on
 
-        " Syntax of these languages is fussy over tabs Vs spaces
-        autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
-        autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    " Syntax of these languages is fussy over tabs Vs spaces
+    autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
+    autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
-        " Customisations based on house-style (arbitrary)
-        autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-        autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-        autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+    " Customisations based on house-style (arbitrary)
+    autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType javascript setlocal tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
-        " Treat .rss files as XML
-        autocmd BufNewFile,BufRead *.rss setfiletype xml
+    " Treat .rss files as XML
+    autocmd BufNewFile,BufRead *.rss setfiletype xml
 
-        " Treat .ejs (embedded javascript) file as HTML
-        autocmd BufNewFile,BufRead *.ejs set filetype=html
+    " Treat .ejs (embedded javascript) file as HTML
+    autocmd BufNewFile,BufRead *.ejs set filetype=html
 augroup END
 
 " Set tabstop, softtabstop and shiftwidth to the same value
@@ -696,7 +699,7 @@ endif
 " Editor theme
 set background=dark
 try
-  colorscheme moonfly
+  colorscheme OceanicNext
 catch
   colorscheme slate
 endtry
