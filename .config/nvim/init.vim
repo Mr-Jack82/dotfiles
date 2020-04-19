@@ -263,6 +263,32 @@ endfunction
 " Turn off eslint when cannot find eslintrc
 call coc#config('eslint.enable', HasEslintConfig())
 
+" Essentially avoid turning on typescript in a flow project
+call coc#config('tsserver.enableJavascript', globpath('.', '.flowconfig') == '')
+
+" lookup local flow executable
+" and turn on flow for coc in executable exists
+function! SetFlow()
+  let s:flow_in_project = findfile('.nvm/versions/node/v10.19.0/lib/node_modules/flow-bin/flow-linux64-v0.123.0/flow')
+  let s:flow_exe = empty(s:flow_in_project) ? '' : getcwd() . '/' . s:flow_in_project
+  let s:flow_config = {
+    \    'command': s:flow_exe,
+    \    'args': ['lsp'],
+    \    'filetypes': ['javascript', 'javascriptreact'],
+    \    'initializationOptions': {},
+    \    'requireRootPattern': 1,
+    \    'settings': {},
+    \    'rootPatterns': ['.flowconfig']
+    \}
+
+" Turn on flow when flow executable exists
+  if !empty(s:flow_exe)
+    call coc#config('languageserver', { 'flow': s:flow_config })
+  endif
+endfunction
+
+call SetFlow()
+
 let g:coc_global_extensions=[
     \ 'coc-tsserver',
     \ 'coc-prettier',
