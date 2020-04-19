@@ -65,9 +65,6 @@ Plug 'christoomey/vim-tmux-navigator'
 " The undo history visualizer for Vim
 Plug 'mbbill/undotree'
 
-" BufExplorer Plugin for Vim
-" Plug 'jlanzarotta/bufexplorer'
-
 " Helps you win at grep.
 Plug 'mhinz/vim-grepper'
 
@@ -78,16 +75,12 @@ Plug 'machakann/vim-highlightedyank'
 " index of a current match
 Plug 'google/vim-searchindex'
 
-" === Copmletion plugins === "
-" A super simple, super minimal, super light-weight tab completion
-" plugin for Vim.
-" Plug 'ajh17/VimCompletesMe'
+" Enhanced in-file search for Vim
+Plug 'wincent/loupe'
 
+" === Completion plugins === "
 " Chained completion that works the way you want!
 " Plug 'lifepillar/vim-mucomplete'
-
-" Vim client for TabNine https://tabnine.com/
-Plug 'codota/tabnine-vim'
 
 " Neo-snippet plugin
 Plug 'Shougo/neosnippet.vim'
@@ -95,8 +88,26 @@ Plug 'Shougo/neosnippet.vim'
 " The standard snippets repository for neosnippet
 Plug 'Shougo/neosnippet-snippets'
 
-" A vim plugin for communicating with a language server
-Plug 'natebosch/vim-lsc'
+" vim-snipmate default snippets (Previously snipmate-snippets)
+Plug 'honza/vim-snippets'
+
+" Dark powered asynchronous completion framework for neovim/Vim8
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+" Language Server Protocol (LSP) support for vim and neovim.
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
 
 " Check syntax in Vim asynchronously and fix files, with
 " Language Server Protocol (LSP) support
@@ -110,9 +121,6 @@ Plug 'tpope/vim-fugitive'
 " === Javascript Plugins === "
 " Typescript syntax highlighting
 Plug 'HerringtonDarkholme/yats.vim'
-
-" HTML5 omnicomplete and syntax
-Plug 'othree/html5.vim'
 
 " ReactJS JSX syntax highlighting
 Plug 'mxw/vim-jsx'
@@ -144,6 +152,9 @@ Plug 'andymass/vim-matchup', { 'for':
 " it shows syntax highlighting groups for word under cursor
 " this feature is needed to make your own colorscheme
 Plug 'gerw/vim-HiLinkTrace'
+
+" HTML5 omnicomplete and syntax
+Plug 'othree/html5.vim'
 
 " === UI === "
 " File explorer
@@ -279,7 +290,8 @@ command! -nargs=1 Silent
 set mouse=a
 
 " Enable loading the plugin files for specific file types.
-filetype plugin on
+filetype indent plugin on
+syntax on
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -314,7 +326,7 @@ augroup Tabs-and-spaces
     if has("autocmd")
 
     " Enable file type detection
-    filetype on
+    " filetype on " I've already activate it (see line 293)
 
     " Syntax of these languages is fussy over tabs Vs spaces
     autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
@@ -421,15 +433,11 @@ set wildmode=full
 set shortmess+=c
 
 " Sources for term and line completions
-set complete=.,w,b
+set complete=.,w,b,u,t,k
 
 " A comma separated list of options for Insert mode completion
 if exists('+completeopt')
-    " set completeopt+=longest  " Insert longest common substring
-    set completeopt+=menu       " Use a popup menu to show the possible completions.
-    set completeopt+=menuone    " Show the menu even if only one match
-    set completeopt+=noinsert   " User selects a match from the menu
-    set completeopt+=noselect   " No insert until the user select a match from menu
+  set completeopt=noinsert,menuone,noselect
 endif
 
 " Height of complete list
@@ -640,6 +648,10 @@ let g:matchup_matchpref            = {
  \}
 
 " === emmet-vim === "
+let g:user_emmet_complete_tag = 0
+let g:user_emmet_install_global = 0
+let g:user_emmet_install_command = 0
+let g:user_emmet_mode = 'i'
 " ↓↓↓ Conflicting with MUcomplete ↓↓↓
 " let g:user_emmet_expandabbr_key = '<Tab>'
 " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
@@ -681,6 +693,122 @@ xmap <C-j> <Plug>(neosnippet_expand_target)
 
 " Hide conceal markers
 let g:neosnippet#enable_conceal_markers = 0
+
+" === Deoplete === "
+" Enable Deoplete at startup
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+
+" Use <Tab> to move through completion list
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#manual_complete()
+function! s:check_back_space() abort "{{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
+
+" === LanguageClient-neovim === "
+let g:LanguageClient_usePopupHover      = 1
+let g:LanguageClient_hoverPreview       = 'Always'
+" let g:LanguageClient_diagnosticsDisplay = {
+"       \   1: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   2: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   3: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   4: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \ }
+
+let g:LanguageClient_serverCommands = {}
+
+if exists('$DEBUG_LC_LOGFILE')
+    let g:LanguageClient_loggingFile  = $DEBUG_LC_LOGFILE
+    let g:LanguageClient_loggingLevel = 'DEBUG'
+endif
+
+if executable('typescript-language-server')
+  " ie. via `npm install -g typescript-language-server`
+  if exists('$DEBUG_LSP_LOGFILE')
+    let s:debug_args=[
+          \   '--log-level=4',
+          \   '--tsserver-log-file',
+          \   $DEBUG_LSP_LOGFILE,
+          \   '--tsserver-log-verbosity=verbose'
+          \ ]
+else
+    let s:debug_args = []
+endif
+
+let s:ts_lsp = extend([exepath('typescript-language-server'), '--stdio'], s:debug_args)
+elseif executable('javascript-typescript-stdio')
+    " ie. via `npm install -g javascript-typescript-langserver`
+    if exists('$DEBUG_LSP_LOGFILE')
+        let s:debug_args = ['--trace', '--logfile', $DEBUG_LSP_LOGFILE]
+    else
+        let s:debug_args = []
+    endif
+
+let s:ts_lsp = extend([exepath('javascript-typescript-stdio')], s:debug_args)
+else
+    let s:ts_lsp = []
+endif
+
+" From `npm install -g flow-bin`
+let s:flow_lsp = executable('flow') ?
+    \ [exepath('flow'), 'lsp'] :
+    \ []
+
+let s:ts_filetypes = [
+    \   'typescript',
+    \   'typescript.tsx',
+    \   'typescript.jest',
+    \   'typescript.jest.tsx'
+    \ ]
+
+let s:js_filetypes = [
+    \   'javascript',
+    \   'javascript.jsx',
+    \   'javascript.jest',
+    \   'javascript.jest.jsx'
+    \ ]
+
+let g:LanguageClient_rootMarkers = {}
+
+if s:ts_lsp != []
+    for s:ts_filetypes in s:ts_filetypes
+        let g:LanguageClient_rootMarkers[s:ts_filetypes] = ['tsconfig.json', '.flowconfig', 'package.json']
+        let g:LanguageClient_serverCommands[s:ts_filetypes] = s:ts_lsp
+    endfor
+endif
+
+if s:ts_lsp != [] && filereadable('tsconfig.json')
+    let s:js_lsp = s:ts_lsp
+elseif s:flow_lsp != [] && filereadable('flowconfig')
+    let s:js_lsp = s:flow_lsp
+elseif s:ts_lsp != []
+    let s:js_lsp = s:ts_lsp
+endif
+
+if exists('s:js_lsp')
+    for s:js_filetype in s:js_filetypes
+        let g:LanguageClient_rootMarkers[s:js_filetype] = ['tsconfig.json', '.flowconfig', 'package.json']
+        let g:LanguageClient_serverCommands[s:js_filetype] = s:js_lsp
+    endfor
+endif
+
+if executable('ocaml-language-server')
+    let s:ocaml_lsp = [exepath('ocaml-language-server')]
+    let g:LanguageClient_serverCommands['reason'] = s:ocaml_lsp
+    let g:LanguageClient_serverCommands['ocaml'] = s:ocaml_lsp
+endif
+
+let g:LanguageClient_diagnosticsList = 'Location'
+
+if filereadable('/usr/local/bin/python3')
+  " Avoid search, speeding up start-up.
+  let g:python3_host_prog = '/usr/local/bin/python3'
+endif
+
 
 " ============================================================================ "
 " ===                                UI                                    === "
