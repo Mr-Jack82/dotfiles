@@ -312,8 +312,10 @@ xmap <C-j> <Plug>(neosnippet_expand_target)
 " Load custom snippets from snippets folder
 let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
 
-" Hide conceal markers
-let g:neosnippet#enable_conceal_markers = 0
+" For conceal markers
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 " === NERDTree === "
 " Show hidden files/directories
@@ -334,6 +336,25 @@ let NERDTreeAutoDeleteBuffer = 1
 
 " Automatically close NerdTree when you open a file
 let NERDTreeQuitOnOpen = 1
+
+" Synchronizing nerdtree with the currently opened file
+" from reddit post (https://www.reddit.com/r/vim/comments/g47z4f/synchronizing_nerdtree_with_the_currently_opened/?%24deep_link=true&correlation_id=8c881181-a7d4-4e11-94dc-f125f7daaa68&ref=email_digest&ref_campaign=email_digest&ref_source=email&utm_content=post_title&utm_medium=digest&utm_name=top_posts&utm_source=email&utm_term=day&%243p=e_as&%24original_url=https%3A%2F%2Fwww.reddit.com%2Fr%2Fvim%2Fcomments%2Fg47z4f%2Fsynchronizing_nerdtree_with_the_currently_opened%2F%3F%24deep_link%3Dtrue%26correlation_id%3D8c881181-a7d4-4e11-94dc-f125f7daaa68%26ref%3Demail_digest%26ref_campaign%3Demail_digest%26ref_source%3Demail%26utm_content%3Dpost_title%26utm_medium%3Ddigest%26utm_name%3Dtop_posts%26utm_source%3Demail%26utm_term%3Dday&_branch_match_id=699372985519899548)
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+
+" Call NERDTreeFind iff NERDTree is active, current window contains a
+" modifiable file, and we're not in vimdiff
+function! SyncTree()
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+" Highlight currently open buffer in NERDTree
+autocmd BufRead * call SyncTree()
 
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 try
