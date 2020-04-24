@@ -140,7 +140,9 @@ Plug 'othree/yajs.vim'
 Plug 'sheerun/vim-polyglot'
 
 " Emmet for Vim
-Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', { 'for':
+    \  ['html', 'xml', 'ejs', 'css', 'sass', 'scss', 'php']
+    \}
 
 " vim match-up: even better % fist_oncoming navigate and highlight
 " matching words fist_oncoming modern matchit and matchparen replacement
@@ -290,7 +292,7 @@ command! -nargs=1 Silent
 set mouse=a
 
 " Enable loading the plugin files for specific file types.
-filetype indent plugin on
+filetype plugin indent on
 syntax on
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
@@ -326,7 +328,7 @@ augroup Tabs-and-spaces
     if has("autocmd")
 
     " Enable file type detection
-    " filetype on " I've already activate it (see line 293)
+    filetype indent on
 
     " Syntax of these languages is fussy over tabs Vs spaces
     autocmd FileType make setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
@@ -691,8 +693,16 @@ imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
 
-" Hide conceal markers
-let g:neosnippet#enable_conceal_markers = 0
+" Enable snipMate compatible feature
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory = '~/.vim/plugged/vim-snippets/snippets'
+
+" For conceal markers
+if has('conceal')
+    set conceallevel=2 concealcursor=niv
+endif
 
 " === Deoplete === "
 " Enable Deoplete at startup
@@ -816,8 +826,8 @@ endif
 
 " Enable true color support
 " for more details see :h xterm-true-color
-" NOTE: the "^[" is a single character. You enter it by pressing
-" Ctrl+v and then ESC or use \<Esc> instead
+" NOTE: the "^[" is a single character. To insert it, press
+" "Ctrl+v" and then "ESC" or use "\<Esc>" instead
 if exists('+termguicolors')
   let &t_8f = "[38;2;%lu;%lu;%lum"
   let &t_8b = "[48;2;%lu;%lu;%lum"
