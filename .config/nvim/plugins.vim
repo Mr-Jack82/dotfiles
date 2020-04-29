@@ -89,8 +89,23 @@ Plug 'andymass/vim-matchup', { 'for':
     \  ['dart', 'eruby', 'html', 'javascript', 'json', 'xml']
     \}
 
-" Intellisense Engine
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
+" Dark powered asynchronous completion framework for neovim/Vim8
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+" Language Server Protocol (LSP) support for vim and neovim.
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
 
 " Tmux/Neovim movement integration
 Plug 'christoomey/vim-tmux-navigator'

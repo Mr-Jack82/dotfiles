@@ -222,86 +222,120 @@ catch
   echo 'Denite not installed. It should work after running :PlugInstall'
 endtry
 
-" === Coc.nvim === "
-" Use <tab> for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
+" === Deoplete === "
+" Enable Deoplete at startup
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+
+" Use <Tab> to move through completion list
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
+      \ deoplete#manual_complete()
+function! s:check_back_space() abort "{{{
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" === LanguageClient-neovim === "
+let g:LanguageClient_usePopupHover      = 1
+let g:LanguageClient_hoverPreview       = 'Always'
+" let g:LanguageClient_diagnosticsDisplay = {
+"       \   1: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   2: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   3: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \   4: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+"       \ }
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-if has('patch8.1.1068')
-  " Use `complete_info` if your (Neo)Vim version supports it.
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+let g:LanguageClient_serverCommands = {}
+
+if exists('$DEBUG_LC_LOGFILE')
+    let g:LanguageClient_loggingFile  = $DEBUG_LC_LOGFILE
+    let g:LanguageClient_loggingLevel = 'DEBUG'
 endif
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+if executable('typescript-language-server')
+  " ie. via `npm install -g typescript-language-server`
+  if exists('$DEBUG_LSP_LOGFILE')
+    let s:debug_args=[
+          \   '--log-level=4',
+          \   '--tsserver-log-file',
+          \   $DEBUG_LSP_LOGFILE,
+          \   '--tsserver-log-verbosity=verbose'
+          \ ]
+else
+    let s:debug_args = []
+endif
 
-function! HasEslintConfig()
-  for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
-    if globpath('.', name) != ''
-      return 1
+let s:ts_lsp = extend([exepath('typescript-language-server'), '--stdio'], s:debug_args)
+elseif executable('javascript-typescript-stdio')
+    " ie. via `npm install -g javascript-typescript-langserver`
+    if exists('$DEBUG_LSP_LOGFILE')
+        let s:debug_args = ['--trace', '--logfile', $DEBUG_LSP_LOGFILE]
+    else
+        let s:debug_args = []
     endif
-  endfor
-endfunction
 
-" Turn off eslint when cannot find eslintrc
-call coc#config('eslint.enable', HasEslintConfig())
+let s:ts_lsp = extend([exepath('javascript-typescript-stdio')], s:debug_args)
+else
+    let s:ts_lsp = []
+endif
 
-" Essentially avoid turning on typescript in a flow project
-call coc#config('tsserver.enableJavascript', globpath('.', '.flowconfig') == '')
+" From `npm install -g flow-bin`
+let s:flow_lsp = executable('flow') ?
+    \ [exepath('flow'), 'lsp'] :
+    \ []
 
-" lookup local flow executable
-" and turn on flow for coc in executable exists
-function! SetFlow()
-  let s:flow_in_project = findfile('.nvm/versions/node/v10.19.0/lib/node_modules/flow-bin/flow-linux64-v0.123.0/flow')
-  let s:flow_exe = empty(s:flow_in_project) ? '' : getcwd() . '/' . s:flow_in_project
-  let s:flow_config = {
-    \    'command': s:flow_exe,
-    \    'args': ['lsp'],
-    \    'filetypes': ['javascript', 'javascriptreact'],
-    \    'initializationOptions': {},
-    \    'requireRootPattern': 1,
-    \    'settings': {},
-    \    'rootPatterns': ['.flowconfig']
-    \}
-
-" Turn on flow when flow executable exists
-  if !empty(s:flow_exe)
-    call coc#config('languageserver', { 'flow': s:flow_config })
-  endif
-endfunction
-
-call SetFlow()
-
-let g:coc_global_extensions=[
-    \ 'coc-tsserver',
-    \ 'coc-prettier',
-    \ 'coc-css',
-    \ 'coc-json',
-    \ 'coc-emmet',
-    \ 'coc-eslint',
-    \ 'coc-highlight',
-    \ 'coc-vimlsp',
-    \ 'coc-sh',
-    \ 'coc-tslint-plugin',
-    \ 'coc-neosnippet'
+let s:ts_filetypes = [
+    \   'typescript',
+    \   'typescript.tsx',
+    \   'typescript.jest',
+    \   'typescript.jest.tsx'
     \ ]
+
+let s:js_filetypes = [
+    \   'javascript',
+    \   'javascript.jsx',
+    \   'javascript.jest',
+    \   'javascript.jest.jsx'
+    \ ]
+
+let g:LanguageClient_rootMarkers = {}
+
+if s:ts_lsp != []
+    for s:ts_filetypes in s:ts_filetypes
+        let g:LanguageClient_rootMarkers[s:ts_filetypes] = ['tsconfig.json', '.flowconfig', 'package.json']
+        let g:LanguageClient_serverCommands[s:ts_filetypes] = s:ts_lsp
+    endfor
+endif
+
+if s:ts_lsp != [] && filereadable('tsconfig.json')
+    let s:js_lsp = s:ts_lsp
+elseif s:flow_lsp != [] && filereadable('flowconfig')
+    let s:js_lsp = s:flow_lsp
+elseif s:ts_lsp != []
+    let s:js_lsp = s:ts_lsp
+endif
+
+if exists('s:js_lsp')
+    for s:js_filetype in s:js_filetypes
+        let g:LanguageClient_rootMarkers[s:js_filetype] = ['tsconfig.json', '.flowconfig', 'package.json']
+        let g:LanguageClient_serverCommands[s:js_filetype] = s:js_lsp
+    endfor
+endif
+
+if executable('ocaml-language-server')
+    let s:ocaml_lsp = [exepath('ocaml-language-server')]
+    let g:LanguageClient_serverCommands['reason'] = s:ocaml_lsp
+    let g:LanguageClient_serverCommands['ocaml'] = s:ocaml_lsp
+endif
+
+let g:LanguageClient_diagnosticsList = 'Location'
+
+if filereadable('/usr/local/bin/python3')
+  " Avoid search, speeding up start-up.
+  let g:python3_host_prog = '/usr/local/bin/python3'
+endif
 
 " === NeoSnippet === "
 " Map <C-j> as shortcut to activate snippet if available
@@ -362,7 +396,7 @@ try
 " === Vim airline ==== "
 " Enable extensions
 let g:airline#extensions#bufferline#enabled = 1
-let g:airline_extensions = ['branch', 'hunks', 'coc']
+let g:airline_extensions = ['branch', 'hunks']
 
 " Update section z to just have line number
 let g:airline_section_z = airline#section#create(['linenr'])
@@ -552,11 +586,6 @@ function! TrailingSpaceHighlights() abort
 endfunction
 
 function! s:custom_jarvis_colors()
-    " coc.nvim color changes
-    hi! link CocErrorSign WarningMsg
-    hi! link CocWarningSign Number
-    hi! link CocInfoSign Type
-
     " Make background transparent for many things
     hi! Normal ctermbg=NONE guibg=NONE
     hi! NonText ctermbg=NONE guibg=NONE
@@ -703,16 +732,6 @@ nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
-
-" === coc.nvim === "
-"   <leader>dd    - Jump to definition of current symbol
-"   <leader>dr    - Jump to references of current symbol
-"   <leader>dj    - Jump to implementation of current symbol
-"   <leader>ds    - Fuzzy search current project symbols
-nmap <silent> <leader>dd <Plug>(coc-definition)
-nmap <silent> <leader>dr <Plug>(coc-references)
-nmap <silent> <leader>dj <Plug>(coc-implementation)
-nnoremap <silent> <leader>ds :<C-u>CocList -I -N --top symbols<CR>
 
 " === vim-better-whitespace === "
 "   <leader>y - Automatically remove trailing whitespace
