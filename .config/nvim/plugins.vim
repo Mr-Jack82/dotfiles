@@ -117,6 +117,9 @@ Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
+" vim-snipmate default snippets (Previously snipmate-snippets)
+Plug 'honza/vim-snippets'
+
 " Print function signatures in echo area
 Plug 'Shougo/echodoc.vim'
 
