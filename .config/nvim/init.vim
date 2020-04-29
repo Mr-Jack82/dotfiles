@@ -343,6 +343,17 @@ imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
 
+" Enable snipMate compatible feature
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory = '~/.config/nvim/plugged/vim-snippets/snippets'
+
+" For conceal markers
+if has('conceal')
+    set conceallevel=2 concealcursor=niv
+endif
+
 " Load custom snippets from snippets folder
 let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
 
