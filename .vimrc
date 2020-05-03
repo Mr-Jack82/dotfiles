@@ -581,32 +581,6 @@ let g:rainbow_active = 1
  nnoremap gs :Grepper -cword -noprompt<CR>
  xmap gs <Plug>(GrepperOperator)
 
-" === vim-lsc === "
-let g:lsc_server_commands = {
- \  'ruby': {
- \    'command': 'solargraph stdio',
- \    'log_level': -1,
- \    'suppress_stderr': v:true,
- \  },
- \  'javascript': {
- \    'command': 'typescript-language-server --stdio',
- \    'log_level': -1,
- \    'suppress_stderr': v:true,
- \  }
- \}
-let g:lsc_auto_map = {
- \  'GoToDefinition': 'gd',
- \  'FindReferences': 'gr',
- \  'Rename': 'gR',
- \  'ShowHover': 'K',
- \  'Completion': 'omnifunc',
- \}
-let g:lsc_enable_autocomplete  = v:true
-let g:lsc_enable_diagnostics   = v:false
-let g:lsc_reference_highlights = v:false
-let g:lsc_trace_level          = 'off'
-
-
 " === ale === "
 let g:ale_fixers = {
 \  'css':        ['prettier'],
@@ -617,7 +591,7 @@ let g:ale_fixers = {
 \  'yml':        ['prettier']
 \}
 let g:ale_linters = {
-\  'css':        ['csslint'],
+\  'css':        ['stylelint'],
 \  'javascript': ['standard'],
 \  'json':       ['jsonlint'],
 \  'markdown':   ['mdl'],
@@ -650,9 +624,9 @@ let g:matchup_matchpref            = {
  \}
 
 " === emmet-vim === "
-let g:user_emmet_complete_tag = 0
-let g:user_emmet_install_global = 0
-let g:user_emmet_install_command = 0
+let g:user_emmet_complete_tag = 1
+let g:user_emmet_install_global = 1
+let g:user_emmet_install_command = 1
 let g:user_emmet_mode = 'i'
 " ↓↓↓ Conflicting with MUcomplete ↓↓↓
 " let g:user_emmet_expandabbr_key = '<Tab>'
@@ -661,6 +635,7 @@ let g:user_emmet_mode = 'i'
 " ↓↓↓ This is conflicting too ↓↓↓
 " let g:user_emmet_leader_key = '<C-e>'
 " let g:user_emmet_expandabbr_key = '<C-x><C-e>'
+
 " imap <silent><expr> <Tab> <SID>expand()
 
 " function! s:expand()
