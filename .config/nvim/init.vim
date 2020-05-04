@@ -62,8 +62,8 @@ set signcolumn=yes
 
 " === TAB/Space settings === "
 
-" default indentation: 4 spaces
- set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+" default indentation: 2 spaces
+ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
  " Only do this part when compiled with support for autocommands
 augroup tabs-and-spaces
@@ -470,6 +470,7 @@ let g:XkbSwitchIMappings = ['ru']
 
 " === indentLine === "
 let g:indentLine_char = '┊'
+let g:vim_json_syntax_conceal = 0
 
 " This option works fine for .json file
 " let g:indentLine_concealcursor = ""
@@ -499,6 +500,8 @@ augroup END
 command! PU PlugUpdate | PlugUpgrade
 
 " === vim-matchup === "
+let g:matchup_surround_enabled     = 1
+let g:matchup_transmute_enabled    = 1
 let g:matchup_delim_noskip         = 2
 let g:matchup_matchparen_deferred  = 1
 let g:matchup_matchparen_nomode    = 'i'
