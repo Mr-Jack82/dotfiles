@@ -241,6 +241,12 @@ set showcmd
 " Disable bell for all events
 set belloff=all
 
+" Resize splits when the window is resized
+augroup on_vim_resized
+  autocmd!
+  autocmd VimResized * wincmd =
+augroup END
+
 " Wrap logn lines *with* indentation
 " set breakindent
 
@@ -628,6 +634,15 @@ let g:user_emmet_complete_tag = 1
 let g:user_emmet_install_global = 1
 let g:user_emmet_install_command = 1
 let g:user_emmet_mode = 'i'
+
+" Change default emmet-vim html5 boilerplate
+let g:user_emmet_settings = {
+\  'html': {
+\    'snippets': {
+\      'html:5': '!!!+html>(head>(meta[charset=${charset}]+meta[name="viewport" content="width=device-width,initial-scale=1.0"]+meta[http-equiv="X-UA-Compatible" content="ie=edge"]+title +body'
+    \}
+ \}
+\}
 " ↓↓↓ Conflicting with MUcomplete ↓↓↓
 " let g:user_emmet_expandabbr_key = '<Tab>'
 " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
