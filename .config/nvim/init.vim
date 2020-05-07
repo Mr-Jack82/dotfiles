@@ -897,3 +897,9 @@ endif
 " Clear all registers with :WipeReg command
 command! WipeReg for i in range(34,122) | silent!
       \ call setreg(nr2char(i), []) | endfor
+
+" Resize splits when the window is resized
+augroup on_vim_resized
+  autocmd!
+  autocmd VimResized * wincmd =
+augroup END
