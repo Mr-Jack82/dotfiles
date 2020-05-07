@@ -241,12 +241,6 @@ set showcmd
 " Disable bell for all events
 set belloff=all
 
-" Resize splits when the window is resized
-augroup on_vim_resized
-  autocmd!
-  autocmd VimResized * wincmd =
-augroup END
-
 " Wrap logn lines *with* indentation
 " set breakindent
 
@@ -619,6 +613,8 @@ let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#buffer_relative_paths  = 1
 
 " === vim-matchup === "
+let g:matchup_surround_enabled     = 1
+let g:matchup_transmute_enabled    = 1
 let g:matchup_delim_noskips        = 2
 let g:matchup_matchparen_deferred  = 1
 let g:matchup_matchparen_nomode    = 'i'
@@ -1140,3 +1136,9 @@ set history=1000
 " Clear all registers with :WipeReg command
 command! WipeReg for i in range(34,122) | silent!
       \ call setreg(nr2char(i), []) | endfor
+
+" Resize splits when the window is resized
+augroup on_vim_resized
+  autocmd!
+  autocmd VimResized * wincmd =
+augroup END
