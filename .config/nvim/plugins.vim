@@ -78,7 +78,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'Yggdroot/indentLine'
 
 " The undo history visualizer for Vim
-Plug 'mbbill/undotree'
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 
 " Easy text exchange operator for Vim
 Plug 'tommcdo/vim-exchange'
