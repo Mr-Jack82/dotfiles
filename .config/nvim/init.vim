@@ -736,6 +736,10 @@ nmap s <Plug>(easymotion-overwin-f)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
+" Enable 'dot' repeat feature
+omap z <Plug>(easymotion-t)
+let g:EasyMotion_keys='hklyuiopnm,qwertzxcvbasdgjf;'
+
 " Lazy targeting
 let g:EasyMotion_smartcase = 1
 
