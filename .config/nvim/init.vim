@@ -728,9 +728,13 @@ map <leader>h :%s///<left><left>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 " === Easy-motion shortcuts ==="
-" <leader>s - Easy-motion highlights {char} to bidirection (forward and
-" backward at the same time.)
-map <Leader> <Plug>(easymotion-prefix)
+" Jump to anywhere you want with minimal keystrokes, with just one key
+" binding. `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 
 " Lazy targeting
 let g:EasyMotion_smartcase = 1
