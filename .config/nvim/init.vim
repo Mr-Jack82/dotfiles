@@ -732,10 +732,6 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 " binding. `s{char}{label}`
 nmap s <Plug>(easymotion-overwin-f)
 
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-
 " Enable 'dot' repeat feature
 omap z <Plug>(easymotion-t)
 let g:EasyMotion_keys='hklyuiopnm,qwertzxcvbasdgjf;'
