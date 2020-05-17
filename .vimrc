@@ -51,7 +51,10 @@ Plug 'tpope/vim-abolish'
 Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
+
+" The missing motion for Vim
+Plug 'justinmk/vim-sneak'
 
 " Pairs of handy bracket mappings
 Plug 'tpope/vim-unimpaired'
@@ -578,8 +581,8 @@ let g:rainbow_active = 1
  " runtime autoload/grepper.vim
  let g:grepper.jump = 1
  nnoremap <Leader>/ :GrepperRg<Space>
- nnoremap gs :Grepper -cword -noprompt<CR>
- xmap gs <Plug>(GrepperOperator)
+ nnoremap gS :Grepper -cword -noprompt<CR>
+ xmap gS <Plug>(GrepperOperator)
 
 " === ale === "
 let g:ale_fixers = {
@@ -920,12 +923,30 @@ map <leader>h :%s///<left><left>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 " === Easy-motion shortcuts ==="
-" <leader>s - Easy-motion highlights {char} to bidirection (forward and
-" backward at the same time.)
-map <Leader> <Plug>(easymotion-prefix)
+" Jump to anywhere you want with minimal keystrokes, with just one key
+" binding. `s{char}{label}`
+" nmap s <Plug>(easymotion-overwin-f)
 
 " Lazy targeting
-let g:EasyMotion_smartcase = 1
+" let g:EasyMotion_smartcase = 1
+
+" === vim-sneak === "
+" Enable label-mode
+let g:sneak#label = 1
+
+" Case insensitive sneak
+let g:sneak#use_ic_scs = 1
+
+" Immediately move to the next instance of search, if you move the cursor
+" sneak is back to default behavior
+let g:sneak#s_next = 1
+
+" Remap `,` to `gs` to move backward with `f` and `t`
+map gs <Plug>Sneak_,
+
+" Change the colors
+highlight Sneak guifg=black guibg=#00C7DF ctermfg=black ctermbg=cyan
+highlight SneakScope guifg=red guibg=yellow ctermfg=red ctermbg=yellow
 
 " === undotree ==="
 nnoremap <Leader>u :UndotreeToggle<cr>
