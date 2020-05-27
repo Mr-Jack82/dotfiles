@@ -758,9 +758,23 @@ map <leader>h :%s///<left><left>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 " === Easy-motion shortcuts ==="
+" Disable default mappings
+let g:EasyMotion_do_mapping = 0
+
 " <leader>s - Easy-motion highlights {char} to bidirection (forward and
 " backward at the same time.)
 map <Leader> <Plug>(easymotion-prefix)
+
+" Jump to anywhere you want with minimal keystrokes, with just one key
+" binding. `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+
+" Bidirectional & within line 't' motion
+omap t <Plug>(easymotion-bd-tl)
+
+" Enable 'dot' repeat feature
+omap z <Plug>(easymotion-t)
+let g:EasyMotion_keys='hklyuiopnm,qwertzxcvbasdgjf;'
 
 " Lazy targeting
 let g:EasyMotion_smartcase = 1
