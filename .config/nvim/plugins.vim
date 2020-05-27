@@ -49,9 +49,6 @@ Plug 'tpope/vim-surround'
 " ghetto HTML/XML mappings (formerly allml.vim)
 Plug 'tpope/vim-ragtag'
 
-" Heuristically set buffer options
-Plug 'tpope/vim-sleuth'
-
 " Automatically save changes to disk in Vim
 Plug '907th/vim-auto-save'
 
