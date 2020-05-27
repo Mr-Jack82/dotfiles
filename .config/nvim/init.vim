@@ -242,7 +242,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
-if has('patch8.1.1068')
+if exists('*complete_info')
   " Use `complete_info` if your (Neo)Vim version supports it.
   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
@@ -471,6 +471,8 @@ let g:XkbSwitchIMappings = ['ru']
 " === indentLine === "
 let g:indentLine_char = '┊'
 let g:vim_json_syntax_conceal = 0
+" TODO: the code below does not work, need to figure out why
+" let g:indentLine_fileTypeExclude = ['help', 'text']
 
 " This option works fine for .json file
 " let g:indentLine_concealcursor = ""
