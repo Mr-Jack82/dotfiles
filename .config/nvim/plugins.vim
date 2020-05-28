@@ -95,11 +95,11 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-" Language Server Protocol (LSP) support for vim and neovim.
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" LSP Completion source for deoplete
+Plug 'Shougo/deoplete-lsp'
+
+" Nvim LSP client configurations
+Plug 'neovim/nvim-lsp'
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
