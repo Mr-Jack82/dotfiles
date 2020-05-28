@@ -237,105 +237,8 @@ function! s:check_back_space() abort "{{{
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction"}}}
 
-" === LanguageClient-neovim === "
-let g:LanguageClient_usePopupHover      = 1
-let g:LanguageClient_hoverPreview       = 'Always'
-" let g:LanguageClient_diagnosticsDisplay = {
-"       \   1: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-"       \   2: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-"       \   3: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-"       \   4: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-"       \ }
-
-let g:LanguageClient_serverCommands = {}
-
-if exists('$DEBUG_LC_LOGFILE')
-    let g:LanguageClient_loggingFile  = $DEBUG_LC_LOGFILE
-    let g:LanguageClient_loggingLevel = 'DEBUG'
-endif
-
-if executable('typescript-language-server')
-  " ie. via `npm install -g typescript-language-server`
-  if exists('$DEBUG_LSP_LOGFILE')
-    let s:debug_args=[
-          \   '--log-level=4',
-          \   '--tsserver-log-file',
-          \   $DEBUG_LSP_LOGFILE,
-          \   '--tsserver-log-verbosity=verbose'
-          \ ]
-else
-    let s:debug_args = []
-endif
-
-let s:ts_lsp = extend([exepath('typescript-language-server'), '--stdio'], s:debug_args)
-elseif executable('javascript-typescript-stdio')
-    " ie. via `npm install -g javascript-typescript-langserver`
-    if exists('$DEBUG_LSP_LOGFILE')
-        let s:debug_args = ['--trace', '--logfile', $DEBUG_LSP_LOGFILE]
-    else
-        let s:debug_args = []
-    endif
-
-let s:ts_lsp = extend([exepath('javascript-typescript-stdio')], s:debug_args)
-else
-    let s:ts_lsp = []
-endif
-
-" From `npm install -g flow-bin`
-let s:flow_lsp = executable('flow') ?
-    \ [exepath('flow'), 'lsp'] :
-    \ []
-
-let s:ts_filetypes = [
-    \   'typescript',
-    \   'typescript.tsx',
-    \   'typescript.jest',
-    \   'typescript.jest.tsx'
-    \ ]
-
-let s:js_filetypes = [
-    \   'javascript',
-    \   'javascript.jsx',
-    \   'javascript.jest',
-    \   'javascript.jest.jsx'
-    \ ]
-
-let g:LanguageClient_rootMarkers = {}
-
-if s:ts_lsp != []
-    for s:ts_filetypes in s:ts_filetypes
-        let g:LanguageClient_rootMarkers[s:ts_filetypes] = ['tsconfig.json', '.flowconfig', 'package.json']
-        let g:LanguageClient_serverCommands[s:ts_filetypes] = s:ts_lsp
-    endfor
-endif
-
-if s:ts_lsp != [] && filereadable('tsconfig.json')
-    let s:js_lsp = s:ts_lsp
-elseif s:flow_lsp != [] && filereadable('flowconfig')
-    let s:js_lsp = s:flow_lsp
-elseif s:ts_lsp != []
-    let s:js_lsp = s:ts_lsp
-endif
-
-if exists('s:js_lsp')
-    for s:js_filetype in s:js_filetypes
-        let g:LanguageClient_rootMarkers[s:js_filetype] = ['tsconfig.json', '.flowconfig', 'package.json']
-        let g:LanguageClient_serverCommands[s:js_filetype] = s:js_lsp
-    endfor
-endif
-
-if executable('ocaml-language-server')
-    let s:ocaml_lsp = [exepath('ocaml-language-server')]
-    let g:LanguageClient_serverCommands['reason'] = s:ocaml_lsp
-    let g:LanguageClient_serverCommands['ocaml'] = s:ocaml_lsp
-endif
-
-let g:LanguageClient_diagnosticsList = 'Location'
-
-if filereadable('/usr/local/bin/python3')
-  " Avoid search, speeding up start-up.
-  let g:python3_host_prog = '/usr/local/bin/python3'
-endif
+" TODO: Modify the autocomplet so that snippets do not fall out when you
+" hover over them in completion list
 
 " === NeoSnippet === "
 " Map <C-j> as shortcut to activate snippet if available
@@ -500,7 +403,6 @@ augroup ft_javascript
   au FileType javascript let b:auto_save = 0
 augroup END
 
-
 " === vim-repeat === "
 " This is an example from Github page and needed to edit properly
 " from Vimcast #61
@@ -556,6 +458,17 @@ let g:matchup_matchpref            = {
  \  'eruby': { 'tagnameonly': 1, 'nolists': 1 },
  \  'xml':   { 'tagnameonly': 1, 'nolists': 1 },
  \}
+
+" === nvim-lsp ==="
+lua << END
+  require'nvim_lsp'.tsserver.setup{}
+  require'nvim_lsp'.vimls.setup{}
+END
+
+sign define LspDiagnosticsErrorSign text=✖
+sign define LspDiagnosticsWarningSign text=⚠
+sign define LspDiagnosticsInformationSign text=ℹ
+sign define LspDiagnosticsHintSign text=➤
 
 " ============================================================================ "
 " ===                                UI                                    === "
