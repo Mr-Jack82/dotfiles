@@ -142,6 +142,8 @@ set cmdheight=2
 " Don't give completion messages like 'match 1 of 2'
 " or 'The only match'
 set shortmess+=c
+" Disable preview window for autocompletion
+set completeopt-=preview
 
 " Do smart autoindenting when starting a new line.
 set smartindent
@@ -237,14 +239,18 @@ function! s:check_back_space() abort "{{{
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction"}}}
 
-" TODO: Modify the autocomplet so that snippets do not fall out when you
-" hover over them in completion list
-
 " === NeoSnippet === "
 " Map <C-j> as shortcut to activate snippet if available
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
+
+" If popup window is visible do autocompletion from back
+imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Fix for jumping over placeholders for neosnippet
+smap <expr><TAB> neosnippet#jumpable() ?
+\ "\<Plug>(neosnippet_jump)"
+\: "\<TAB>"
 
 " Enable snipMate compatible feature
 let g:neosnippet#enable_snipmate_compatibility = 1
@@ -259,11 +265,6 @@ endif
 
 " Load custom snippets from snippets folder
 let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
-
-" For conceal markers
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 
 " === NERDTree === "
 " Show hidden files/directories
@@ -461,9 +462,67 @@ let g:matchup_matchpref            = {
 
 " === nvim-lsp ==="
 lua << END
-  require'nvim_lsp'.tsserver.setup{}
+  require'nvim_lsp'.tsserver.setup{
+    -- cmd = {
+    --   "typescript-language-server",
+    --   "--stdio",
+    --   "--tsserver-log-file",
+    --   "tslog"
+    -- }
+  }
   require'nvim_lsp'.vimls.setup{}
+
+  -- Override hover winhighlight.
+  local method = 'textDocument/hover'
+  local hover = vim.lsp.callbacks[method]
+  vim.lsp.callbacks[method] = function (_, method, result)
+     hover(_, method, result)
+
+     for _, winnr in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+       if pcall(function ()
+         vim.api.nvim_win_get_var(winnr, 'textDocument/hover')
+       end) then
+         vim.api.nvim_win_set_option(winnr, 'winhighlight', 'Normal:Visual,NormalNC:Visual')
+         break
+       else
+         -- Not a hover window.
+       end
+     end
+  end
 END
+
+" I get this from @wincent https://github.com/wincent/wincent
+function! s:Bind()
+  try
+    if nvim_win_get_var(0, 'textDocument/hover')
+      nnoremap <buffer> <silent> K :call nvim_win_close(0, v:true)<CR>
+      nnoremap <buffer> <silent> <Esc> :call nvim_win_close(0, v:true)<CR>
+
+      setlocal nocursorline
+
+      " I believe this is supposed to happen automatically because I can see
+      " this in lsp/util.lua:
+      "
+      "     api.nvim_buf_set_option(floating_bufnr, 'modifiable', false)
+      "
+      " but it doesn't seem to be working.
+      setlocal nomodifiable
+    endif
+  catch /./
+    " Not a hover window.
+  endtry
+endfunction
+
+function! s:ConfigureBuffer()
+    nnoremap <buffer> <silent> <Leader>ld <cmd>lua vim.lsp.util.show_line_diagnostics()<CR>
+    nnoremap <buffer> <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <buffer> <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
+    nnoremap <buffer> <silent> gd <cmd>lua vim.lsp.buf.declaration()<CR>
+
+    if exists('+signcolumn')
+      setlocal signcolumn=yes
+    endif
+endfunction
 
 sign define LspDiagnosticsErrorSign text=✖
 sign define LspDiagnosticsWarningSign text=⚠
