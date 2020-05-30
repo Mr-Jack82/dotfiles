@@ -123,6 +123,7 @@ alias l='colorls --group-directories-first --almost-all'
 alias ll='colorls --group-directories-first --almost-all --long'
 alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias ldir='ls -d */'
+alias weather="http http://wttr.in/Temruk"
 
 # User configuration
 
