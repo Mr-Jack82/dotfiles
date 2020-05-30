@@ -163,7 +163,10 @@ Plug 'othree/html5.vim'
 
 " === UI === "
 " File explorer
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+" Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+
+" Directory viewer for Vim
+Plug 'justinmk/vim-dirvish'
 
 " The fancy start screen for Vim.
 Plug 'mhinz/vim-startify'
@@ -808,6 +811,23 @@ if filereadable('/usr/local/bin/python3')
   let g:python3_host_prog = '/usr/local/bin/python3'
 endif
 
+" === vim-dirvish === "
+augroup dirvish_config
+    autocmd!
+
+    " Map `\t` to open in new tab.
+    autocmd FileType dirvish
+                \  nnoremap <silent><buffer> <Bslash>t :call dirvish#open('tabedit', 0)<CR>
+                \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+
+    " Map `gr` to reload.
+    autocmd FileType dirvish nnoremap <silent><buffer>
+                \ gr :<C-U>Dirvish %<CR>
+
+    " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
+    autocmd FileType dirvish nnoremap <silent><buffer>
+                \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+augroup END
 
 " ============================================================================ "
 " ===                                UI                                    === "
@@ -973,7 +993,8 @@ noremap \ ,
 "   <Space> - PageDown
 "   -       - PageUp
 noremap <Space> <PageDown>
-noremap - <PageUp>
+" NOTE: `-` key is used by 'vim-dirvish'
+" noremap - <PageUp>
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
