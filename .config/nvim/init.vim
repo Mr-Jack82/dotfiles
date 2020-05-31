@@ -55,7 +55,7 @@ set scrolloff=5
 set hidden
 
 " You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
+set updatetime=50
 
 " always show signcolumns
 set signcolumn=yes
