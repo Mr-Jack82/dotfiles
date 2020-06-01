@@ -309,6 +309,11 @@ imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
 
+" Fix for jumping over placeholders for neosnippet
+smap <expr><TAB> neosnippet#jumpable() ?
+\ "\<Plug>(neosnippet_jump)"
+\: "\<TAB>"
+
 " Load custom snippets from snippets folder
 let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
 
@@ -449,10 +454,10 @@ let g:auto_save        = 1
 let g:auto_save_silent = 1
 let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
 
-" Disable auto save for javascript files
+" Disable auto save for javascript and json files
 augroup ft_javascript
   au!
-  au FileType javascript let b:auto_save = 0
+  au FileType javascript,json let b:auto_save = 0
 augroup END
 
 
@@ -513,6 +518,14 @@ let g:matchup_matchpref            = {
  \  'eruby': { 'tagnameonly': 1, 'nolists': 1 },
  \  'xml':   { 'tagnameonly': 1, 'nolists': 1 },
  \}
+
+" === ctrlp.vim === "
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = "CtrlP"
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_working_path_mode = 'ra'
 
 " ============================================================================ "
 " ===                                UI                                    === "
