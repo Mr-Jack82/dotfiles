@@ -111,7 +111,7 @@ let g:airline#themes#space#palette.replace.airline_error =
 if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
-let g:airline#themes#base16_oceanicnext#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(
+let g:airline#themes#space#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(
       \ [ s:gui07, s:gui02, s:cterm07, s:cterm02, '' ],
       \ [ s:gui07, s:gui04, s:cterm07, s:cterm04, '' ],
       \ [ s:gui05, s:gui01, s:cterm05, s:cterm01, 'bold' ])
