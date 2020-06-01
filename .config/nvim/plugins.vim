@@ -105,6 +105,9 @@ Plug 'Shougo/echodoc.vim'
 " Enhanced in-file search for Vim
 Plug 'wincent/loupe'
 
+" Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder.
+Plug 'ctrlpvim/ctrlp.vim'
+
 " === Git Plugins === "
 " Enable git changes to be shown in sign column
 Plug 'mhinz/vim-signify'
