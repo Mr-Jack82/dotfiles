@@ -249,7 +249,7 @@ else
   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" Highlight symbol under cursor on CursorHold
+" Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 function! HasEslintConfig()
@@ -523,9 +523,22 @@ let g:matchup_matchpref            = {
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = "CtrlP"
 
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+" Use rg to search instead
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+endif
+
+" Ignore files to completion
+set wildignore+=*/.git/*,*/tmp/*,*.so,*.swp,*.zip,*.epub,*.pdf,*.jpg
+
+" show hidden files
 let g:ctrlp_show_hidden = 1
-let g:ctrlp_working_path_mode = 'ra'
+
+" Lets us change the working directory during a Vim session and make CtrlP
+" respect that change.
+let g:ctrlp_working_path_mode = 0
 
 " ============================================================================ "
 " ===                                UI                                    === "
@@ -744,7 +757,10 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 
 " === Easy-motion shortcuts ==="
 " Disable default mappings
-let g:EasyMotion_do_mapping = 0
+" let g:EasyMotion_do_mapping = 0
+
+" Setting up <Leader> key for easymotion
+map <Leader> <Plug>(easymotion-prefix)
 
 " Jump to anywhere you want with minimal keystrokes, with just one key
 " binding. `s{char}{label}`
@@ -759,6 +775,10 @@ let g:EasyMotion_keys='hklyuiopnm,qwertzxcvbasdgjf;'
 
 " Lazy targeting
 let g:EasyMotion_smartcase = 1
+
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
 
 " === vim-jsdoc shortcuts ==="
 " Generate jsdoc for function under cursor
