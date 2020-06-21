@@ -10,81 +10,10 @@ Xft.hintstyle:  hintslight
 Xft.autohint:   false
 Xft.lcdfilter:  lcddefault
 
-!---------------------------------
-! URXVT Terminal config
-! --------------------------------
-URxvt.depth:                            32
-URxvt*termName:                         screen-256color
-URxvt*geometry:                         90x25
-URxvt.loginShell:                       true
-URxvt*scrollColor:                      #777777
-URxvt.scrollStyle:                      rxvt
-URxvt*scrollTtyKeypress:                true
-URxvt*scrollTtyOutput:                  false
-URxvt*scrollWithBuffer:                 true
-URxvt*skipScroll:                       true
-URxvt*scrollBar:                        false
-URxvt*fading:                           30
-URxvt*urgentOnBell:                     false
-URxvt*visualBell:                       true
-URxvt*mapAlert:                         true
-URxvt*mouseWheelScrollPage:             true
-URxvt.foreground:                       #eeeeee
-URxvt.background:                       #000000
-URxvt*colorUL:                          yellow
-URxvt*underlineColor:                   yellow
-URxvt.saveLines:                        65535
-URxvt.cursorBlink:                      false
-URxvt.utf8:                             true
-URxvt.locale:                           true
-
-URxvt.letterSpace:              -1
-
-URxvt.font:             xft:monospace:pixelsize=16:style=regular
-URxvt.boldFont:         xft:monospace:pixelsize=14:style=bold
-
-! Perl extensions
-URxvt.perl-ext-common:     default,matcher
-URxvt.matcher.button:      1
-URxvt.urlLauncher:         google-chrome
-
-URxvt.perl-ext-common:          ...,font-size
-URxvt.keysym.C-Up:              perl:font-size:increase
-URxvt.keysym.C-Down:            perl:font-size:decrease
-URxvt.keysym.C-S-Up:            perl:font-size:incglobal
-URxvt.keysym.C-S-Down:          perl:font-size:decglobal
-
-URxvt.keysym.Home: \033[1~
-URxvt.keysym.End: \033[4~
-URxvt.keysym.KP_Home: \033[1~
-URxvt.keysym.KP_End:  \033[4~
-
-! Colors
-/* *background:   #282a36 */
-/* *foreground:   #eff0eb */
-/* *cursorColor:  #9aedfe */
-
-/* *color0:      #33303b */
-/* *color8:      #4f4b58 */
-/* *color1:      #ff5c57 */
-/* *color9:      #ff5c57 */
-/* *color2:      #5af78e */
-/* *color10:     #5af78e */
-/* *color3:      #f3f99d */
-/* *color11:     #f3f99d */
-/* *color4:      #57c7ff */
-/* *color12:     #57c7ff */
-/* *color5:      #ff6ac1 */
-/* *color13:     #ff6ac1 */
-/* *color6:      #9aedfe */
-/* *color14:     #9aedfe */
-/* *color7:      #eff0eb */
-/* *color15:     #eff0eb */
-
 /* Config for ST terminal */
 
 !! Transparency (0-1):
-*.alpha: 0.9
+*.alpha: 0.93
 
 !! Set a default font and font size as below:
 *.font: monospace:size=12
