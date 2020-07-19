@@ -579,7 +579,7 @@ let g:undotree_WindowLayout = 3
 let g:rainbow_active = 1
 
 " === vim-grepper === "
-let g:grepper = {}
+let g:grepper       = {}
 let g:grepper.tools = ['grep', 'git', 'rg']
 
 " Search for the current word
@@ -600,6 +600,10 @@ call SetupCommandAlias("grep", "GrepperGrep")
 " Search for the current selection
 nmap gs <Plug>(GrepperOperator)
 xmap gs <Plug>(GrepperOperator)
+
+" Open Grepper-prompt for a particular grep-alike tool
+nnoremap <Leader>g :Grepper -tool git<CR>
+nnoremap <Leader>G :Grepper -tool rg<CR>
 
 " === ale === "
 let g:ale_fixers = {
