@@ -638,6 +638,9 @@ nmap <silent> [w <Plug>(ale_previous)
 nmap <silent> ]w <Plug>(ale_next)
 nmap <silent> ]W <Plug>(ale_last)
 
+" Show 5 lines of errors (default: 10)
+let g:ale_list_window_size = 5
+
 " === vim-mucomplete === "
 let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#buffer_relative_paths  = 1
