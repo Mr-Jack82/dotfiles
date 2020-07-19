@@ -590,7 +590,7 @@ let g:rainbow_active = 1
 " === ale === "
 let g:ale_fixers = {
 \  'css':        ['prettier'],
-\  'javascript': ['prettier-standard'],
+\  'javascript': ['prettier'],
 \  'json':       ['prettier'],
 \  'ruby':       ['standardrb'],
 \  'scss':       ['prettier'],
@@ -598,7 +598,7 @@ let g:ale_fixers = {
 \}
 let g:ale_linters = {
 \  'css':        ['stylelint'],
-\  'javascript': ['standard'],
+\  'javascript': ['eslint'],
 \  'json':       ['jsonlint'],
 \  'markdown':   ['mdl'],
 \  'ruby':       ['standardrb'],
@@ -613,6 +613,12 @@ let g:ale_sign_warning       = '❯❯'
 let g:ale_sign_priority      = 50
 let g:ale_virtualtext_cursor = 0
 let g:ale_virtualtext_prefix = '● '
+
+" Mappings in the style of unimpaired-next
+nmap <silent> [W <Plug>(ale_first)
+nmap <silent> [w <Plug>(ale_previous)
+nmap <silent> ]w <Plug>(ale_next)
+nmap <silent> ]W <Plug>(ale_last)
 
 " === vim-mucomplete === "
 let g:mucomplete#enable_auto_at_startup = 1
