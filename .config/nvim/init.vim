@@ -890,6 +890,18 @@ nnoremap <Leader>l :ls<cr>:b<Space>
 " Shortcut to save
 nmap <Leader>, :w<CR>
 
+" Switching between Terminal Mode and Normal Mode
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <C-v><Esc> <Esc>
+endif
+
+" Distinguishing the Terminal Cursor from the Normal Cursor
+if has('nvim')
+  highlight! link TermCursor Cursor
+  highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
+endif
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
