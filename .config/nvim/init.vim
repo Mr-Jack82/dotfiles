@@ -902,6 +902,14 @@ if has('nvim')
   highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 endif
 
+" Easy window switching for Terminal mode
+if has('nvim')
+  tnoremap <M-h> <C-\><C-n><C-w>h
+  tnoremap <M-j> <C-\><C-n><C-w>j
+  tnoremap <M-k> <C-\><C-n><C-w>k
+  tnoremap <M-l> <C-\><C-n><C-w>l
+endif
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
