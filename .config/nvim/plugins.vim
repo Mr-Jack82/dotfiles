@@ -55,6 +55,9 @@ Plug '907th/vim-auto-save'
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
 
+" Continuously updated session files
+Plug 'tpope/vim-obsession'
+
 " A Vim Plugin for indicating changes as colored bars using signs.
 Plug 'chrisbra/changesPlugin'
 
