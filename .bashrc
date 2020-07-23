@@ -123,6 +123,8 @@ alias ldir='ls -d */'			# show only folders
 
 export HISTCONTROL=ignoredups           # ignore duplicates in command history
 export HISTSIZE=1000                    # increase the volume of history
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
 xhost +local:root > /dev/null 2>&1
 
