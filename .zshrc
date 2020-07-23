@@ -277,6 +277,15 @@ fgr() {
     fi
 }
 
+# Prevent Neovim from nesting inside of the Terminal buffer
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+  if [ -x "$(command -v nvr)" ]; then
+    alias nvim=nvr
+  else
+    alias nvim='echo "No nesting\!"'
+  fi
+fi
+
 # Set default editor to nvim
 export VISUAL='nvim'
 export EDITOR="$VISUAL"
