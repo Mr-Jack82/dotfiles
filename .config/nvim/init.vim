@@ -968,3 +968,8 @@ augroup on_vim_resized
   autocmd!
   autocmd VimResized * wincmd =
 augroup END
+
+" Prevent Neovim from nesting inside of a terminal buffer
+if has('nvim') && executable('nvr')
+  let $VISUAL="nvr -cc split --remote-wait + 'set bufhidden=wipe'"
+endif
