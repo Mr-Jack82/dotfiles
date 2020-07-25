@@ -34,9 +34,6 @@ Plug 'ntpeters/vim-better-whitespace'
 " Multiple cursors like in Sublime Text
 Plug 'terryma/vim-multiple-cursors'
 
-" Vim plugin for intensely orgasmic commenting
-" Plug 'scrooloose/nerdcommenter'
-
 " Comment stuff out
 Plug 'tpope/vim-commentary'
 
@@ -54,9 +51,6 @@ Plug '907th/vim-auto-save'
 
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
-
-" Continuously updated session files
-Plug 'tpope/vim-obsession'
 
 " A Vim Plugin for indicating changes as colored bars using signs.
 Plug 'chrisbra/changesPlugin'
@@ -91,24 +85,12 @@ Plug 'andymass/vim-matchup', { 'for':
 " Intellisense Engine
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 
-" Tmux/Neovim movement integration
-Plug 'christoomey/vim-tmux-navigator'
-
-" Denite - Fuzzy finding, buffer management
-Plug 'Shougo/denite.nvim'
-
 " Snippet support
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
 " Print function signatures in echo area
 Plug 'Shougo/echodoc.vim'
-
-" Enhanced in-file search for Vim
-Plug 'wincent/loupe'
-
-" Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder.
-Plug 'ctrlpvim/ctrlp.vim'
 
 " EditorConfig plugin for Vim
 Plug 'editorconfig/editorconfig-vim'
@@ -146,6 +128,21 @@ Plug 'othree/yajs.vim'
 " === UI === "
 " File explorer
 Plug 'scrooloose/nerdtree'
+
+" Continuously updated session files
+Plug 'tpope/vim-obsession'
+
+" Tmux/Neovim movement integration
+Plug 'christoomey/vim-tmux-navigator'
+
+" Denite - Fuzzy finding, buffer management
+Plug 'Shougo/denite.nvim'
+
+" Enhanced in-file search for Vim
+Plug 'wincent/loupe'
+
+" Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder.
+Plug 'ctrlpvim/ctrlp.vim'
 
 " Colorscheme
 Plug 'mhartington/oceanic-next'
