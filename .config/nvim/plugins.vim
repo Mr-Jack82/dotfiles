@@ -65,7 +65,6 @@ Plug 'chrisbra/changesPlugin'
 Plug 'tpope/vim-abolish'
 
 " auto-close plugin
-" Plug 'rstacruz/vim-closer'
 Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
@@ -110,6 +109,9 @@ Plug 'wincent/loupe'
 
 " Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder.
 Plug 'ctrlpvim/ctrlp.vim'
+
+" EditorConfig plugin for Vim
+Plug 'editorconfig/editorconfig-vim'
 
 " === Git Plugins === "
 " Enable git changes to be shown in sign column
