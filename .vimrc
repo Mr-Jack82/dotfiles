@@ -110,7 +110,8 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 " (Optional) Multi-entry selection UI.
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Check syntax in Vim asynchronously and fix files, with
 " Language Server Protocol (LSP) support
@@ -855,6 +856,24 @@ augroup dirvish_config
     autocmd FileType dirvish nnoremap <silent><buffer>
                 \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
 augroup END
+
+" === FZF === "
+" fzf file fuzzy search that respects .gitignore
+" If in git directory, show only files are commited, staged, or unstaged
+" else use regular :Files
+nnoremap <expr> <C-p> (len(system('git rev-parse'))
+      \ ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<CR>"
+
+nnoremap <silent> <Leader>a :All<CR>
+
+command! -bang -nargs=* All
+  \ call fzf#run(fzf#wrap({'source': 'rg --files --hidden --no-ignore-vcs -g
+  \ "!{node_modules/*,.git/*,Видео/*,Фильмы/*}"', 'down': '40%', 'options':
+  \ '--expect=ctrl-t,ctrl-x,ctrl-v --multi --reverse'}))
+
+let g:fzf_layout      = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS = '--reverse'
+
 
 " ============================================================================ "
 " ===                                UI                                    === "
