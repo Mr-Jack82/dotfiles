@@ -212,7 +212,10 @@ ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 
 # Setting rg as the default source for fzf
-export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+
+# Making fzf a bit more user friendly
+export FZF_DEFAULT_OPTS='--height 96% --reverse --preview  "cat {}"'
 
 # Apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
