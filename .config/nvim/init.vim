@@ -979,3 +979,11 @@ augroup vimrc
   autocmd!
   autocmd BufWritePre /tmp/* setlocal noundofile
 augroup END
+
+" Highlight on yank
+augroup highlight_yank
+  if exists('##TextYankPost')
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank('IncSearch', 300)
+  endif
+augroup END
