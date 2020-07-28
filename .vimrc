@@ -658,6 +658,8 @@ let g:matchup_matchpref            = {
  \}
 
 " === emmet-vim === "
+" Hacked from Mhartington from
+" https://github.com/mhartington/dotfiles/blob/master/config/nvim/init.vim
 " Remapping <C-y>, just doesn't cut it.
 function! s:expand_html_tab()
   " try to determine if we're within quotes or tags.
