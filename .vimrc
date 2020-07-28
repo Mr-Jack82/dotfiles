@@ -144,9 +144,7 @@ Plug 'othree/yajs.vim'
 Plug 'sheerun/vim-polyglot'
 
 " Emmet for Vim
-Plug 'mattn/emmet-vim', { 'for':
-    \  ['html', 'xml', 'ejs', 'css', 'sass', 'scss', 'php']
-    \}
+Plug 'mattn/emmet-vim'
 
 " vim match-up: even better % fist_oncoming navigate and highlight
 " matching words fist_oncoming modern matchit and matchparen replacement
@@ -660,10 +658,33 @@ let g:matchup_matchpref            = {
  \}
 
 " === emmet-vim === "
-let g:user_emmet_complete_tag = 1
-let g:user_emmet_install_global = 1
-let g:user_emmet_install_command = 1
-let g:user_emmet_mode = 'i'
+" Remapping <C-y>, just doesn't cut it.
+function! s:expand_html_tab()
+  " try to determine if we're within quotes or tags.
+  " if so, assume we're in an emmet fill area.
+  let line = getline('.')
+  if col('.') < len(line)
+    let line = matchstr(line, '[">][^<"]*\%'.col('.').'c[^>"]*[<"]')
+    if len(line) >= 2
+      return "\<C-n>"
+    endif
+  endif
+  " expand anything emmet thinks is expandable.
+  if emmet#isExpandable()
+    return emmet#expandAbbrIntelligent("\<tab>")
+    " return "\<C-y>,"
+  endif
+  " return a regular tab character
+  return "\<tab>"
+endfunction
+" let g:user_emmet_expandabbr_key='<Tab>'
+" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+
+autocmd FileType html,css,scss,typescriptreact,vue,javascript,markdown.mdx imap <silent><buffer><expr><tab> <sid>expand_html_tab()
+let g:user_emmet_mode='a'
+let g:user_emmet_complete_tag = 0
+let g:user_emmet_install_global = 0
+autocmd FileType html,css,scss,typescriptreact,vue,javascript,markdown.mdx EmmetInstall
 
 " Change default emmet-vim html5 boilerplate
 let g:user_emmet_settings = {
@@ -673,26 +694,6 @@ let g:user_emmet_settings = {
     \}
  \}
 \}
-" ↓↓↓ Conflicting with MUcomplete ↓↓↓
-" let g:user_emmet_expandabbr_key = '<Tab>'
-" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-
-" ↓↓↓ This is conflicting too ↓↓↓
-" let g:user_emmet_leader_key = '<C-e>'
-" let g:user_emmet_expandabbr_key = '<C-x><C-e>'
-
-" imap <silent><expr> <Tab> <SID>expand()
-
-" function! s:expand()
-"     if pumvisible()
-"         return "\<C-y>"
-"     endif
-"     let col = col('.') - 1
-"     if !col || getline('.')[col - 1] =~# '\s'
-"         return "\<Tab>"
-"     endif
-"     return "\<C-x>\<C-e>"
-" endfunction
 
 " === vim-startify === "
 let g:startify_commands = [
