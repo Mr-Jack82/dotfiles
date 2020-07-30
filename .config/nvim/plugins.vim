@@ -32,7 +32,7 @@ Plug 'junegunn/vim-plug'
 Plug 'ntpeters/vim-better-whitespace'
 
 " Multiple cursors like in Sublime Text
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi'
 
 " Comment stuff out
 Plug 'tpope/vim-commentary'
