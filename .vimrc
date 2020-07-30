@@ -843,22 +843,28 @@ if filereadable('/usr/local/bin/python3')
 endif
 
 " === vim-dirvish === "
-augroup dirvish_config
-    autocmd!
+" hacked from mhinz
+" https://github.com/mhinz/dotfiles/blob/master/.vim/vimrc
+autocmd FileType dirvish nmap <buffer> <c-o> -
+autocmd VimEnter * if &ft == 'dirvish' | exe 'lcd' expand('%') | endif
+nnoremap <expr> <f1> (&ft == 'dirvish' ? ':close' : ':leftabove 35vs +Dirvish')."\<cr>"
 
-    " Map `\t` to open in new tab.
-    autocmd FileType dirvish
-                \  nnoremap <silent><buffer> <Bslash>t :call dirvish#open('tabedit', 0)<CR>
-                \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+" augroup dirvish_config
+"     autocmd!
 
-    " Map `gr` to reload.
-    autocmd FileType dirvish nnoremap <silent><buffer>
-                \ gr :<C-U>Dirvish %<CR>
+"     " Map `\t` to open in new tab.
+"     autocmd FileType dirvish
+"                 \  nnoremap <silent><buffer> <Bslash>t :call dirvish#open('tabedit', 0)<CR>
+"                 \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
 
-    " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
-    autocmd FileType dirvish nnoremap <silent><buffer>
-                \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
-augroup END
+"     " Map `gr` to reload.
+"     autocmd FileType dirvish nnoremap <silent><buffer>
+"                 \ gr :<C-U>Dirvish %<CR>
+
+"     " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
+"     autocmd FileType dirvish nnoremap <silent><buffer>
+"                 \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+" augroup END
 
 " === FZF === "
 " fzf file fuzzy search that respects .gitignore
