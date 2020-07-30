@@ -880,7 +880,7 @@ command! -bang -nargs=* All
   \ "!{node_modules/*,.git/*,Видео/*,Фильмы/*}"', 'down': '40%', 'options':
   \ '--expect=ctrl-t,ctrl-x,ctrl-v --multi --reverse'}))
 
-let g:fzf_layout      = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let g:fzf_layout      = { 'window': { 'width': 0.8, 'height': 0.8, 'border': 'sharp' } }
 let $FZF_DEFAULT_OPTS = '--reverse'
 
 
