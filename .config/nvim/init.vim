@@ -51,6 +51,10 @@ set fillchars+=vert:│
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
 
+" Making scrolling horizontally a bit more useful
+set sidescroll=5
+set listchars+=precedes:<,extends:>
+
 " Hides buffers instead of closing them
 set hidden
 
