@@ -446,13 +446,6 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" === NERD Commenter === "
-" Add spaces after comment delimiters by default
-" let g:NERDSpaceDelims = 1
-
-" Use compact syntax for prettified multi-line comments
-" let g:NERDCompactSexyComs = 1
-
 " === vim-auto-save === "
 let g:auto_save        = 1
 let g:auto_save_silent = 1
