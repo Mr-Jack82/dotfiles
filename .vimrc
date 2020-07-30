@@ -682,11 +682,11 @@ endfunction
 " let g:user_emmet_expandabbr_key='<Tab>'
 " imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
-autocmd FileType html,css,scss,typescriptreact,vue,javascript,markdown.mdx imap <silent><buffer><expr><tab> <sid>expand_html_tab()
+autocmd FileType html,css,scss,typescriptreact,vue,,markdown,mdx imap <silent><buffer><expr><tab> <sid>expand_html_tab()
 let g:user_emmet_mode='a'
 let g:user_emmet_complete_tag = 0
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,scss,typescriptreact,vue,javascript,markdown.mdx EmmetInstall
+autocmd FileType html,css,scss,typescriptreact,vue,,markdown,mdx EmmetInstall
 
 " Change default emmet-vim html5 boilerplate
 let g:user_emmet_settings = {
