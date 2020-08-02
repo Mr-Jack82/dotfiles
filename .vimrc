@@ -173,11 +173,6 @@ Plug 'mhinz/vim-startify'
 " Silly game for Vim 8.2
 Plug 'vim/killersheep'
 
-" Fast file navigation for VIM
-Plug 'wincent/command-t', {
-  \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
-  \ }
-
 " Rainbow Parentheses Improved, shorter code, no level limit,
 " smooth and fast, powerful configuration.
 Plug 'luochen1990/rainbow'
@@ -702,13 +697,6 @@ let g:startify_commands = [
         \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
         \ ]
-
-" === command-t === "
-" Brings up the Command-T buffer window, except that matches
-" are shown in MRU (most recently used) order.
-nmap <silent> <Leader>r <Plug>(CommandTMRU)
-" bring up the Command-T jumplist window
-nmap <silent> <Bslash>j <Plug>(CommandTJump)
 
 " === NeoSnippet === "
 " Map <C-j> as shortcut to activate snippet if available
