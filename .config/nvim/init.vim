@@ -993,3 +993,13 @@ augroup highlight_yank
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank('IncSearch', 300)
   endif
 augroup END
+
+" " Autosave
+" " Note: there are a bug - (neo)vim trying to save content of the buffers
+" " with 'nomodifiable' flag like `:PlugUpdate` or so, and it need to be
+" " fixed but currently I don't know how to do it.
+" augroup autosave
+"     autocmd!
+"     autocmd BufRead * if &filetype == "" | setlocal ft=text | endif
+"     autocmd FileType * autocmd InsertLeave <buffer> if &readonly == 0 | silent write | endif
+" augroup END
