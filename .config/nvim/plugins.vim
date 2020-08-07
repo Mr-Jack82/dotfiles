@@ -47,7 +47,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-ragtag'
 
 " Automatically save changes to disk in Vim
-Plug '907th/vim-auto-save'
+" Plug '907th/vim-auto-save'
 
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
