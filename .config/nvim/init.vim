@@ -907,6 +907,15 @@ if has('nvim')
   tnoremap <M-l> <C-\><C-n><C-w>l
 endif
 
+" When in terminal buffer -> Insert Mode
+augroup insert_in_term
+  autocmd!
+  if has('nvim')
+    autocmd!
+    autocmd TermOpen,BufEnter term://* startinsert
+  endif
+augroup END
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
