@@ -922,6 +922,13 @@ nnoremap <cr> o<esc>
 " Yank to end of line
 nnoremap Y y$
 
+" Making things easier a little bit
+" Hacked from Steeve Losh
+" https://bitbucket.org/sjl/dotfiles/src/default/vim/vimrc
+nnoremap H ^
+nnoremap L $
+vnoremap L g_
+
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
