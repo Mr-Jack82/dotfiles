@@ -1,3 +1,4 @@
+autocmd!
 scriptencoding utf-8
 source ~/.config/nvim/plugins.vim
 
