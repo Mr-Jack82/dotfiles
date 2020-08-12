@@ -29,8 +29,8 @@ set clipboard=unnamedplus
 augroup remember-cursor-position
   autocmd!
     autocmd BufReadPost *
-      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit' |
-      \ |   execute 'normal! g`"zvzz' |
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
       \ | endif
 augroup END
 
