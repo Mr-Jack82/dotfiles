@@ -29,10 +29,11 @@ set clipboard=unnamedplus
 " Remember last cursor position
 augroup remember-cursor-position
   autocmd!
-    autocmd BufReadPost *
-      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-      \ |   exe "normal! g`\""
-      \ | endif
+  autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") &&
+        \   &ft !~# '\%(^git\%(config\)\@!\|commit\)'
+        \ | exe "normal! g`\""
+        \ | endif
 augroup END
 
 " Enable mouse support in all modes.
