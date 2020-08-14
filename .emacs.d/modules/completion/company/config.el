@@ -2,23 +2,50 @@
 
 (use-package! company
   :commands company-complete-common company-manual-begin company-grab-line
-  :after-call pre-command-hook after-find-file
+  :hook (doom-first-input . global-company-mode)
   :init
   (setq company-idle-delay 0.25
         company-minimum-prefix-length 2
         company-tooltip-limit 14
         company-tooltip-align-annotations t
         company-require-match 'never
-        company-global-modes
-        '(not erc-mode message-mode help-mode gud-mode eshell-mode)
-        company-backends  '(company-capf)
+        company-global-modes '(not erc-mode message-mode help-mode gud-mode)
         company-frontends '(company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
+                            company-echo-metadata-frontend)
+
+        ;; Buffer-local backends will be computed when loading a major mode, so
+        ;; only specify a global default here.
+        company-backends '(company-capf)
+
+        ;; These auto-complete the current selection when
+        ;; `company-auto-complete-chars' is typed. This is too magical. We
+        ;; already have the much more explicit RET and TAB.
+        company-auto-complete nil
+        company-auto-complete-chars nil
+
+        ;; Only search the current buffer for `company-dabbrev' (a backend that
+        ;; suggests text your open buffers). This prevents Company from causing
+        ;; lag once you have a lot of buffers open.
+        company-dabbrev-other-buffers nil
+        ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+        ;; domain-specific words with particular casing.
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil)
+
   :config
   (when (featurep! :editor evil)
     (add-hook 'company-mode-hook #'evil-normalize-keymaps)
-    ;; Don't persist company popups when switching back to normal mode.
-    (add-hook 'evil-normal-state-entry-hook #'company-abort)
+    (unless (featurep! +childframe)
+      ;; Don't persist company popups when switching back to normal mode.
+      ;; `company-box' aborts on mode switch so it doesn't need this.
+      (add-hook! 'evil-normal-state-entry-hook
+        (defun +company-abort-h ()
+          ;; HACK `company-abort' doesn't no-op if company isn't active; causing
+          ;;      unwanted side-effects, like the suppression of messages in the
+          ;;      echo-area.
+          ;; REVIEW Revisit this to refactor; shouldn't be necessary!
+          (when company-candidates
+            (company-abort)))))
     ;; Allow users to switch between backends on the fly. E.g. C-x C-s followed
     ;; by C-x C-n, will switch from `company-yasnippet' to
     ;; `company-dabbrev-code'.
@@ -26,8 +53,7 @@
       :before #'company-begin-backend
       (company-abort)))
 
-  (add-hook 'after-change-major-mode-hook #'+company-init-backends-h 'append)
-  (global-company-mode +1))
+  (add-hook 'after-change-major-mode-hook #'+company-init-backends-h 'append))
 
 
 (use-package! company-tng
@@ -47,16 +73,7 @@
 ;; Packages
 
 (after! company-files
-  (pushnew! company-files--regexps
-            "file:\\(\\(?:\\.\\{1,2\\}/\\|~/\\|/\\)[^\]\n]*\\)"))
-
-
-(use-package! company-prescient
-  :hook (company-mode . company-prescient-mode)
-  :config
-  ;; NOTE prescient config duplicated with `ivy'
-  (setq prescient-save-file (concat doom-cache-dir "prescient-save.el"))
-  (prescient-persist-mode +1))
+  (add-to-list 'company-files--regexps "file:\\(\\(?:\\.\\{1,2\\}/\\|~/\\|/\\)[^\]\n]*\\)"))
 
 
 (use-package! company-box
@@ -105,6 +122,8 @@
             (ElispFeature  . ,(all-the-icons-material "stars"                    :face 'all-the-icons-orange))
             (ElispFace     . ,(all-the-icons-material "format_paint"             :face 'all-the-icons-pink)))))
 
+  (delq! 'company-echo-metadata-frontend company-frontends)
+
   (defun +company-box-icons--elisp-fn (candidate)
     (when (derived-mode-p 'emacs-lisp-mode)
       (let ((sym (intern candidate)))
@@ -117,8 +136,7 @@
     "This disables the company-box scrollbar, because:
 https://github.com/sebastiencs/company-box/issues/44"
     :around #'company-box--update-scrollbar
-    (cl-letf (((symbol-function #'display-buffer-in-side-window)
-               (symbol-function #'ignore)))
+    (letf! ((#'display-buffer-in-side-window #'ignore))
       (apply orig-fn args))))
 
 

@@ -92,17 +92,9 @@
 
 (use-package! typescript-mode
   :hook (typescript-mode . rainbow-delimiters-mode)
-  :init
-  ;; REVIEW Fix #2252. This is overwritten if the :lang web module is enabled.
-  ;;        We associate TSX files with `web-mode' by default instead because
-  ;;        `typescript-mode' does not officially support JSX/TSX. See
-  ;;        https://github.com/emacs-typescript/typescript.el/issues/4
-  (unless (featurep! :lang web)
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
   :config
   (set-electric! 'typescript-mode
     :chars '(?\} ?\)) :words '("||" "&&"))
-  (set-docsets! 'typescript-mode "TypeScript" "AngularTS")
   (set-pretty-symbols! 'typescript-mode
     ;; Functional
     :def "function"
@@ -123,6 +115,25 @@
   (setq-hook! 'typescript-mode-hook
     comment-line-break-function #'js2-line-break))
 
+;; REVIEW We associate TSX files with `typescript-tsx-mode' derived from
+;;        `web-mode' because `typescript-mode' does not officially support
+;;        JSX/TSX. See
+;;        https://github.com/emacs-typescript/typescript.el/issues/4
+(if (featurep! :lang web)
+    (progn
+      (define-derived-mode typescript-tsx-mode web-mode "TypeScript-tsx")
+      (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+
+      (add-hook 'typescript-tsx-mode-hook #'emmet-mode)
+
+      (after! flycheck
+        (flycheck-add-mode 'typescript-tslint 'typescript-tsx-mode)
+        (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
+
+(after! (:any typescript-mode web-mode)
+  (set-docsets! '(typescript-mode typescript-tsx-mode) "TypeScript" "AngularTS"))
+
 
 ;;;###package coffee-mode
 (setq coffee-indent-like-python-mode t)
@@ -133,7 +144,11 @@
 ;;
 ;;; Tools
 
-(add-hook! '(js-mode-hook typescript-mode-hook web-mode-hook)
+(add-hook! '(js2-mode-local-vars-hook
+             typescript-mode-local-vars-hook
+             typescript-tsx-mode-local-vars-hook
+             web-mode-local-vars-hook
+             rjsx-mode-local-vars-hook)
   (defun +javascript-init-lsp-or-tide-maybe-h ()
     "Start `lsp' or `tide' in the current buffer.
 
@@ -143,14 +158,11 @@ current buffer represents a file in a project.
 If LSP fails to start (e.g. no available server or project), then we fall back
 to tide."
     (let ((buffer-file-name (buffer-file-name (buffer-base-buffer))))
-      (when (or (derived-mode-p 'js-mode 'typescript-mode)
-                (and buffer-file-name
-                     (eq major-mode 'web-mode)
-                     (string= "tsx" (file-name-extension buffer-file-name))))
+      (when (derived-mode-p 'js-mode 'typescript-mode 'typescript-tsx-mode)
         (if (not buffer-file-name)
             ;; necessary because `tide-setup' and `lsp' will error if not a
             ;; file-visiting buffer
-            (add-hook 'after-save-hook #'+javascript-init-tide-or-lsp-maybe-h nil 'local)
+            (add-hook 'after-save-hook #'+javascript-init-lsp-or-tide-maybe-h nil 'local)
           (or (and (featurep! +lsp) (lsp!))
               ;; fall back to tide
               (if (executable-find "node")
@@ -158,7 +170,7 @@ to tide."
                        (progn (tide-setup) tide-mode))
                 (ignore
                  (doom-log "Couldn't start tide because 'node' is missing"))))
-          (remove-hook 'after-save-hook #'+javascript-init-tide-or-lsp-maybe-h 'local))))))
+          (remove-hook 'after-save-hook #'+javascript-init-lsp-or-tide-maybe-h 'local))))))
 
 
 (use-package! tide
@@ -177,9 +189,11 @@ to tide."
     (setq-default company-backends (delq 'company-tide (default-value 'company-backends))))
   (set-company-backend! 'tide-mode 'company-tide)
   ;; navigation
-  (set-lookup-handlers! 'tide-mode
-    :definition '(tide-jump-to-definition :async t)
-    :references '(tide-references :async t))
+  (set-lookup-handlers! 'tide-mode :async t
+    :definition #'tide-jump-to-definition
+    :references #'tide-references
+    :documentation #'tide-documentation-at-point)
+  (set-popup-rule! "^\\*tide-documentation" :quit t)
   ;; resolve to `doom-project-root' if `tide-project-root' fails
   (advice-add #'tide-project-root :override #'+javascript-tide-project-root-a)
   ;; cleanup tsserver when no tide buffers are left
@@ -191,8 +205,6 @@ to tide."
   ;; support exists. It is set *after* tide-mode is enabled, so enabling it on
   ;; `tide-mode-hook' is too early, so...
   (advice-add #'tide-setup :after #'eldoc-mode)
-
-  (define-key tide-mode-map [remap +lookup/documentation] #'tide-documentation-at-point)
 
   (map! :localleader
         :map tide-mode-map
@@ -237,13 +249,6 @@ to tide."
     (add-hook 'js2-refactor-mode-hook #'evil-normalize-keymaps)
     (let ((js2-refactor-mode-map (evil-get-auxiliary-keymap js2-refactor-mode-map 'normal t t)))
       (js2r-add-keybindings-with-prefix (format "%s r" doom-localleader-key)))))
-
-
-(use-package! eslintd-fix
-  :commands eslintd-fix
-  :config
-  (setq-hook! 'eslintd-fix-mode-hook
-    flycheck-javascript-eslint-executable eslintd-fix-executable))
 
 
 ;;;###package skewer-mode
@@ -292,10 +297,12 @@ to tide."
            web-mode
            markdown-mode
            js-mode
+           json-mode
            typescript-mode
+           typescript-tsx-mode
            solidity-mode)
   :when (locate-dominating-file default-directory "package.json")
-  :add-hooks '(+javascript-add-node-modules-path-h npm-mode))
+  :add-hooks '(add-node-modules-path npm-mode))
 
 (def-project-mode! +javascript-gulp-mode
   :when (locate-dominating-file default-directory "gulpfile.js"))

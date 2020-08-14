@@ -23,8 +23,7 @@ be negative.")
 ;;; Packages
 
 (use-package! helm-mode
-  :defer t
-  :after-call pre-command-hook
+  :hook (doom-first-input . helm-mode)
   :init
   (map! [remap apropos]                   #'helm-apropos
         [remap find-library]              #'helm-locate-library
@@ -43,7 +42,6 @@ be negative.")
         [remap recentf-open-files]        #'helm-recentf
         [remap yank-pop]                  #'helm-show-kill-ring)
   :config
-  (helm-mode +1)
   ;; helm is too heavy for `find-file-at-point'
   (add-to-list 'helm-completing-read-handlers-alist (cons #'find-file-at-point nil)))
 
@@ -101,14 +99,7 @@ be negative.")
   :config
   (set-popup-rule! "^\\*helm" :vslot -100 :size 0.22 :ttl nil)
 
-  ;; HACK Doom doesn't support these commands, which invite the user to install
-  ;; the package via ELPA. Force them to use +helm/* instead, because they work
-  ;; out of the box.
-  (advice-add #'helm-projectile-rg :override #'+helm/project-search)
-  (advice-add #'helm-projectile-ag :override #'+helm/project-search)
-  (advice-add #'helm-projectile-grep :override #'+helm/project-search)
-
-  ;; Hide the modeline
+  ;; Hide the modeline in helm windows as it serves little purpose.
   (defun +helm--hide-mode-line (&rest _)
     (with-current-buffer (helm-buffer-get)
       (unless helm-mode-line-string
@@ -137,7 +128,7 @@ be negative.")
         "C-c C-e" #'helm-rg--bounce)
   (map! :map helm-rg--bounce-mode-map
         "q" #'kill-current-buffer
-        "C-c C-c" (λ! (helm-rg--bounce-dump) (kill-current-buffer))
+        "C-c C-c" (cmd! (helm-rg--bounce-dump) (kill-current-buffer))
         "C-x C-c" #'helm-rg--bounce-dump-current-file
         "C-c C-k" #'kill-current-buffer))
 
@@ -189,3 +180,7 @@ be negative.")
         (lambda (buf &optional _resume) (pop-to-buffer buf)))
   (global-set-key [remap swiper] #'swiper-helm)
   (add-to-list 'swiper-font-lock-exclude #'+doom-dashboard-mode nil #'eq))
+
+
+(use-package! helm-descbinds
+  :hook (helm-mode . helm-descbinds-mode))

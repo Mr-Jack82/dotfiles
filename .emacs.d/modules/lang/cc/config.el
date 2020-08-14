@@ -40,7 +40,7 @@ This is ignored by ccls.")
   ;; set up before the likes of irony/lsp are initialized. Also, we use
   ;; local-vars hooks to ensure these only run in their respective major modes,
   ;; and not their derived modes.
-  :hook ((after-c-mode after-c++-mode after-objc-mode) . +cc-init-ffap-integration-h)
+  :hook ((c-mode-local-vars c++-mode-local-vars objc-mode-local-vars) . +cc-init-ffap-integration-h)
   ;;; Improve fontification in C/C++ (also see `modern-cpp-font-lock')
   :hook (c-mode-common . rainbow-delimiters-mode)
   :hook ((c-mode c++-mode) . +cc-fontify-constants-h)
@@ -66,6 +66,13 @@ This is ignored by ccls.")
     :for "for"
     :return "return"
     :yield "#require")
+
+  ;; HACK Suppress 'Args out of range' error in when multiple modifications are
+  ;;      performed at once in a `c++-mode' buffer, e.g. with `iedit' or
+  ;;      multiple cursors.
+  (undefadvice! +cc--suppress-silly-errors-a (orig-fn &rest args)
+    :around #'c-after-change-mark-abnormal-strings
+    (ignore-errors (apply orig-fn args)))
 
   ;; Custom style, based off of linux
   (setq c-basic-offset tab-width
@@ -120,7 +127,7 @@ This is ignored by ccls.")
   :hook (irony-mode . +cc-init-irony-compile-options-h)
   ;; Only initialize `irony-mode' if the server is available. Otherwise fail
   ;; quietly and gracefully.
-  :hook ((after-c-mode after-c++-mode after-objc-mode) . +cc-init-irony-mode-maybe-h)
+  :hook ((c-mode-local-vars c++-mode-local-vars objc-mode-local-vars) . +cc-init-irony-mode-maybe-h)
   :preface (setq irony-server-install-prefix (concat doom-etc-dir "irony-server/"))
   :config
   (defun +cc-init-irony-mode-maybe-h ()
@@ -171,7 +178,7 @@ This is ignored by ccls.")
 (use-package! rtags
   :unless (featurep! +lsp)
   ;; Only initialize rtags-mode if rtags and rdm are available.
-  :hook ((after-c-mode after-c++-mode after-objc-mode) . +cc-init-rtags-maybe-h)
+  :hook ((c-mode-local-vars c++-mode-local-vars objc-mode-local-vars) . +cc-init-rtags-maybe-h)
   :preface (setq rtags-install-path (concat doom-etc-dir "rtags/"))
   :config
   (defun +cc-init-rtags-maybe-h ()
@@ -223,15 +230,29 @@ If rtags or rdm aren't available, fail silently instead of throwing a breaking e
   (add-hook! '(c-mode-local-vars-hook
                c++-mode-local-vars-hook
                objc-mode-local-vars-hook)
-    (defun +cc-init-lsp-h ()
-      (setq-local company-transformers nil)
-      (setq-local company-lsp-async t)
-      (setq-local company-lsp-cache-candidates nil)
-      (lsp!))))
+    #'lsp!)
+
+  (when (featurep! :tools lsp +eglot)
+    ;; Map eglot specific helper
+    (map! :localleader
+          :after cc-mode
+          :map c++-mode-map
+          :n :desc "Show type inheritance hierarchy" "ct" #'+cc/eglot-ccls-inheritance-hierarchy)
+
+    ;; NOTE : This setting is untested yet
+    (after! eglot
+      ;; IS-MAC custom configuration
+      (when IS-MAC
+        (add-to-list 'eglot-workspace-configuration
+                     `((:ccls . ((:clang . ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
+                                                              "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                                                              "-isystem/usr/local/include"]
+                                                  :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir"))))))))))))
+
 
 
 (use-package! ccls
-  :when (featurep! +lsp)
+  :when (and (featurep! +lsp) (not (featurep! :tools lsp +eglot)))
   :after lsp
   :init
   (after! projectile

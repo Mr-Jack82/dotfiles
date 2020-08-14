@@ -50,11 +50,13 @@ stored in `persp-save-dir'.")
           (persp-mode +1)))))
   :config
   (setq persp-autokill-buffer-on-remove 'kill-weak
+        persp-reset-windows-on-nil-window-conf nil
         persp-nil-hidden t
         persp-auto-save-fname "autosave"
         persp-save-dir (concat doom-etc-dir "workspaces/")
         persp-set-last-persp-for-new-frames t
         persp-switch-to-added-buffer nil
+        persp-kill-foreign-buffer-behaviour 'kill
         persp-remove-buffers-from-nil-persp-behaviour nil
         persp-auto-resume-time -1 ; Don't auto-load on startup
         persp-auto-save-opt (if noninteractive 0 1)) ; auto-save on kill
@@ -193,10 +195,19 @@ stored in `persp-save-dir'.")
       (defun +workspaces-delete-all-posframes-h (&rest _)
         (posframe-delete-all))))
 
-  ;; Fix #1525: Ignore dead buffers in PERSP's buffer list
-  (defun +workspaces-dead-buffer-p (buf)
-    (not (buffer-live-p buf)))
-  (add-hook 'persp-filter-save-buffers-functions #'+workspaces-dead-buffer-p)
+
+  (add-hook! 'persp-filter-save-buffers-functions
+    (defun +workspaces-dead-buffer-p (buf)
+      ;; Fix #1525: Ignore dead buffers in PERSP's buffer list
+      (not (buffer-live-p buf)))
+    (defun +workspaces-remote-buffer-p (buf)
+      ;; And don't save TRAMP buffers; they're super slow to restore
+      (let ((dir (buffer-local-value 'default-directory buf)))
+        (ignore-errors (file-remote-p dir)))))
+
+  ;; Otherwise, buffers opened via bookmarks aren't treated as "real" and are
+  ;; excluded from the buffer list.
+  (add-hook 'bookmark-after-jump-hook #'+workspaces-add-current-buffer-h)
 
   ;;
   ;; eshell

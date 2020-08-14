@@ -11,11 +11,24 @@
 ;;; Packages
 
 (use-package! sh-script ; built-in
-  :mode ("\\.zunit\\'" . sh-mode)
+  :mode ("\\.\\(?:zunit\\|env\\)\\'" . sh-mode)
   :mode ("/bspwmrc\\'" . sh-mode)
   :config
   (set-electric! 'sh-mode :words '("else" "elif" "fi" "done" "then" "do" "esac" ";;"))
   (set-repl-handler! 'sh-mode #'+sh/open-repl)
+  (set-pretty-symbols! 'sh-mode
+    ;; Functional
+    :def "function"
+    ;; Types
+    :true "true" :false "false"
+    ;; Flow
+    :not "!"
+    :and "&&" :or "||"
+    :in "in"
+    :for "for"
+    :return "return"
+    ;; Other
+    :dot "." :dot "source")
 
   (when (featurep! +lsp)
     (add-hook 'sh-mode-local-vars-hook #'lsp!))

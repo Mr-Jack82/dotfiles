@@ -3,9 +3,6 @@
 (defvar +latex-indent-level-item-continuation 4
   "Custom indentation level for items in enumeration-type environments")
 
-(defvar +latex-bibtex-file nil
-  "File AUCTeX (specifically RefTeX) uses to search for citations.")
-
 (defvar +latex-enable-unicode-math nil
   "If non-nil, use `company-math-symbols-unicode' backend in LaTeX-mode,
 enabling unicode symbols in math regions. This requires the unicode-math latex
@@ -56,8 +53,6 @@ If no viewers are found, `latex-preview-pane' is used.")
     fill-nobreak-predicate (cons #'texmathp fill-nobreak-predicate))
   ;; Enable word wrapping
   (add-hook 'TeX-mode-hook #'visual-line-mode)
-  ;; Fold TeX macros
-  (add-hook 'TeX-mode-hook #'TeX-fold-mode)
   ;; Enable rainbow mode after applying styles to the buffer
   (add-hook 'TeX-update-style-hook #'rainbow-delimiters-mode)
   ;; display output of latex commands in popup
@@ -75,7 +70,49 @@ If no viewers are found, `latex-preview-pane' is used.")
         (sp-local-pair modes open nil :actions :rem))
       ;; And tweak these so that users can decide whether they want use latex
       ;; quotes or not, via `+latex-enable-plain-double-quotes'
-      (sp-local-pair modes "``" nil :unless '(:add sp-in-math-p)))))
+      (sp-local-pair modes "``" nil :unless '(:add sp-in-math-p))))
+  ;; Hook lsp if enabled
+  (when (featurep! +lsp)
+    (add-hook! '(tex-mode-local-vars-hook
+                 latex-mode-local-vars-hook)
+               #'lsp!)))
+
+
+(use-package! tex-fold
+  :when (featurep! +fold)
+  :hook (TeX-mode . TeX-fold-buffer)
+  :hook (TeX-mode . TeX-fold-mode)
+  :config
+  ;; Fold after all auctex macro insertions
+  (advice-add #'TeX-insert-macro :after #'+latex-fold-last-macro-a)
+  ;; Fold after cdlatex macro insertions
+  (advice-add #'cdlatex-math-symbol :after #'+latex-fold-last-macro-a)
+  (advice-add #'cdlatex-math-modify :after #'+latex-fold-last-macro-a)
+  ;; Fold after snippets
+  (when (featurep! :editor snippets)
+    (add-hook! 'TeX-fold-mode-hook
+      (defun +latex-fold-snippet-contents-h ()
+        (add-hook! 'yas-after-exit-snippet-hook :local
+          (TeX-fold-region yas-snippet-beg yas-snippet-end)))))
+
+  (add-hook! 'mixed-pitch-mode-hook
+    (defun +latex-fold-set-variable-pitch-h ()
+      "Fix folded things invariably getting fixed pitch when using mixed-pitch.
+Math faces should stay fixed by the mixed-pitch blacklist, this is mostly for
+\\section etc."
+      (when mixed-pitch-mode
+        ;; Adding to this list makes mixed-pitch clean the face remaps after us
+        (add-to-list 'mixed-pitch-fixed-cookie
+                     (face-remap-add-relative
+                      'TeX-fold-folded-face
+                      :family (face-attribute 'variable-pitch :family)
+                      :height (face-attribute 'variable-pitch :height))))))
+
+  (map! :map TeX-fold-mode-map
+        :localleader
+        :desc "Fold paragraph"   "f"   #'TeX-fold-paragraph
+        :desc "Unfold paragraph" "F"   #'TeX-fold-clearout-paragraph
+        :desc "Unfold buffer"    "C-f" #'TeX-fold-clearout-buffer))
 
 
 (after! latex
@@ -168,12 +205,18 @@ If no viewers are found, `latex-preview-pane' is used.")
   (auctex-latexmk-setup))
 
 
+(use-package! evil-tex
+  :when (featurep! :editor evil +everywhere)
+  :hook (LaTeX-mode . evil-tex-mode))
+
+
 (use-package! company-auctex
   :when (featurep! :completion company)
   :defer t
   :init
   (add-to-list '+latex--company-backends #'company-auctex-environments nil #'eq)
   (add-to-list '+latex--company-backends #'company-auctex-macros nil #'eq))
+
 
 (use-package! company-math
   :when (featurep! :completion company)

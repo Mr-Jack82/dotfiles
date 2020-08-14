@@ -13,16 +13,20 @@ called.")
 
 
 ;;
-;; Packages
+;;; Packages
 
 (use-package! python
-  :defer t
+  :mode ("[./]flake8\\'" . conf-mode)
+  :mode ("/Pipfile\\'" . conf-mode)
   :init
   (setq python-environment-directory doom-cache-dir
         python-indent-guess-indent-offset-verbose nil)
 
   (when (featurep! +lsp)
-    (add-hook 'python-mode-local-vars-hook #'lsp!))
+    (add-hook 'python-mode-local-vars-hook #'lsp!)
+    ;; Use "mspyls" in eglot if in PATH
+    (when (executable-find "Microsoft.Python.LanguageServer")
+      (set-eglot-client! 'python-mode '("Microsoft.Python.LanguageServer"))))
   :config
   (set-repl-handler! 'python-mode #'+python/open-repl :persist t)
   (set-docsets! 'python-mode "Python 3" "NumPy" "SciPy")
@@ -98,6 +102,7 @@ called.")
       "Enable `anaconda-mode' if `lsp-mode' is absent and
 `python-shell-interpreter' is present."
       (unless (or (bound-and-true-p lsp-mode)
+                  (bound-and-true-p eglot--managed-mode)
                   (bound-and-true-p lsp--buffer-deferred)
                   (not (executable-find python-shell-interpreter)))
         (anaconda-mode +1))))
@@ -193,7 +198,7 @@ called.")
 
 
 ;;
-;; Environment management
+;;; Environment management
 
 (use-package! pipenv
   :commands pipenv-project-p
@@ -261,14 +266,15 @@ called.")
                                 "~/.anaconda"
                                 "~/.miniconda"
                                 "~/.miniconda3"
+                                "~/anaconda3"
                                 "~/miniconda3"
                                 "/usr/bin/anaconda3"
                                 "/usr/local/anaconda3"
                                 "/usr/local/miniconda3"
                                 "/usr/local/Caskroom/miniconda/base")
                if (file-directory-p dir)
-               return (setq conda-anaconda-home dir
-                            conda-env-home-directory dir))
+               return (setq conda-anaconda-home (expand-file-name dir)
+                            conda-env-home-directory (expand-file-name dir)))
       (message "Cannot find Anaconda installation"))
 
   ;; integration with term/eshell
@@ -280,21 +286,9 @@ called.")
                'append))
 
 
-(use-package! lsp-python-ms
-  :when (featurep! +lsp)
-  :after lsp-clients
-  :preface
-  (after! python
-    (setq lsp-python-ms-python-executable-cmd python-shell-interpreter))
-  :init
-  ;; HACK If you don't have python installed, then opening python buffers with
-  ;;      this on causes a "wrong number of arguments: nil 0" error, because of
-  ;;      careless usage of `cl-destructuring-bind'. This silences that error,
-  ;;      since we may still want to write some python on a system without
-  ;;      python installed!
-  (defadvice! +python--silence-errors-a (orig-fn &rest args)
-    :around #'lsp-python-ms--extra-init-params
-    (ignore-errors (apply orig-fn args))))
+(use-package! poetry
+  :when (featurep! +poetry)
+  :after python)
 
 
 (use-package! cython-mode
@@ -312,3 +306,21 @@ called.")
   :when (featurep! +cython)
   :when (featurep! :checkers syntax)
   :after cython-mode)
+
+
+;;
+;;; LSP
+
+(when! (and (featurep! +lsp)
+            (not (featurep! :tools lsp +eglot)))
+
+  (use-package! lsp-python-ms
+    :unless (featurep! +pyright)
+    :after lsp-clients
+    :preface
+    (after! python
+      (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)))
+
+  (use-package! lsp-pyright
+    :when (featurep! +pyright)
+    :after lsp-clients))
