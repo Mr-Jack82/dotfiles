@@ -57,6 +57,10 @@ set scrolloff=5
 set sidescroll=5
 set listchars+=precedes:<,extends:>
 
+" Make it obvious where 80 characters is
+set textwidth=80
+set colorcolumn=+1
+
 " Hides buffers instead of closing them
 set hidden
 
