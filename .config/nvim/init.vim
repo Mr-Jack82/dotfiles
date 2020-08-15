@@ -15,6 +15,7 @@ let g:mapleader=','
 
 " Enable line numbers
 set number
+set numberwidth=5
 
 " Show the line number relative to the line with the cursor in front of
 " each line.
