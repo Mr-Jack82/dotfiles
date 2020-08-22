@@ -1014,12 +1014,13 @@ augroup highlight_yank
   endif
 augroup END
 
-" " Autosave
-" " TODO: there is a bug - (neo)vim trying to save content of the buffers
-" " with 'nomodifiable' flag like `:PlugUpdate` or so, and it need to be
-" " fixed but currently I don't know how to do it.
-" augroup autosave
-"     autocmd!
-"     autocmd BufRead * if &filetype == "" | setlocal ft=text | endif
-"     autocmd FileType * autocmd TextChanged,InsertLeave <buffer> if &readonly == 0 | silent write | endif
-" augroup END
+" Autosave
+" thanks to Monkoose from Reddit
+" https://www.reddit.com/r/vim/comments/ieekfb/need_help_to_tweak_vim_script/
+augroup AutoSave
+  autocmd!
+  autocmd TextChanged,InsertLeave *
+        \ if &buftype == "" && !&readonly |
+        \ silent write |
+        \ endif
+augroup END
