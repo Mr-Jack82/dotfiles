@@ -163,8 +163,8 @@ export LC_ALL
 #Enable Vi mode
 #bindkey -v
 
-#bindkey '^P' up-history
-#bindkey '^N' down-history
+bindkey '^P' up-history
+bindkey '^N' down-history
 #bindkey '^?' backward-delete-char
 #bindkey '^h' backward-delete-char
 #bindkey '^w' backward-kill-word
