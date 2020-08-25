@@ -1020,7 +1020,7 @@ augroup END
 augroup AutoSave
   autocmd!
   autocmd TextChanged,InsertLeave *
-        \ if &buftype == "" && !&readonly |
-        \ silent write |
-        \ endif
+        \ if &buftype == "" && !&readonly
+        \ |   silent write
+        \ | endif
 augroup END
