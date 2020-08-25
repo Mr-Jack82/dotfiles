@@ -856,9 +856,9 @@ xnoremap & :&&<CR>
 " nnoremap <silent> ]B :blast<CR>
 
 " Automaticaly jump to end of pasted text
-vnoremap <silent> y y`]
-vnoremap <silent> p p`]
-nnoremap <silent> p p`]
+" vnoremap <silent> y y`]
+" vnoremap <silent> p p`]
+" nnoremap <silent> p p`]
 
 " Enable soft wraping text
 command! -nargs=* Wrap set wrap linebreak nolist
