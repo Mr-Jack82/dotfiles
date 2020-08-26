@@ -107,6 +107,9 @@ Plug 'HerringtonDarkholme/yats.vim'
 " ReactJS JSX syntax highlighting
 Plug 'mxw/vim-jsx'
 
+" Vastly improved Javascript indentation and syntax support in Vim.
+Plug 'pangloss/vim-javascript'
+
 " Generate JSDoc commands based on function signature
 Plug 'heavenshell/vim-jsdoc'
 
