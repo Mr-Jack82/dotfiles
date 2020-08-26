@@ -803,7 +803,7 @@ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 vnoremap <leader>p "_dP
 
 "" Clean search (highlight)
-nnoremap <silent> <leader><space> :noh<cr>
+map <silent> <esc> :noh<cr>
 
 " Make {motion} text uppercase in INSERT mode.
 map! <C-F> <Esc>gUiw`]a
