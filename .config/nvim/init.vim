@@ -51,6 +51,9 @@ endif
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
 
+" Match angle brackets...
+set matchpairs+=<:>,«:»,｢:｣
+
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
 
