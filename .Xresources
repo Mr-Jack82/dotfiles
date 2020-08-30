@@ -1,4 +1,29 @@
 !---------------------------------
+! XTerm settings
+! --------------------------------
+XTerm.termName: xterm-256color
+XTerm.vt100.locale: true
+XTerm.vt100.metaSendsEscape: true
+XTerm.vt100.backarrowKey: false
+XTerm.ttyModes: erase ^?
+XTerm.vt100.translations: #override \n\
+    Ctrl <Key>M: maximize() \n\
+    Ctrl <Key>R: restore()
+XTerm.vt100.saveLines: 4096
+XTerm.vt100.geometry: 75x25
+XTerm.vt100.faceName: Hack Nerd Font Mono:size=14:antialias=true
+XTerm.vt100.font: 7x13
+
+!---------------------------------
+! Color Settings
+!---------------------------------
+XTerm.vt100.foreground: white
+XTerm.vt100.background: black
+XTerm.vt100.color0: rgb:28/28/28
+! ...
+XTerm.vt100.color15: rgb:e4/e4/e4
+
+!---------------------------------
 ! Xft settings
 ! --------------------------------
 !Xft.dpi:        110
