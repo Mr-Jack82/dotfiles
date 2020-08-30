@@ -467,7 +467,6 @@ augroup ft_javascript
   au FileType javascript,json let b:auto_save = 0
 augroup END
 
-
 " === vim-repeat === "
 " This is an example from Github page and needed to edit properly
 " from Vimcast #61
@@ -859,9 +858,9 @@ xnoremap & :&&<CR>
 " nnoremap <silent> ]B :blast<CR>
 
 " Automaticaly jump to end of pasted text
-" vnoremap <silent> y y`]
-" vnoremap <silent> p p`]
-" nnoremap <silent> p p`]
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
 
 " Enable soft wraping text
 command! -nargs=* Wrap set wrap linebreak nolist
@@ -1020,10 +1019,10 @@ augroup END
 " Autosave
 " thanks to Monkoose from Reddit
 " https://www.reddit.com/r/vim/comments/ieekfb/need_help_to_tweak_vim_script/
-augroup AutoSave
-  autocmd!
-  autocmd TextChanged,InsertLeave *
-        \ if &buftype == "" && !&readonly
-        \ |   silent write
-        \ | endif
-augroup END
+" augroup AutoSave
+"   autocmd!
+"   autocmd TextChanged,InsertLeave *
+"         \ if &buftype == "" && !&readonly
+"         \ |   silent write
+"         \ | endif
+" augroup END
