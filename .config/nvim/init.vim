@@ -915,3 +915,9 @@ augroup on_vim_resized
   autocmd!
   autocmd VimResized * wincmd =
 augroup END
+
+" Disable persistent undo for temporary files
+augroup vimrc
+  autocmd!
+  autocmd BufWritePre /tmp/* setlocal noundofile
+augroup END
