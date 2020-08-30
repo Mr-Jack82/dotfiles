@@ -94,7 +94,7 @@ Plug 'Shougo/echodoc.vim'
 
 " EditorConfig plugin for Vim
 " Note: this plugin conflicts with 'vim-auto-save'
-" Plug 'editorconfig/editorconfig-vim'
+Plug 'editorconfig/editorconfig-vim'
 
 " === Git Plugins === "
 " Enable git changes to be shown in sign column

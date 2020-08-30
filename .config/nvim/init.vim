@@ -546,6 +546,10 @@ let g:ctrlp_show_hidden = 1
 " respect that change.
 let g:ctrlp_working_path_mode = 0
 
+" ===[ editorconfig-vim ]===
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
