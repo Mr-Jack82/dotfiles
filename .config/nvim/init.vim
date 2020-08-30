@@ -74,7 +74,7 @@ set updatetime=50
 " always show signcolumns
 set signcolumn=yes
 
-" === TAB/Space settings === "
+" =====[ TAB/Space settings ]=====
 
 " default indentation: 2 spaces
  set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
@@ -151,7 +151,7 @@ set noruler
 " Only one line for command line
 set cmdheight=2
 
-" === Completion Settings === "
+" =====[ Completion Settings ]=====
 
 " Don't give completion messages like 'match 1 of 2'
 " or 'The only match'
@@ -236,7 +236,7 @@ catch
   echo 'Denite not installed. It should work after running :PlugInstall'
 endtry
 
-" === Coc.nvim === "
+" =====[ Coc.nvim ]=====
 " Use <tab> for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -317,7 +317,7 @@ let g:coc_global_extensions=[
     \ 'coc-neosnippet'
     \ ]
 
-" === NeoSnippet === "
+" =====[ NeoSnippet ]=====
 " Map <C-j> as shortcut to activate snippet if available
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
@@ -336,7 +336,7 @@ if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
 
-" === NERDTree === "
+" =====[ NERDTree ]=====
 " Show hidden files/directories
 let g:NERDTreeShowHidden = 1
 
@@ -378,7 +378,7 @@ autocmd BufRead * call SyncTree()
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 try
 
-" === Vim airline ==== "
+" =====[ Vim airline ]======
 " Enable extensions
 let g:airline#extensions#bufferline#enabled = 1
 let g:airline_extensions = ['branch', 'hunks', 'coc']
@@ -428,25 +428,25 @@ catch
   echo 'Airline not installed. It should work after running :PlugInstall'
 endtry
 
-" === echodoc === "
+" =====[ echodoc ]=====
 " Enable echodoc on startup
 let g:echodoc#enable_at_startup = 1
 
-" === vim-javascript === "
+" =====[ vim-javascript ]=====
 " Enable syntax highlighting for JSDoc
 let g:javascript_plugin_jsdoc = 1
 
-" === vim-jsx === "
+" =====[ vim-jsx ]=====
 " Highlight jsx syntax even in non .jsx files
 let g:jsx_ext_required = 0
 
-" === javascript-libraries-syntax === "
+" =====[ javascript-libraries-syntax ]=====
 let g:used_javascript_libs = 'underscore,requirejs,chai,jquery'
 
-" === Signify === "
+" =====[ Signify ]=====
 let g:signify_sign_delete = '-'
 
-" === EasyAlign === "
+" =====[ EasyAlign ]=====
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
 vmap <Enter> <Plug>(EasyAlign)
 
@@ -456,7 +456,7 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" === vim-auto-save === "
+" =====[ vim-auto-save ]=====
 let g:auto_save        = 1
 let g:auto_save_silent = 1
 let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
@@ -467,19 +467,19 @@ augroup ft_javascript
   au FileType javascript,json let b:auto_save = 0
 augroup END
 
-" === vim-repeat === "
+" =====[ vim-repeat ]=====
 " This is an example from Github page and needed to edit properly
 " from Vimcast #61
 nnoremap <silent> <Plug>TransposeCharacters xp
       \:call repeat#set("\<Plug>TransposeCharacters")<CR>
 nmap cp <Plug>TransposeCharacters
 
-" === vim-xkbswitch === "
+" =====[ vim-xkbswitch ]=====
 let g:XkbSwitchEnabled   = 1
 let g:XkbSwitchIMappings = ['ru']
 " let g:XkbSwitchLib       = '/usr/lib/libxkbswitch.so'
 
-" === indentLine === "
+" =====[ indentLine ]=====
 let g:indentLine_char = '┊'
 let g:vim_json_syntax_conceal = 0
 " TODO: the code below does not work, need to figure out why
@@ -488,10 +488,10 @@ let g:vim_json_syntax_conceal = 0
 " This option works fine for .json file
 " let g:indentLine_concealcursor = ""
 
-" === undotree === "
+" =====[ undotree ]=====
 let g:undotree_WindowLayout = 3
 
-" === fugitive === "
+" =====[ fugitive ]=====
 " Auto-clean fugitive buffers
 augroup auto-clean-fugitive
   autocmd!
@@ -512,7 +512,7 @@ augroup END
 " (:PU instead of :PlugUpdate | PlugUpgrade)
 command! PU PlugUpdate | PlugUpgrade
 
-" === vim-matchup === "
+" =====[ vim-matchup ]=====
 let g:matchup_surround_enabled     = 1
 let g:matchup_transmute_enabled    = 1
 let g:matchup_delim_noskip         = 2
@@ -525,7 +525,7 @@ let g:matchup_matchpref            = {
  \  'xml':   { 'tagnameonly': 1, 'nolists': 1 },
  \}
 
-" === ctrlp.vim === "
+" =====[ ctrlp.vim ]=====
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = "CtrlP"
 
@@ -657,7 +657,7 @@ endtry
 " ===                             KEY MAPPINGS                             === "
 " ============================================================================ "
 
-" === Denite shorcuts === "
+" =====[ Denite shorcuts ]=====
 "   ;         - Browser currently open buffers
 "   <leader>t - Browse list of files in current directory
 "   <leader>g - Search current directory for occurences of given term and close
@@ -732,7 +732,7 @@ function! s:denite_my_settings() abort
   \ denite#do_map('do_action', 'split')
 endfunction
 
-" === Nerdtree shorcuts === "
+" =====[ Nerdtree shorcuts ]=====
 "  <leader>n - Toggle NERDTree on/off
 "  <leader>f - Opens current file location in NERDTree
 nmap <leader>n :NERDTreeToggle<CR>
@@ -749,7 +749,7 @@ nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
-" === coc.nvim === "
+" =====[ coc.nvim ]=====
 "   <leader>dd    - Jump to definition of current symbol
 "   <leader>dr    - Jump to references of current symbol
 "   <leader>dj    - Jump to implementation of current symbol
@@ -759,17 +759,17 @@ nmap <silent> <leader>dr <Plug>(coc-references)
 nmap <silent> <leader>dj <Plug>(coc-implementation)
 nnoremap <silent> <leader>ds :<C-u>CocList -I -N --top symbols<CR>
 
-" === vim-better-whitespace === "
+" =====[ vim-better-whitespace ]=====
 "   <leader>y - Automatically remove trailing whitespace
 nmap <leader>y :StripWhitespace<CR>
 
-" === Search shorcuts === "
+" =====[ Search shorcuts ]=====
 "   <leader>h - Find and replace
 "   <leader>/ - Clear highlighted search terms while preserving history
 map <leader>h :%s///<left><left>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
-" === Easy-motion shortcuts ==="
+" =====[ Easy-motion shortcuts ]=====
 " Disable default mappings
 " let g:EasyMotion_do_mapping = 0
 
@@ -794,14 +794,14 @@ let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
 
-" === vim-jsdoc shortcuts ==="
+" =====[ vim-jsdoc shortcuts ]=====
 " Generate jsdoc for function under cursor
 nmap <leader>z :JsDoc<CR>
 
-" === undotree ==="
+" =====[ undotree ]=====
 nnoremap <Leader>u :UndotreeToggle<cr>
 
-" === Little usability improvements ==="
+" =====[ Little usability improvements ]=====
 
 " Allows you to save files you opened without write permissions via sudo
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
@@ -964,7 +964,7 @@ augroup open-nerdtree
   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
 
-" === Search === "
+" =====[ Search ]=====
 " Turning On Neovim built-in feature inccommand, to live preview the
 " :substitute command
 if has("nvim")
