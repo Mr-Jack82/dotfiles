@@ -1,0 +1,38 @@
+# http://editorconfig.org/
+
+root = true
+
+# All Files
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+##################################################
+# File Extension Settings
+##################################################
+
+# Markdown Files
+[*.{md,markdown}]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = false
+
+# JSON Files
+[*.{json,json5,webmanifest}]
+indent_size = 2
+
+# Web Files
+[*.{htm,html,js,jsm,ts,css,sass,scss,less,svg,vue}]
+indent_size = 2
+
+# YAML Files
+[*.{yml,yaml}]
+indent_size = 2
+
+# Makefiles
+[Makefile]
+indent_style = tab
