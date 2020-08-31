@@ -74,6 +74,9 @@ set updatetime=50
 " always show signcolumns
 set signcolumn=yes
 
+" Set Python3 provider as of Neovim is recommend
+let g:python3_host_prog = '/usr/bin/python3'
+
 " =====[ TAB/Space settings ]=====
 
 " default indentation: 2 spaces
