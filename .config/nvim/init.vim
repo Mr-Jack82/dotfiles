@@ -40,8 +40,8 @@ augroup END
 " Enable mouse support in all modes.
 set mouse=a
 
-" Enable loading the plugin files for specific file types
-filetype plugin on
+" Enable loading the plugin files for specific file types and indent support
+filetype plugin indent on
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
