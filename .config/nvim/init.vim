@@ -163,6 +163,9 @@ set shortmess+=c
 " Do smart autoindenting when starting a new line.
 set smartindent
 
+" Fix spelling errors
+iabbrev costn const
+
 " ============================================================================ "
 " ===                           PLUGIN SETUP                               === "
 " ============================================================================ "
