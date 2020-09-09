@@ -1032,6 +1032,12 @@ augroup vimrc
   autocmd BufWritePre /tmp/* setlocal noundofile
 augroup END
 
+" Turn off line number and relativenumber for term buffer
+augroup termBuffer
+  autocmd!
+  autocmd TermOpen * setlocal nonumber norelativenumber
+augroup END
+
 " Highlight on yank
 " augroup highlight_yank
 "   if exists('##TextYankPost')
