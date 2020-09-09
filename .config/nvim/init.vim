@@ -164,7 +164,7 @@ set shortmess+=c
 set smartindent
 
 " Fix spelling errors
-iabbrev costn const
+iabbrev cosnt const
 
 " ============================================================================ "
 " ===                           PLUGIN SETUP                               === "
