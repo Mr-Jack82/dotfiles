@@ -840,7 +840,7 @@ map! <C-F> <Esc>gUiw`]a
 " nnoreMap c "_c
 
 " Repeat latest f, t, F or T in opposite direction
-noremap \ ,
+nnoremap ' ,
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
