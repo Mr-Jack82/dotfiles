@@ -785,7 +785,6 @@ nmap <leader>y :StripWhitespace<CR>
 "   <leader>h - Find and replace
 "   <leader>/ - Clear highlighted search terms while preserving history
 map <leader>h :%s///<left><left>
-nmap <silent> <leader>/ :nohlsearch<CR>
 
 " =====[ Easy-motion shortcuts ]=====
 " Disable default mappings
@@ -831,7 +830,7 @@ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 vnoremap <leader>p "_dP
 
 "" Clean search (highlight)
-map <silent> <esc> :noh<cr>
+nnoremap <silent> <esc> :nohlsearch<cr>
 
 " Make {motion} text uppercase in INSERT mode.
 map! <C-F> <Esc>gUiw`]a
