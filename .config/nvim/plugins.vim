@@ -60,6 +60,7 @@ Plug 'tpope/vim-abolish'
 
 " auto-close plugin
 Plug 'jiangmiao/auto-pairs'
+" Plug 'cohama/lexima.vim'
 
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'
@@ -95,6 +96,9 @@ Plug 'Shougo/echodoc.vim'
 " EditorConfig plugin for Vim
 " Note: this plugin conflicts with 'vim-auto-save'
 Plug 'editorconfig/editorconfig-vim'
+
+" The fastest Neovim colorizer
+Plug 'norcalli/nvim-colorizer.lua'
 
 " === Git Plugins === "
 " Enable git changes to be shown in sign column
