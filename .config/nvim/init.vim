@@ -1,5 +1,4 @@
 autocmd!
-scriptencoding utf-8
 source ~/.config/nvim/plugins.vim
 
 " source of this config is https://github.com/ctaylo21/jarvis
@@ -12,6 +11,16 @@ source ~/.config/nvim/plugins.vim
 
 " Remap leader key to ,
 let g:mapleader=','
+
+if has('vim_starting')
+	set encoding=utf-8
+	scriptencoding utf-8
+
+	" Enables 24-bit RGB color in the TUI
+	if has('termguicolors') && $COLORTERM =~# 'truecolor\|24bit'
+		set termguicolors
+	endif
+endif
 
 " Enable line numbers
 set number
@@ -559,6 +568,9 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
 " Fix conflicts of trailing whitespace trimming and buffer autosaving
 let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+
+" ===[ nvim-colorizer ]===
+lua require'colorizer'.setup()
 
 " ============================================================================ "
 " ===                                UI                                    === "
