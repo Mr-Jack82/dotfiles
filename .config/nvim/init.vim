@@ -671,6 +671,9 @@ try
 catch
   colorscheme slate
 endtry
+
+" Make it more obvious where 'ColorColumn' is
+highlight ColorColumn guibg=SlateBlue3
 " ============================================================================ "
 " ===                             KEY MAPPINGS                             === "
 " ============================================================================ "
