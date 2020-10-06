@@ -824,7 +824,7 @@ nnoremap <Leader>u :UndotreeToggle<cr>
 " =====[ Little usability improvements ]=====
 
 " Allows you to save files you opened without write permissions via sudo
-cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 " cmap w!! w !sudo tee %
 
 " Delete current visual selection and dump in black hole buffer before pasting
