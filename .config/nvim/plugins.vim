@@ -22,6 +22,13 @@ if !filereadable(plugpath)
     endif
 endif
 
+" Run PlugInstall if there are missing plugins
+" Note that this may increase the startup time of Vim.
+autocmd VimEnter *
+      \| if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      \| PlugInstall --sync | source $MYVIMRC
+      \| endif
+
 call plug#begin('~/.config/nvim/plugged')
 
 " Minimalist Vim Plugin Manager
@@ -170,9 +177,3 @@ Plug 'lyokha/vim-xkbswitch'
 
 " Initialize plugin system
 call plug#end()
-
-" Automatically install missing plugins on startup
-autocmd VimEnter *
-      \ if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-      \| PlugInstall --sync | q
-      \| endif
