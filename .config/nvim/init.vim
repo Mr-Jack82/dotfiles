@@ -570,15 +570,21 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " Fix conflicts of trailing whitespace trimming and buffer autosaving
 let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
+"For correct appear in some terminals
+if exists('+termguicolors')
+ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+ set termguicolors
+
+ "for italic in tmux
+endif
+
 " ===[ nvim-colorizer ]===
 lua require'colorizer'.setup()
 
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
-
-" Enable true color support
-set termguicolors
 
 " Vim airline theme
 let g:airline_theme='space'
