@@ -634,6 +634,8 @@ nmap <silent> ]W <Plug>(ale_last)
 
 " Show 5 lines of errors (default: 10)
 let g:ale_list_window_size = 5
+" Disable autopopup fix window
+let g:ale_open_list = 0
 
 " === vim-mucomplete === "
 let g:mucomplete#enable_auto_at_startup = 1
