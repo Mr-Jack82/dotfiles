@@ -64,7 +64,7 @@ set fillchars+=vert:│
 set matchpairs+=<:>,«:»,｢:｣
 
 " Minimal number of screen lines to keep above and below the cursor.
-set scrolloff=5
+set scrolloff=7
 
 " Making scrolling horizontally a bit more useful
 set sidescroll=5
