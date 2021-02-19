@@ -269,7 +269,8 @@ set ttimeoutlen=10          " Reduce the delay in entering escape sequences
 let &t_SI.="\e[5 q"         " SI = INSERT mode
 let &t_SR.="\e[3 q"         " SR = REPLACE mode
 let &t_EI.="\e[1 q"         " EI = NORMAL mode
-" Where 1 is the flashing rectangle
+" Where:
+" 1 - is the flashing rectangle
 " 2 - regular rectangle
 " 3 - flashing underline
 " 4 - just underline
