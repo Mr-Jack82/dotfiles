@@ -291,9 +291,6 @@ endif
 " Height of complete list
 set pumheight=20
 
-" Match angle brackets
-set matchpairs+=<:>
-
 " Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
 
