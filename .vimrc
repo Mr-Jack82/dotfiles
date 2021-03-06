@@ -29,6 +29,9 @@ Plug 'tpope/vim-commentary'
 " Pairs of handy bracket mappings
 Plug 'tpope/vim-unimpaired'
 
+" A Vim alignment plugin
+Plug 'junegunn/vim-easy-align'
+
 " Initialize plugin system
 call plug#end()
 
