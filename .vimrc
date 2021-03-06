@@ -17,6 +17,9 @@ Plug 'junegunn/vim-plug'
 " Automatically save changes to disk in Vim
 Plug '907th/vim-auto-save'
 
+" Enable repeating supported plugin maps with "."
+Plug 'tpope/vim-repeat'
+
 " Initialize plugin system
 call plug#end()
 
