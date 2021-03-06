@@ -294,6 +294,9 @@ set pumheight=20
 " Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
 
+" Don't dispay mode in command line (airilne already shows it)
+set noshowmode
+
 " Setting up ignores
 set wildignore+=*.o,*.obj,*.pyc                " output objects
 set wildignore+=*.png,*.jpg,*.gif,*.ico        " image format
