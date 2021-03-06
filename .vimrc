@@ -78,6 +78,7 @@ Plug 'lambdalisue/fern.vim'
 
 " Colorschemes
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'morhetz/gruvbox'
 
 " Initialize plugin system
 call plug#end()
@@ -301,6 +302,11 @@ set wildignore+=*sass-cache*
 set wildignore+=*.DS_Store
 set wildignore+=log/**
 set wildignore+=tmp/**
+
+" Color Theme
+colorscheme gruvbox
+" For gruvbox specifically
+set background=dark
 
 " =============================================================
 " ==> Moving around, tabs, windows and buffers
