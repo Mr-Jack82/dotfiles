@@ -23,6 +23,9 @@ Plug 'tpope/vim-repeat'
 " Quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
 
+" Comment stuff out
+Plug 'tpope/vim-commentary'
+
 " Initialize plugin system
 call plug#end()
 
