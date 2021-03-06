@@ -157,6 +157,9 @@ Plug 'wincent/loupe'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" Most Recently Used (MRU) Vim Plugin
+Plug 'yegappan/mru'
+
 " Colorscheme
 Plug 'mhartington/oceanic-next'
 Plug 'dracula/vim'
