@@ -469,26 +469,8 @@ let g:matchup_matchpref            = {
  \  'xml':   { 'tagnameonly': 1, 'nolists': 1 },
  \}
 
-" =====[ ctrlp.vim ]=====
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = "CtrlP"
-
-" Use rg to search instead
-if executable('rg')
-  set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-  let g:ctrlp_use_caching = 0
 endif
 
-" Ignore files to completion
-set wildignore+=*/.git/*,*/tmp/*,*.so,*.swp,*.zip,*.epub,*.pdf,*.jpg
-
-" show hidden files
-let g:ctrlp_show_hidden = 1
-
-" Lets us change the working directory during a Vim session and make CtrlP
-" respect that change.
-let g:ctrlp_working_path_mode = 0
 
 " ===[ editorconfig-vim ]===
 " Fix conflicts with Tim Pope's fugitive and avoid loading EditorConfig
