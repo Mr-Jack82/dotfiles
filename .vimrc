@@ -62,6 +62,9 @@ Plug 'natebosch/vim-lsc'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" Improved motion in Vim
+Plug 'easymotion/vim-easymotion'
+
 " Initialize plugin system
 call plug#end()
 
