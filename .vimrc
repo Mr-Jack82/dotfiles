@@ -49,6 +49,10 @@ Plug 'lifepillar/vim-mucomplete'
 " emmet for vim: https://emmet.io/
 Plug 'mattn/emmet-vim', {'for': ['html', 'css']}
 
+" Snippet plugin for vim/nvim that supports LSP/VSCode's snippet format.
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
 " Initialize plugin system
 call plug#end()
 
