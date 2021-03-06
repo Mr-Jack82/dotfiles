@@ -68,6 +68,9 @@ Plug 'easymotion/vim-easymotion'
 " Most Recently Used (MRU) Vim Plugin
 Plug 'yegappan/mru'
 
+" Tmux/Neovim movement integration
+Plug 'christoomey/vim-tmux-navigator'
+
 " Initialize plugin system
 call plug#end()
 
