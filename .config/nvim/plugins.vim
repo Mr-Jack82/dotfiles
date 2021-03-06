@@ -142,7 +142,7 @@ Plug 'othree/yajs.vim'
 
 " === UI === "
 " File explorer
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 
 " Continuously updated session files
 Plug 'tpope/vim-obsession'
