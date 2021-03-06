@@ -81,6 +81,10 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
 Plug 'mhartington/oceanic-next'
 
+" Status line
+Plug 'glepnir/spaceline.vim'
+Plug 'ryanoasis/vim-devicons'
+
 " Initialize plugin system
 call plug#end()
 
