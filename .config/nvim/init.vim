@@ -907,7 +907,6 @@ set autoread
 if has('persistent_undo')
   set undofile
   set undolevels=3000
-  set undoreload=10000
 endif
 set backupdir=~/.local/share/nvim/backup " Don't put backups in current dir
 set backup
