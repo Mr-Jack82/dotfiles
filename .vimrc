@@ -53,6 +53,9 @@ Plug 'mattn/emmet-vim', {'for': ['html', 'css']}
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
+" A vim plugin for communicating with a language server
+Plug 'natebosch/vim-lsc'
+
 " Initialize plugin system
 call plug#end()
 
