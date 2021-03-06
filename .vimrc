@@ -74,6 +74,11 @@ Plug 'christoomey/vim-tmux-navigator'
 " General purpose asynchronous tree viewer written in Pure Vim script
 Plug 'lambdalisue/fern.vim'
 
+" === UI === "
+
+" Colorschemes
+Plug 'dracula/vim', { 'as': 'dracula' }
+
 " Initialize plugin system
 call plug#end()
 
