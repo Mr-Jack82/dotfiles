@@ -35,6 +35,12 @@ Plug 'junegunn/vim-easy-align'
 " auto-close plugin
 Plug 'jiangmiao/auto-pairs'
 
+" vim match-up: even better % fist_oncoming navigate and highlight
+" matching words fist_oncoming modern matchit and matchparen replacement
+Plug 'andymass/vim-matchup', { 'for':
+    \  ['dart', 'eruby', 'html', 'javascript', 'json', 'xml']
+    \}
+
 " Initialize plugin system
 call plug#end()
 
