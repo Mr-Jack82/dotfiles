@@ -20,6 +20,9 @@ Plug '907th/vim-auto-save'
 " Enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
 
+" Quoting/parenthesizing made simple
+Plug 'tpope/vim-surround'
+
 " Initialize plugin system
 call plug#end()
 
