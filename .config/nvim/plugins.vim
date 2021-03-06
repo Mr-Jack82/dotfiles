@@ -153,6 +153,9 @@ Plug 'christoomey/vim-tmux-navigator'
 " Enhanced in-file search for Vim
 Plug 'wincent/loupe'
 
+" fzf ♡ vim
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Colorscheme
 Plug 'mhartington/oceanic-next'
