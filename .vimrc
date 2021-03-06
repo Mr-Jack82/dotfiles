@@ -71,6 +71,9 @@ Plug 'yegappan/mru'
 " Tmux/Neovim movement integration
 Plug 'christoomey/vim-tmux-navigator'
 
+" General purpose asynchronous tree viewer written in Pure Vim script
+Plug 'lambdalisue/fern.vim'
+
 " Initialize plugin system
 call plug#end()
 
