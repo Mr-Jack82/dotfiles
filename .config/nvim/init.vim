@@ -955,12 +955,18 @@ augroup highlight_yank
 augroup END
 
 " Autosave
-" thanks to Monkoose from Reddit
-" https://www.reddit.com/r/vim/comments/ieekfb/need_help_to_tweak_vim_script/
-" augroup AutoSave
-"   autocmd!
-"   autocmd TextChanged,InsertLeave *
-"         \ if &buftype == "" && !&readonly
-"         \ |   silent write
-"         \ | endif
-" augroup END
+" from:
+" https://github.com/junegunn/dotfiles/blob/18e886d73eac4866724cfcb00ef168dffd5be0d4/vimrc#L904
+" function! s:autosave(enable)
+"   augroup autosave
+"     autocmd!
+"     if a:enable
+"       autocmd TextChanged,InsertLeave <buffer>
+"             \  if empty(&buftype) && !empty(bufname(''))
+"             \|   silent! update
+"             \| endif
+"     endif
+"   augroup END
+" endfunction
+
+" command! -bang AutoSave call s:autosave(<bang>1)
