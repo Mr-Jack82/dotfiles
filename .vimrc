@@ -56,6 +56,12 @@ Plug 'hrsh7th/vim-vsnip-integ'
 " A vim plugin for communicating with a language server
 Plug 'natebosch/vim-lsc'
 
+" === Seaching and Moving === "
+
+" fzf ♡ vim
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 " Initialize plugin system
 call plug#end()
 
