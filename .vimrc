@@ -12,6 +12,11 @@ call plug#begin('~/.vim/plugged')
 " Minimalist Vim Plugin Manager
 Plug 'junegunn/vim-plug'
 
+" === Editing Plugins === "
+
+" Automatically save changes to disk in Vim
+Plug '907th/vim-auto-save'
+
 " Initialize plugin system
 call plug#end()
 
