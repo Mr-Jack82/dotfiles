@@ -546,6 +546,25 @@ set winblend=10
 " Set a WildMenu in old style
 set wildoptions=""
 
+" Window management in (neo)Vim
+augroup ReduceNoise
+    autocmd!
+    " Automatically resize active split to 85 width
+    autocmd WinEnter * :call ResizeSplits()
+augroup END
+
+function! ResizeSplits()
+    set winwidth=60
+    wincmd =
+endfunction
+
+" Unfocuse window when cursor lives
+autocmd WinEnter * setlocal cursorline
+autocmd WinEnter * setlocal signcolumn=auto
+
+autocmd WinLeave * setlocal nocursorline
+autocmd WinLeave * setlocal signcolumn=no
+
 " ============================================================================ "
 " ===                      CUSTOM COLORSCHEME CHANGES                      === "
 " ============================================================================ "
