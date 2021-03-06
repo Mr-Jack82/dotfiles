@@ -46,6 +46,9 @@ Plug 'andymass/vim-matchup', { 'for':
 " Chained completion that works the way you want!
 Plug 'lifepillar/vim-mucomplete'
 
+" emmet for vim: https://emmet.io/
+Plug 'mattn/emmet-vim', {'for': ['html', 'css']}
+
 " Initialize plugin system
 call plug#end()
 
