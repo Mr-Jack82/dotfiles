@@ -32,6 +32,9 @@ Plug 'tpope/vim-unimpaired'
 " A Vim alignment plugin
 Plug 'junegunn/vim-easy-align'
 
+" auto-close plugin
+Plug 'jiangmiao/auto-pairs'
+
 " Initialize plugin system
 call plug#end()
 
