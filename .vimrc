@@ -197,7 +197,7 @@ set history=1000
 set undolevels=1000
 if v:version >= 730
   set undofile
-  set undodir=~/.vim/.undodir
+  set undodir=~/.vim/undodir
 endif
 
 " don't keep backup files
