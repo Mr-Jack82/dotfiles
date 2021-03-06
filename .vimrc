@@ -79,6 +79,7 @@ Plug 'lambdalisue/fern.vim'
 " Colorschemes
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
+Plug 'mhartington/oceanic-next'
 
 " Initialize plugin system
 call plug#end()
