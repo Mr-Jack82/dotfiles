@@ -150,9 +150,6 @@ Plug 'tpope/vim-obsession'
 " Tmux/Neovim movement integration
 Plug 'christoomey/vim-tmux-navigator'
 
-" Denite - Fuzzy finding, buffer management
-Plug 'Shougo/denite.nvim'
-
 " Enhanced in-file search for Vim
 Plug 'wincent/loupe'
 
