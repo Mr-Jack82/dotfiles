@@ -41,6 +41,11 @@ Plug 'andymass/vim-matchup', { 'for':
     \  ['dart', 'eruby', 'html', 'javascript', 'json', 'xml']
     \}
 
+" === Code completion, snippets === "
+
+" Chained completion that works the way you want!
+Plug 'lifepillar/vim-mucomplete'
+
 " Initialize plugin system
 call plug#end()
 
