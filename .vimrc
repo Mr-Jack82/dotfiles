@@ -65,6 +65,9 @@ Plug 'junegunn/fzf.vim'
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'
 
+" Most Recently Used (MRU) Vim Plugin
+Plug 'yegappan/mru'
+
 " Initialize plugin system
 call plug#end()
 
