@@ -26,6 +26,9 @@ Plug 'tpope/vim-surround'
 " Comment stuff out
 Plug 'tpope/vim-commentary'
 
+" Pairs of handy bracket mappings
+Plug 'tpope/vim-unimpaired'
+
 " Initialize plugin system
 call plug#end()
 
