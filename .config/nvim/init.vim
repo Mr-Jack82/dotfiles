@@ -878,14 +878,6 @@ augroup close-nerdtree
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 augroup END
 
-" Automaticaly open NERDTree when you're starting vim/nvim with no command
-" line arguments
-augroup open-nerdtree
-  autocmd!
-  autocmd StdinReadPre * let s:std_in=1
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-augroup END
-
 " =====[ Search ]=====
 " Turning On Neovim built-in feature inccommand, to live preview the
 " :substitute command
