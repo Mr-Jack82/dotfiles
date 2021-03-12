@@ -44,7 +44,7 @@
   staaash = stash --all              # stash ignored, untracked, and tracked files
 [push]
 	default = upstream
-[color "diff-highlight"]
+[color "diff-highlight"]             # config for diff-so-fancy
 	oldNormal = red bold
 	oldHighlight = red bold 52
 	newNormal = green bold
