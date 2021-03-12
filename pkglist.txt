@@ -354,6 +354,7 @@ tmuxinator
 tor-browser
 traceroute
 transmission-qt
+tree-sitter
 ttf-bitstream-vera
 ttf-carlito
 ttf-cascadia-code
