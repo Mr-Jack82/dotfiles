@@ -138,7 +138,6 @@ iproute2
 iputils
 irssi
 jdk-openjdk
-jekyll
 jfsutils
 jq
 kactivitymanagerd
