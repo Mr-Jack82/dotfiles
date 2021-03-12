@@ -97,6 +97,7 @@ gentium-plus-font
 gettext
 gimp
 git
+git-delta
 github-cli
 gitkraken
 glances
