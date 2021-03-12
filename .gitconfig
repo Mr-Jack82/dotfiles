@@ -6,7 +6,13 @@
 	autocrlf = false
 	safecrlf = true
 	quotepath = off
-	pager = diff-so-fancy | less --tabs=2 -RFX
+	pager = delta
+[delta]                              # config for git-delta
+  plus-style = "syntax #012800"
+  minus-style = "syntax #340001"
+  syntax-theme = Monokai Extended
+[interactive]                        # config for git-delta
+  diffFilter = delta --color-only
 [merge]
 	tool = vimdiff
 [mergetool "fugutive"]
