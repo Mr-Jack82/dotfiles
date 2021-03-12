@@ -16,32 +16,32 @@
 [merge]
 	tool = vimdiff
 [mergetool "fugutive"]
-    cmd = vim -f -c \"Gdiff\" \"$MERGED\"
-    keepBackup = false
+  cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+  keepBackup = false
 [color]
 	ui = true
 [alias]
-    co = checkout
-    cb = checkout -b
-    di = diff
-    dc = diff --cached
-    aa = add --all
-    ff = merge --ff-only
-    pullff = pull --ff-only
-    noff = merge --no-ff
-    pom = push origin master
-    ci = commit
-    st = status
-    br = branch
-    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-    l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
-    type = cat-file -t
-    dump = cat-file -p
-	commend = commit --amend --no-edit  # sticks all indexed files to latest commit
-	please = push --force-with-lease    # check a local copy before rewrite
-	stsh = stash --keep-index           # stash only unstaged changes to tracked files
-	staash = stash --include-untracked  # stash any changes to tracked files
-	staaash = stash --all               # stash ignored, untracked, and tracked files
+  co = checkout
+  cb = checkout -b
+  di = diff
+  dc = diff --cached
+  aa = add --all
+  ff = merge --ff-only
+  pullff = pull --ff-only
+  noff = merge --no-ff
+  pom = push origin master
+  ci = commit
+  st = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
+  type = cat-file -t
+  dump = cat-file -p
+  commend = commit --amend --no-edit # sticks all indexed files to latest commit
+  please = push --force-with-lease   # check a local copy before rewrite
+  stsh = stash --keep-index          # stash only unstaged changes to tracked files
+  staash = stash --include-untracked # stash any changes to tracked files
+  staaash = stash --all              # stash ignored, untracked, and tracked files
 [push]
 	default = upstream
 [color "diff-highlight"]
