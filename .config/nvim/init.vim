@@ -80,8 +80,14 @@ set hidden
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=50
 
-" always show signcolumns
-set signcolumn=yes
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " Set Python3 provider as of Neovim is recommend
 let g:python3_host_prog = '/usr/bin/python3'
