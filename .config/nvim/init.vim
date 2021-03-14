@@ -668,16 +668,13 @@ nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
 " =====[ coc.nvim ]=====
-"   <leader>gd    - Jump to definition of current symbol
-"   <leader>gy    - Jump to type definition of current symbol
-"   <leader>gr    - Jump to references of current symbol
-"   <leader>gi    - Jump to implementation of current symbol
-"   <leader>ds    - Fuzzy search current project symbols
+" GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gi <Plug>(coc-implementation)
 nnoremap <silent> <leader>ds :<C-u>CocList -I -N --top symbols<CR>
+
 
 " =====[ vim-better-whitespace ]=====
 "   <leader>y - Automatically remove trailing whitespace
