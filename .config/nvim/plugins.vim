@@ -66,8 +66,7 @@ Plug 'chrisbra/changesPlugin'
 Plug 'tpope/vim-abolish'
 
 " auto-close plugin
-Plug 'jiangmiao/auto-pairs'
-" Plug 'cohama/lexima.vim'
+" Plug 'jiangmiao/auto-pairs'
 
 " Improved motion in Vim
 Plug 'easymotion/vim-easymotion'

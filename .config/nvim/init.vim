@@ -264,7 +264,8 @@ let g:coc_global_extensions=[
     \ 'coc-sh',
     \ 'coc-tslint-plugin',
     \ 'coc-neosnippet',
-    \ 'coc-marketplace'
+    \ 'coc-marketplace',
+    \ 'coc-pairs'
     \ ]
 
 " =====[ NeoSnippet ]=====
