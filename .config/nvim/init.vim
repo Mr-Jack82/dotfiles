@@ -265,6 +265,7 @@ let g:coc_global_extensions=[
     \ 'coc-tslint-plugin',
     \ 'coc-neosnippet',
     \ 'coc-marketplace',
+    \ 'coc-lua',
     \ 'coc-pairs'
     \ ]
 
