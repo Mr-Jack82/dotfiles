@@ -46,6 +46,9 @@ Plug 'andymass/vim-matchup', { 'for':
 " Chained completion that works the way you want!
 Plug 'lifepillar/vim-mucomplete'
 
+" A solid language pack for Vim.
+Plug 'sheerun/vim-polyglot'
+
 " emmet for vim: https://emmet.io/
 Plug 'mattn/emmet-vim', {'for': ['html', 'css']}
 
