@@ -1,9 +1,130 @@
-autocmd!
-source ~/.config/nvim/plugins.vim
+" ============================================================================ "
+" ===                               PLUGINS                                === "
+" ============================================================================ "
 
-" source of this config is https://github.com/ctaylo21/jarvis
-" also read his article "A guide to modern Web Development with (Neo)vim"
-" https://www.freecodecamp.org/news/a-guide-to-modern-web-development-with-neo-vim-333f7efbf8e2/
+" check whether vim-plug is installed and install it if necessary
+let plugpath = expand('<sfile>:p:h'). '/autoload/plug.vim'
+if !filereadable(plugpath)
+    if executable('curl')
+        let plugurl = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        call system('curl -fLo ' . shellescape(plugpath) . ' --create-dirs ' . plugurl)
+        if v:shell_error
+            echom "Error downloading vim-plug. Please install it manually.\n"
+            exit
+        endif
+    else
+        echom "vim-plug not installed. Please install it manually or install curl.\n"
+        exit
+    endif
+endif
+
+" Run PlugInstall if there are missing plugins
+" Note that this may increase the startup time of Vim.
+autocmd VimEnter *
+      \| if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      \| PlugInstall --sync | source $MYVIMRC
+      \| endif
+
+call plug#begin('~/.config/nvim/plugged')
+
+" Minimalist Vim Plugin Manager
+Plug 'junegunn/vim-plug'
+
+" === Editing Plugins === "
+" Trailing whitespace highlighting & automatic fixing
+Plug 'ntpeters/vim-better-whitespace'
+
+" Comment stuff out
+Plug 'tpope/vim-commentary'
+
+" A Vim alignment plugin
+Plug 'junegunn/vim-easy-align'
+
+" Quoting/parenthesizing made simple
+Plug 'tpope/vim-surround'
+
+" Automatically save changes to disk in Vim
+Plug '907th/vim-auto-save'
+
+" Enable repeating supported plugin maps with "."
+Plug 'tpope/vim-repeat'
+
+" Easily search for, substitute, and abbreviate multiple variants of a word
+Plug 'tpope/vim-abolish'
+
+" Auto close parentheses and repeat by dot dot dot...
+Plug 'cohama/lexima.vim'
+
+" Improved motion in Vim
+Plug 'easymotion/vim-easymotion'
+
+" Pairs of handy bracket mappings
+Plug 'tpope/vim-unimpaired'
+
+" The undo history visualizer for Vim
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+
+" Easy text exchange operator for Vim
+Plug 'tommcdo/vim-exchange'
+
+" vim match-up: even better % fist_oncoming navigate and highlight
+" matching words fist_oncoming modern matchit and matchparen replacement
+Plug 'andymass/vim-matchup', { 'for':
+    \  ['dart', 'eruby', 'html', 'javascript', 'json', 'xml']
+    \}
+
+" EditorConfig plugin for Vim
+" Note: this plugin conflicts with 'vim-auto-save'
+Plug 'editorconfig/editorconfig-vim'
+
+" The fastest Neovim colorizer
+Plug 'norcalli/nvim-colorizer.lua'
+
+" === Code completion, snippets === "
+
+" === Syntax Highlighting === "
+
+" A solid language pack for Vim.
+Plug 'sheerun/vim-polyglot'
+
+" === UI === "
+" File explorer
+Plug 'preservim/nerdtree'
+
+" Continuously updated session files
+Plug 'tpope/vim-obsession'
+
+" Tmux/Neovim movement integration
+Plug 'christoomey/vim-tmux-navigator'
+
+" fzf ♡ vim
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Most Recently Used (MRU) Vim Plugin
+Plug 'yegappan/mru'
+
+" Colorscheme
+Plug 'mhartington/oceanic-next'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'morhetz/gruvbox'
+
+" Customized vim status line
+Plug 'glepnir/spaceline.vim'
+
+" Icons
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" vim plugin for automatic keyboard layout switching in insert mode
+Plug 'lyokha/vim-xkbswitch'
+
+" Vim-Plug shortcut for update all plugins and upgrade itself
+" (:PU instead of :PlugUpdate | PlugUpgrade)
+command! PU PlugUpdate | PlugUpgrade
+
+" Initialize plugin system
+call plug#end()
 
 " ============================================================================ "
 " ===                           EDITING OPTIONS                            === "
@@ -22,12 +143,9 @@ if has('vim_starting')
 	endif
 endif
 
-" Enable line numbers
-set number
-set numberwidth=5
-
 " Show the line number relative to the line with the cursor in front of
 " each line.
+set number
 set relativenumber
 
 " Show (partial) command in the last line of the screen.
@@ -60,9 +178,6 @@ endif
 " Setting up vertical split separator as in Tmux.
 set fillchars+=vert:│
 
-" Match angle brackets...
-set matchpairs+=<:>,«:»,｢:｣
-
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=7
 
@@ -89,6 +204,8 @@ else
   set signcolumn=yes
 endif
 
+set numberwidth=5
+
 " Set Python3 provider as of Neovim is recommend
 let g:python3_host_prog = '/usr/bin/python3'
 
@@ -98,7 +215,7 @@ let g:python3_host_prog = '/usr/bin/python3'
  set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
  " Only do this part when compiled with support for autocommands
-augroup tabs-and-spaces
+augroup tabs_and_spaces
   if has("autocmd")
 
     " Enable file type detection
@@ -118,6 +235,7 @@ augroup tabs-and-spaces
 
     " Treat .ejs (embedded javascript) file as HTML
     autocmd BufNewFile,BufRead *.ejs set filetype=html
+endif
 augroup END
 
 " Set tabstop, softtabstop and shiftwidth to the same value
@@ -149,13 +267,6 @@ function! SummarizeTabs()
   endtry
 endfunction
 
-  " Enable syntax highlight for *.log files
-augroup log-messages
-  autocmd!
-  autocmd BufNewFile,BufReadPost *.log :set filetype=messages
-endif
-augroup END
-
 " do not wrap long lines by default
 set nowrap
 
@@ -181,343 +292,7 @@ set smartindent
 " Fix spelling errors
 iabbrev cosnt const
 
-" ============================================================================ "
-" ===                           PLUGIN SETUP                               === "
-" ============================================================================ "
-
-" =====[ Coc.nvim ]=====
-" Use <tab> for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-function! HasEslintConfig()
-  for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
-    if globpath('.', name) != ''
-      return 1
-    endif
-  endfor
-endfunction
-
-" Turn off eslint when cannot find eslintrc
-call coc#config('eslint.enable', HasEslintConfig())
-
-" Essentially avoid turning on typescript in a flow project
-call coc#config('tsserver.enableJavascript', globpath('.', '.flowconfig') == '')
-
-" lookup local flow executable
-" and turn on flow for coc in executable exists
-function! SetFlow()
-  let s:flow_in_project = findfile('.nvm/versions/node/v10.19.0/lib/node_modules/flow-bin/flow-linux64-v0.123.0/flow')
-  let s:flow_exe = empty(s:flow_in_project) ? '' : getcwd() . '/' . s:flow_in_project
-  let s:flow_config = {
-    \    'command': s:flow_exe,
-    \    'args': ['lsp'],
-    \    'filetypes': ['javascript', 'javascriptreact'],
-    \    'initializationOptions': {},
-    \    'requireRootPattern': 1,
-    \    'settings': {},
-    \    'rootPatterns': ['.flowconfig']
-    \}
-
-" Turn on flow when flow executable exists
-  if !empty(s:flow_exe)
-    call coc#config('languageserver', { 'flow': s:flow_config })
-  endif
-endfunction
-
-call SetFlow()
-
-let g:coc_global_extensions=[
-    \ 'coc-tsserver',
-    \ 'coc-prettier',
-    \ 'coc-css',
-    \ 'coc-json',
-    \ 'coc-emmet',
-    \ 'coc-eslint',
-    \ 'coc-highlight',
-    \ 'coc-vimlsp',
-    \ 'coc-sh',
-    \ 'coc-tslint-plugin',
-    \ 'coc-neosnippet',
-    \ 'coc-marketplace',
-    \ 'coc-lua',
-    \ 'coc-pairs'
-    \ ]
-
-" =====[ NeoSnippet ]=====
-" Map <C-j> as shortcut to activate snippet if available
-imap <C-j> <Plug>(neosnippet_expand_or_jump)
-smap <C-j> <Plug>(neosnippet_expand_or_jump)
-xmap <C-j> <Plug>(neosnippet_expand_target)
-
-" Fix for jumping over placeholders for neosnippet
-smap <expr><TAB> neosnippet#jumpable() ?
-\ "\<Plug>(neosnippet_jump)"
-\: "\<TAB>"
-
-" Load custom snippets from snippets folder
-let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
-
-" For conceal markers
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-
-" =====[ NERDTree ]=====
-" Show hidden files/directories
-let g:NERDTreeShowHidden = 1
-
-" Remove bookmarks and help text from NERDTree
-let g:NERDTreeMinimalUI = 1
-
-" Custom icons for expandable/expanded directories
-let g:NERDTreeDirArrowExpandable = '⬏'
-let g:NERDTreeDirArrowCollapsible = '⬎'
-
-" Hide certain files and directories from NERDTree
-let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
-
-" Automatically delete the buffer of the file you just deleted with NerdTree
-let NERDTreeAutoDeleteBuffer = 1
-
-" Automatically close NerdTree when you open a file
-let NERDTreeQuitOnOpen = 1
-
-" Synchronizing nerdtree with the currently opened file
-" from reddit post (https://www.reddit.com/r/vim/comments/g47z4f/synchronizing_nerdtree_with_the_currently_opened/?%24deep_link=true&correlation_id=8c881181-a7d4-4e11-94dc-f125f7daaa68&ref=email_digest&ref_campaign=email_digest&ref_source=email&utm_content=post_title&utm_medium=digest&utm_name=top_posts&utm_source=email&utm_term=day&%243p=e_as&%24original_url=https%3A%2F%2Fwww.reddit.com%2Fr%2Fvim%2Fcomments%2Fg47z4f%2Fsynchronizing_nerdtree_with_the_currently_opened%2F%3F%24deep_link%3Dtrue%26correlation_id%3D8c881181-a7d4-4e11-94dc-f125f7daaa68%26ref%3Demail_digest%26ref_campaign%3Demail_digest%26ref_source%3Demail%26utm_content%3Dpost_title%26utm_medium%3Ddigest%26utm_name%3Dtop_posts%26utm_source%3Demail%26utm_term%3Dday&_branch_match_id=699372985519899548)
-" Check if NERDTree is open or active
-function! IsNERDTreeOpen()
-  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
-
-" Call NERDTreeFind iff NERDTree is active, current window contains a
-" modifiable file, and we're not in vimdiff
-function! SyncTree()
-  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
-
-" Highlight currently open buffer in NERDTree
-autocmd BufRead * call SyncTree()
-
-" Wrap in try/catch to avoid errors on initial install before plugin is available
-try
-
-" =====[ Vim airline ]======
-" Enable extensions
-let g:airline#extensions#bufferline#enabled = 1
-let g:airline_extensions = ['branch', 'hunks', 'coc']
-
-" Update section z to just have line number
-let g:airline_section_z = airline#section#create(['linenr'])
-
-" Do not draw separators for empty sections (only for the active window) >
-let g:airline_skip_empty_sections = 1
-
-" Smartly uniquify buffers names with similar filename, suppressing common parts of paths.
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-
-" Custom setup that removes filetype/whitespace from default vim airline bar
-let g:airline#extensions#default#layout = [
-  \ ['a', 'b', 'c'],
-  \ ['x', 'z', 'error', 'warning',]
-  \ ]
-
-" Customize vim airline per filetype
-" 'nerdtree'  - Hide nerdtree status line
-" 'list'      - Only show file type plus current line number out of total
-let g:airline_filetype_overrides = {
-  \ 'nerdtree': [ get(g:, 'NERDTreeStatusline', ''), '' ],
-  \ 'list': [ '%y', '%l/%L' ],
-  \ }
-
-" Enable powerline fonts
-let g:airline_powerline_fonts = 1
-
-" Enable caching of syntax highlighting groups
-let g:airline_highlighting_cache = 1
-
-" Define custom airline symbols
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = '❮'
-let g:airline_right_sep = '❯'
-
-" Don't show git changes to current file in airline
-let g:airline#extensions#hunks#enabled=0
-
-catch
-  echo 'Airline not installed. It should work after running :PlugInstall'
-endtry
-
-" =====[ echodoc ]=====
-" Enable echodoc on startup
-let g:echodoc#enable_at_startup = 1
-
-" =====[ vim-javascript ]=====
-" Enable syntax highlighting for JSDoc
-let g:javascript_plugin_jsdoc = 1
-
-" =====[ vim-jsx ]=====
-" Highlight jsx syntax even in non .jsx files
-let g:jsx_ext_required = 0
-
-" =====[ javascript-libraries-syntax ]=====
-let g:used_javascript_libs = 'underscore,requirejs,chai,jquery'
-
-" =====[ Signify ]=====
-let g:signify_sign_delete = '-'
-
-" =====[ EasyAlign ]=====
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-" =====[ vim-auto-save ]=====
-let g:auto_save        = 1
-let g:auto_save_silent = 1
-let g:auto_save_events = ["InsertLeave", "TextChanged", "FocusLost"]
-
-" Disable auto save for javascript and json files
-augroup ft_javascript
-  au!
-  au FileType javascript,json let b:auto_save = 0
-augroup END
-
-" =====[ vim-repeat ]=====
-" This is an example from Github page and needed to edit properly
-" from Vimcast #61
-nnoremap <silent> <Plug>TransposeCharacters xp
-      \:call repeat#set("\<Plug>TransposeCharacters")<CR>
-nmap cp <Plug>TransposeCharacters
-
-" =====[ vim-xkbswitch ]=====
-let g:XkbSwitchEnabled   = 1
-let g:XkbSwitchIMappings = ['ru']
-" let g:XkbSwitchLib       = '/usr/lib/libxkbswitch.so'
-
-" =====[ indentLine ]=====
-let g:indentLine_char = '┊'
-let g:vim_json_syntax_conceal = 0
-" TODO: the code below does not work, need to figure out why
-" let g:indentLine_fileTypeExclude = ['help', 'text']
-
-" This option works fine for .json file
-" let g:indentLine_concealcursor = ""
-
-" =====[ undotree ]=====
-let g:undotree_WindowLayout = 3
-
-" =====[ fugitive ]=====
-" Auto-clean fugitive buffers
-augroup auto-clean-fugitive
-  autocmd!
-  autocmd BufReadPost fugitive://* set bufhidden=delete
-augroup END
-
-" Use '..' to go up the history of Git commits, but only for buffers
-" containing a git blob or tree
-augroup go-up-fugitive
-  autocmd!
-  autocmd User fugitive
-        \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-        \     nnoremap <buffer> .. :edit %:h<cr> |
-        \ endif
-augroup END
-
-" Vim-Plug shortcut for update all plugins and upgrade itself
-" (:PU instead of :PlugUpdate | PlugUpgrade)
-command! PU PlugUpdate | PlugUpgrade
-
-" =====[ vim-matchup ]=====
-let g:matchup_surround_enabled     = 1
-let g:matchup_transmute_enabled    = 1
-let g:matchup_delim_noskip         = 2
-let g:matchup_matchparen_deferred  = 1
-let g:matchup_matchparen_nomode    = 'i'
-let g:matchup_matchparen_offscreen = { 'method': 'popup', 'scrolloff': 1 }
-let g:matchup_matchpref            = {
- \  'html':  { 'tagnameonly': 1, 'nolists': 1 },
- \  'eruby': { 'tagnameonly': 1, 'nolists': 1 },
- \  'xml':   { 'tagnameonly': 1, 'nolists': 1 },
- \}
-
-" =====[ fzf.vim ]=====
-
-" Mappings
-nnoremap <leader>p           :Files<cr>
-nnoremap <leader>.           :Tags<cr>
-nnoremap <leader>b           :Buffers<cr>
-nnoremap <silent> <leader>'  :Marks<cr>
-nnoremap <silent> <Leader>L  :Lines<cr>
-
-" This is the default option:
-"   - Preview window on the right with 50% width
-"   - CTRL-/ will toggle preview window.
-" - Note that this array is passed as arguments to fzf#vim#with_preview function.
-" - To learn more about preview window options, see `--preview-window` section of `man fzf`.
-let g:fzf_preview_window = ['right:50%', 'ctrl-/']
-
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'down': '40%' }
-
-" Hide statusline.
-" It's a good combo with `{ 'down': '40%' }` layout
-if has('nvim') && !exists('g:fzf_layout')
-  autocmd! FileType fzf
-  autocmd  FileType fzf set laststatus=0 noshowmode noruler
-    \| autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
-endif
-
-" Get Files
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--inline-info']}), <bang>0)
-
-" ===[ editorconfig-vim ]===
-" Fix conflicts with Tim Pope's fugitive and avoid loading EditorConfig
-" for any remote files over ssh
-let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
-
-" Fix conflicts of trailing whitespace trimming and buffer autosaving
-let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
-
-"For correct appear in some terminals
+" For correct appear in some terminals
 if exists('+termguicolors')
  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -525,17 +300,9 @@ if exists('+termguicolors')
 
  "for italic in tmux
 endif
-
-" ===[ nvim-colorizer ]===
-lua require'colorizer'.setup()
-
 " ============================================================================ "
 " ===                                UI                                    === "
 " ============================================================================ "
-
-" Vim airline theme
-let g:airline_theme='space'
-" silent! colorscheme kolor
 
 " Change vertical split character to be a space (essentially hide it)
 set fillchars+=vert:.
@@ -545,11 +312,6 @@ set splitbelow
 
 " Don't dispay mode in command line (airilne already shows it)
 set noshowmode
-
-" Set floating window to be slightly transparent
-" From denite.vim docs: To use "floating", you need to use neovim 0.4.0+
-" (|nvim_open_win()|). neovim 0.3(includes 0.3.7) does not work.
-set winblend=10
 
 " Set a WildMenu in old style
 set wildoptions=""
@@ -587,43 +349,6 @@ function! TrailingSpaceHighlights() abort
   call matchadd('Trail', '\s\+$', 100)
 endfunction
 
-function! s:custom_jarvis_colors()
-    " coc.nvim color changes
-    hi! link CocErrorSign WarningMsg
-    hi! link CocWarningSign Number
-    hi! link CocInfoSign Type
-
-    " Make background transparent for many things
-    hi! Normal ctermbg=NONE guibg=NONE
-    hi! NonText ctermbg=NONE guibg=NONE
-    hi! LineNr ctermfg=NONE guibg=NONE
-    hi! SignColumn ctermfg=NONE guibg=NONE
-    hi! StatusLine guifg=#16252b guibg=#6699CC
-    hi! StatusLineNC guifg=#16252b guibg=#16252b
-
-    " Try to hide vertical spit and end of buffer symbol
-    hi! VertSplit gui=NONE guifg=#17252c guibg=#17252c
-    hi! EndOfBuffer ctermbg=NONE ctermfg=NONE guibg=#17252c guifg=#17252c
-
-    " Customize NERDTree directory
-    hi! NERDTreeCWD guifg=#99c794
-
-    " Make background color transparent for git changes
-    hi! SignifySignAdd guibg=NONE
-    hi! SignifySignDelete guibg=NONE
-    hi! SignifySignChange guibg=NONE
-
-    " Highlight git change signs
-    hi! SignifySignAdd guifg=#99c794
-    hi! SignifySignDelete guifg=#ec5f67
-    hi! SignifySignChange guifg=#c594c5
-endfunction
-
-augroup trailing-space-highlight
-  autocmd! ColorScheme * call TrailingSpaceHighlights()
-  autocmd! ColorScheme OceanicNext call s:custom_jarvis_colors()
-augroup END
-
 " Call method on window enter
 augroup WindowManagement
   autocmd!
@@ -638,12 +363,9 @@ function! Handle_Win_Enter()
 endfunction
 
 " Editor theme
+colorscheme gruvbox
+" For gruvbox specifically
 set background=dark
-try
-  colorscheme OceanicNext
-catch
-  colorscheme slate
-endtry
 
 " Make it more obvious where 'ColorColumn' is
 highlight ColorColumn guibg=SlateBlue3
@@ -651,84 +373,10 @@ highlight ColorColumn guibg=SlateBlue3
 " ===                             KEY MAPPINGS                             === "
 " ============================================================================ "
 
-" =====[ Nerdtree shorcuts ]=====
-"  <leader>n - Toggle NERDTree on/off
-"  <leader>f - Opens current file location in NERDTree
-nmap <leader>n :NERDTreeToggle<CR>
-nmap <leader>f :NERDTreeFind<CR>
-
-"   <Space> - PageDown
-"   -       - PageUp
-noremap <Space> <PageDown>
-noremap - <PageUp>
-
-" Quick window switching
-nmap <C-h> <C-w>h
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-nmap <C-l> <C-w>l
-
-" =====[ coc.nvim ]=====
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gi <Plug>(coc-implementation)
-nnoremap <silent> <leader>ds :<C-u>CocList -I -N --top symbols<CR>
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" =====[ vim-better-whitespace ]=====
-"   <leader>y - Automatically remove trailing whitespace
-nmap <leader>y :StripWhitespace<CR>
-
 " =====[ Search shorcuts ]=====
 "   <leader>h - Find and replace
 "   <leader>/ - Clear highlighted search terms while preserving history
 map <leader>h :%s///<left><left>
-
-" =====[ Easy-motion shortcuts ]=====
-" Disable default mappings
-" let g:EasyMotion_do_mapping = 0
-
-" Setting up <Leader> key for easymotion
-map <Leader> <Plug>(easymotion-prefix)
-
-" Jump to anywhere you want with minimal keystrokes, with just one key
-" binding. `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
-
-" Bidirectional & within line 't' motion
-omap t <Plug>(easymotion-bd-tl)
-
-" Enable 'dot' repeat feature
-omap z <Plug>(easymotion-t)
-let g:EasyMotion_keys='hklyuiopnm,qwertzxcvbasdgjf;'
-
-" Lazy targeting
-let g:EasyMotion_smartcase = 1
-
-" Use uppercase target labels and type as a lower case
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
-
-" =====[ vim-jsdoc shortcuts ]=====
-" Generate jsdoc for function under cursor
-nmap <leader>z :JsDoc<CR>
-
-" =====[ undotree ]=====
-nnoremap <Leader>u :UndotreeToggle<cr>
 
 " =====[ Little usability improvements ]=====
 
@@ -766,11 +414,6 @@ map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
 
-" >>> Instead of that use a dot '.' command <<<
-"" Vmap for maintain Visual Mode after shifting > and <
-" vmap < <gv
-" vmap > >gv
-
 " Search for the Current Selection (Redux)
 " from Practical Vim, 2nd edition book by Drew Neil
 xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
@@ -788,12 +431,6 @@ endfunction
 nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
-" >>> Use unimpaired.vim keybindings <<<
-" nnoremap <silent> [b :bprevious<CR>
-" nnoremap <silent> ]b :bnext<CR>
-" nnoremap <silent> [B :bfirst<CR>
-" nnoremap <silent> ]B :blast<CR>
-
 " Automaticaly jump to end of pasted text
 vnoremap <silent> y y`]
 vnoremap <silent> p p`]
@@ -801,18 +438,6 @@ nnoremap <silent> p p`]
 
 " Enable soft wraping text
 command! -nargs=* Wrap set wrap linebreak nolist
-
-" Moving around through wrapped lines
-vmap <M-j> gj
-vmap <M-k> gk
-vmap <M-4> g$
-vmap <M-6> g^
-vmap <M-0> g^
-nmap <M-j> gj
-nmap <M-k> gk
-nmap <M-4> g$
-nmap <M-6> g^
-nmap <M-0> g^
 
 " Visually select the text that was last edited/pasted
 nmap gV `[v`]
@@ -888,12 +513,6 @@ nnoremap cu :lcd ..<bar>pwd<cr>
 " ============================================================================ "
 " ===                                 MISC.                                === "
 " ============================================================================ "
-
-" Automaticaly close nvim if NERDTree is only thing left open
-augroup close-nerdtree
-  autocmd!
-  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-augroup END
 
 " =====[ Search ]=====
 " Turning On Neovim built-in feature inccommand, to live preview the
