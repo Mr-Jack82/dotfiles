@@ -51,6 +51,7 @@ cups-pdf
 cyrus-sasl
 daemonize
 dbeaver
+deadbeef
 device-mapper
 dhcpcd
 dhcping
