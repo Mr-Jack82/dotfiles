@@ -129,7 +129,7 @@ htop
 httpie
 hub
 hugo
-hunspell-en_US
+hunspell-en_us
 hunspell-ru
 hwinfo
 icdiff
