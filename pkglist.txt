@@ -256,7 +256,6 @@ otf-fira-sans
 otf-hermit
 otf-ipafont
 oxygen
-p7zip
 pacman
 pacman-contrib
 pacmatic
@@ -320,7 +319,6 @@ scrot
 sddm-kcm
 sed
 shadow
-shutter
 sierrabreeze-kwin-decoration-git
 skim
 sl
@@ -329,7 +327,6 @@ spectacle
 spotify-dev
 squashfs-tools
 sshfs
-st-leeroy-git
 stow
 strace
 sublime-merge
