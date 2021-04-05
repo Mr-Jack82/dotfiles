@@ -30,6 +30,7 @@ bitlbee
 bleachbit
 bluedevil
 bluemail
+bomi-git
 brave-bin
 breeze
 breeze-gtk
