@@ -184,6 +184,7 @@ less
 lf
 lftp
 libcaca
+libhandy
 libkscreen
 libksysguard
 libmythes
