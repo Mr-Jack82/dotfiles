@@ -431,14 +431,32 @@ let g:XkbSwitchEnabled   = 1
 let g:XkbSwitchIMappings = ['ru']
 " let g:XkbSwitchLib       = '/usr/lib/libxkbswitch.so'
 
-" =====[ indentLine ]=====
-let g:indentLine_char = '┊'
-let g:vim_json_syntax_conceal = 0
-" TODO: the code below does not work, need to figure out why
-" let g:indentLine_fileTypeExclude = ['help', 'text']
+" =====[ indent-blankline ]=====
+" Specifies a list of |buftype| values for which this plugin is not enabled.
+let g:indent_blankline_buftype_exclude = [ 'terminal' ]
 
-" This option works fine for .json file
-" let g:indentLine_concealcursor = ""
+" Specifies a list of |filetype| values for which this plugin is not enabled.
+let g:indent_blankline_filetype_exclude = [ 'help', 'startify', 'packer' ]
+
+" Specifies the character to be used as indent line.
+let g:indent_blankline_char = '▏'
+
+" Do not show indentation for the first line
+let g:indent_blankline_show_first_indent_level = v:false
+
+" Displays a trailing indentation guide on blank lines, to match the
+" indentation of surrounding code.
+" Turn this off if you want to use background highlighting instead of chars.
+let g:indent_blankline_show_trailing_blankline_indent = v:false
+
+" Highlight of indent character when base of current context.
+" NOTE: This feature requires Treesitter
+" let g:indent_blankline_show_current_context = v:true
+" let g:indent_blankline_context_patterns = [
+"   \  'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for', '^object', '^table', 'block',
+"   \  'arguments', 'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element', 'try_statement',
+"   \  'catch_clause', 'import_statement'
+"   \ ]
 
 " =====[ undotree ]=====
 let g:undotree_WindowLayout = 3

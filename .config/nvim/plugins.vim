@@ -74,8 +74,8 @@ Plug 'easymotion/vim-easymotion'
 " Pairs of handy bracket mappings
 Plug 'tpope/vim-unimpaired'
 
-" A vim plugin to display the indention levels with thin vertical lines
-" Plug 'Yggdroot/indentLine'
+" Indent guides for Neovim
+Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
 
 " The undo history visualizer for Vim
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
