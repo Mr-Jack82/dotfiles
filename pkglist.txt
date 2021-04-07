@@ -383,6 +383,7 @@ typora
 uget
 unrar
 unzip
+upd72020x-fw
 usb_modeswitch
 usbutils
 util-linux
