@@ -242,7 +242,6 @@ nmap
 nmon
 nnn
 nodejs
-notion-app
 noto-fonts-extra
 npm
 ntfs-3g
