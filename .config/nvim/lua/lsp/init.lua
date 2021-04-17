@@ -89,6 +89,20 @@ for _, lsp in ipairs(servers) do
     }
 end
 
+-- npm i -g emmet-ls
+local configs = require "lspconfig/configs"
+configs.emmet_ls = {
+    default_config = {
+        cmd = {"emmet-ls", "--stdio"},
+        filetypes = {"html", "css"},
+        root_dir = function()
+            return vim.loop.cwd()
+        end,
+        settings = {}
+    }
+}
+nvim_lsp.emmet_ls.setup {autostart = LSP.emmet}
+
 -- Lua Language Server
 local luapath = "/home/" .. os.getenv("USER") .. "/.cache/nvim/nlua/sumneko_lua"
 local luabin = luapath .. "/bin/Linux/lua-language-server"
