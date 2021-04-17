@@ -187,3 +187,6 @@ export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
 # Add 'local/bin' folder to the PATH to be able to use
 # custom scripts
 export PATH=$PATH:~/.local/bin
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
