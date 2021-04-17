@@ -27,6 +27,7 @@ return require('packer').startup(function()
   use 'mattn/emmet-vim'
 
   -- Syntax highlighting
+  -- this one may conflict with treesitter
   use 'sheerun/vim-polyglot'
 
   -- Searching and moving
