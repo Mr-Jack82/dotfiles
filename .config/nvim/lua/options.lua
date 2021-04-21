@@ -1,6 +1,3 @@
--- Remap leader key to ,
-vim.g.mapleader = ","
-
 -- Enable syntax highlight for Lua in .vim files
 vim.g.vimsyn_embed = "l"
 
