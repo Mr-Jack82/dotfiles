@@ -6,7 +6,7 @@
 	autocrlf = false
 	safecrlf = true
 	quotepath = off
-	pager = delta
+	pager = diff-so-fancy
 [delta]                              # config for git-delta
   plus-style = "syntax #012800"
   minus-style = "syntax #340001"
