@@ -61,3 +61,5 @@
 	whitespace = red reverse
 [pull]
 	rebase = true
+[diff-so-fancy]
+	changeHunkIndicators = false
