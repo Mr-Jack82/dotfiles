@@ -441,22 +441,29 @@ let g:indent_blankline_filetype_exclude = [ 'help', 'startify', 'packer' ]
 " Specifies the character to be used as indent line.
 let g:indent_blankline_char = '▏'
 
+" Displays a trailing indentation guide on blank lines, to match the
+" indentation of surrounding code.
+" Turn this off if you want to use background highlighting instead of chars.
+let g:indent_blankline_show_trailing_blankline_indent = v:false
+
 " Do not show indentation for the first line
 let g:indent_blankline_show_first_indent_level = v:false
 
 " Displays a trailing indentation guide on blank lines, to match the
 " indentation of surrounding code.
 " Turn this off if you want to use background highlighting instead of chars.
-let g:indent_blankline_show_trailing_blankline_indent = v:false
+let g:indent_blankline_show_trailing_blankline_indent = v:true
 
 " Highlight of indent character when base of current context.
 " NOTE: This feature requires Treesitter
 " let g:indent_blankline_show_current_context = v:true
 " let g:indent_blankline_context_patterns = [
-"   \  'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for', '^object', '^table', 'block',
-"   \  'arguments', 'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element', 'try_statement',
-"   \  'catch_clause', 'import_statement'
-"   \ ]
+"       \ 'class', 'return', 'function', 'method', '^if', '^while',
+"       \ 'jsx_element', '^for', '^object', '^table', 'block', 'arguments',
+"       \ 'if_statement', 'else_clause', 'jsx_element',
+"       \ 'jsx_self_closing_element', 'try_statement', 'catch_clause',
+"       \ 'import_statement'
+"       \ ]
 
 " =====[ undotree ]=====
 let g:undotree_WindowLayout = 3
