@@ -13,7 +13,7 @@
   line-numbers = true
   syntax-theme = gruvbox
 [interactive]                        # config for git-delta
-  diffFilter = delta --color-only
+	diffFilter = diff-so-fancy --patch
 [merge]
 	tool = vimdiff
 [mergetool "fugutive"]
