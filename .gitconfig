@@ -1,5 +1,5 @@
 [user]
-	name = Vitaly
+	name = Виталий Шевченко
 	email = blackjack358@gmail.com
 [core]
 	editor = nvim
@@ -63,3 +63,8 @@
 	rebase = true
 [diff-so-fancy]
 	changeHunkIndicators = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
