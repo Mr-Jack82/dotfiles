@@ -105,6 +105,7 @@ gimp
 git
 git-delta
 github-cli
+github-desktop
 gitkraken
 glances
 glibc
@@ -167,8 +168,7 @@ kmail
 kmenuedit
 kmines
 koala-bin
-kodi-gbm
-kodi-wayland
+kodi
 konsole
 konversation
 krita
@@ -205,6 +205,7 @@ logrotate
 lshw
 lsof
 ltrace
+luajit-2.1
 luit
 lvm2
 lynx
@@ -234,7 +235,7 @@ ncdu
 neofetch
 neomutt
 neovide
-neovim-nightly-bin
+neovim
 nerd-fonts-ibm-plex-mono
 nerd-fonts-noto-sans-regular-complete
 nerd-fonts-roboto-mono
@@ -264,7 +265,7 @@ oxygen
 pacman
 pacman-contrib
 pacmatic
-pamac-aur
+pamac-all
 papirus-maia-icon-theme-git
 par
 paru
@@ -326,6 +327,7 @@ scrot
 sddm-kcm
 sed
 shadow
+shfmt
 shutter
 sierrabreeze-kwin-decoration-git
 skim
