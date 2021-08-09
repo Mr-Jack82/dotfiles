@@ -180,6 +180,7 @@ set smartindent
 
 " Fix spelling errors
 iabbrev cosnt const
+iabbrev thsi this
 
 " ============================================================================ "
 " ===                           PLUGIN SETUP                               === "
