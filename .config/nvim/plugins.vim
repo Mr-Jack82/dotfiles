@@ -75,7 +75,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-unimpaired'
 
 " Indent guides for Neovim
-Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 " The undo history visualizer for Vim
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
