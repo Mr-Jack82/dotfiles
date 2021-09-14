@@ -54,6 +54,12 @@ lfcd () {
 }
 bindkey -s '^o' 'lfcd\n'
 
+# Make a directory and cd into it in one command
+# also you may use `mkdir 'dir' && cd $_`
+mkcd() {
+  mkdir -p $1 && cd $1
+}
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
