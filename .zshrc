@@ -137,6 +137,7 @@ plugins=(git
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
+# aliases
 alias cdi='cd `ls | peco`'
 alias rm='rm -i'
 alias grep='grep --color=auto'
