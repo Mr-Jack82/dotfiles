@@ -36,16 +36,16 @@ M.plugins = {
    --              use "(custom.configs).my_func()" to call a function
    --              use "custom.blankline" to call a file
    default_plugin_config_replace = {
-    nvim_tree = "custom.plugins.nvimtree",
-    indent_blankline = "custom.plugins.indentLine",
+      nvim_tree = "custom.plugins.nvimtree",
+      indent_blankline = "custom.plugins.indentLine",
    },
 }
 
 M.mappings.plugins = {
-  nvimtree = {
-    toggle = "<leader>n",
-    focus = "<leader>e",
-  },
+   nvimtree = {
+      toggle = "<leader>n",
+      focus = "<leader>e",
+   },
 }
 
 return M

@@ -1,4 +1,3 @@
-
 -- Remember last cursor position
 vim.cmd [[
     augroup cursorPosition
