@@ -81,6 +81,8 @@ M.plugins = {
       },
       nvimtree = {
          enable_git = 0,
+         -- packerCompile required after changing lazy_load
+         lazy_load = true,
 
          ui = {
             allow_resize = true,
