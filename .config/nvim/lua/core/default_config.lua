@@ -16,8 +16,6 @@ M.options = {
    mapleader = " ",
    mouse = "a",
    number = true,
-   showmode = false,
-   scrolloff = 10,
    numberwidth = 2,
    relativenumber = false,
    expandtab = true,
@@ -28,12 +26,13 @@ M.options = {
    updatetime = 250,
    undofile = true,
    fillchars = { eob = " " },
+   shadafile = vim.opt.shadafile,
 
    -- NvChad options
    nvChad = {
       copy_cut = true, -- copy cut text ( x key ), visual and normal mode
       copy_del = true, -- copy deleted text ( dd key ), visual and normal mode
-      insert_nav = false, -- navigation in insertmode
+      insert_nav = true, -- navigation in insertmode
       window_nav = true,
 
       -- updater
@@ -68,28 +67,26 @@ M.plugins = {
       feline = true, -- statusline
       gitsigns = true,
       lspsignature = true, -- lsp enhancements
-      telescope_media = false,
       vim_matchup = true, -- improved matchit
       cmp = true,
+      snippets = false,
       nvimtree = true,
       autopairs = true,
    },
    options = {
+      packer = {
+         init_file = "plugins.packerInit",
+      },
       autopairs = { loadAfter = "nvim-cmp" },
+      cmp = {
+         lazy_load = true,
+      },
       lspconfig = {
          setup_lspconf = "", -- path of file containing setups of different lsps
       },
       nvimtree = {
-         enable_git = 0,
          -- packerCompile required after changing lazy_load
          lazy_load = true,
-
-         ui = {
-            allow_resize = true,
-            side = "left",
-            width = 25,
-            hide_root_folder = true,
-         },
       },
       luasnip = {
          snippet_path = {},
@@ -111,6 +108,8 @@ M.plugins = {
       esc_insertmode_timeout = 300,
    },
    default_plugin_config_replace = {},
+   default_plugin_remove = {},
+   install = nil,
 }
 
 -- Don't use a single keymap twice
@@ -125,6 +124,9 @@ M.mappings = {
       cheatsheet = "<leader>ch",
       close_buffer = "<leader>x",
       copy_whole_file = "<C-a>", -- copy all contents of current buffer
+      copy_to_system_clipboard = "<C-c>", -- copy selected text (visual mode) or curent line (normal)
+      line_number_toggle = "<leader>n", -- toggle line number
+      relative_line_number_toggle = "<leader>rn",
       update_nvchad = "<leader>uu",
       new_buffer = "<S-t>",
       new_tab = "<C-t>b",
@@ -170,7 +172,7 @@ M.mappings = {
 }
 
 -- plugins related mappings
-
+-- To disable a mapping, equate the variable to "" or false or nil in chadrc
 M.mappings.plugins = {
    bufferline = {
       next_buffer = "<TAB>",
@@ -203,7 +205,7 @@ M.mappings.plugins = {
       remove_workspace_folder = "<leader>wr",
       list_workspace_folders = "<leader>wl",
       type_definition = "<leader>D",
-      rename = "<leader>rn",
+      rename = "<leader>ra",
       code_action = "<leader>ca",
       references = "gr",
       float_diagnostics = "ge",
@@ -228,10 +230,6 @@ M.mappings.plugins = {
       live_grep = "<leader>fw",
       oldfiles = "<leader>fo",
       themes = "<leader>th", -- NvChad theme picker
-
-      telescope_media = {
-         media_files = "<leader>fp",
-      },
    },
 }
 

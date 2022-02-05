@@ -18,3 +18,6 @@ vim.cmd [[
       \ require 'vim.highlight'.on_yank({ higroup="IncSearch", timeout = 150 })
   augroup END
 ]]
+
+vim.cmd [[ autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx ]]
+vim.cmd [[ autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact ]]

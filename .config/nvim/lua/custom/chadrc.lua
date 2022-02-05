@@ -1,33 +1,61 @@
--- IMPORTANT NOTE : This is the user config, can be edited. Will be preserved if updated with internal updater
--- This file is for NvChad options & tools, custom settings are split between here and 'lua/custom/init.lua'
+-- This is an example chadrc file, its supposed to be placed in /lua/custom/
 
 local M = {}
 M.options, M.ui, M.mappings, M.plugins = {}, {}, {}, {}
 
--- NOTE: To use this, make a copy with `cp example_chadrc.lua chadrc.lua`
-
---------------------------------------------------------------------
-
--- To use this file, copy the structure of `core/default_config.lua`,
--- examples of setting relative number & changing theme:
-
-M.options = {
-   mapleader = ",",
-   relativenumber = true,
-   cmdheight = 2,
-}
+-- make sure you maintain the structure of `core/default_config.lua` here,
+-- example of changing theme:
 
 -- M.ui = {
---   theme = "nord"
+--   theme = "onedark",
 -- }
+--------------------------------------------------------------------
+
+M.options = {
+  -- move 'mapleader' to init.lua because of an error that throw that script
+  relativenumber = true,
+  cmdheight = 2,
+  textwidth = 80,
+  colorcolumn = "81",
+  scrolloff = 8,
+  showmode = false,
+}
+
+-- That script is attempt to register every option with the available editor
+-- option table (see :h vim.opt for more info) and if it can't find the right
+-- place to set the option, it will display the error message.
+-- taken from @Esequiel378 https://github.com/NvChad/NvChad/issues/560
+for option, value in pairs(M.options) do
+  local opts = { vim.opt, vim.o, vim.bo, vim.wo, vim.go }
+
+  for index, opt in ipairs(opts) do
+    local _, optError = pcall(function () opt[option] = value end)
+
+    if index == 4 and optError then
+      print(optError)
+    elseif optError then
+    else
+      break
+    end
+  end
+end
+
+-- Install plugins
+local userPlugins = require "custom.plugins"
 
 -- NvChad included plugin options & overrides
 M.plugins = {
+  install = userPlugins,
+   -- enable/disable plugins (false for disable)
+   status = {
+      colorizer = true, -- color RGB, HEX, CSS, NAME color codes
+      dashboard = true,
+      shippets = true,
+   },
    options = {
-      --   lspconfig = {
-      --    path of file containing setups of different lsps (ex : "custom.plugins.lspconfig"), read the docs for more info
-      --    setup_lspconf = "",
-      --   },
+        lspconfig = {
+          setup_lspconf = "custom.plugins.lspconfig",
+        },
    },
    -- To change the Packer `config` of a plugin that comes with NvChad,
    -- add a table entry below matching the plugin github name
