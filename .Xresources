@@ -37,11 +37,14 @@ Xft.lcdfilter:  lcddefault
 
 /* Config for ST terminal */
 
-!! Transparency (0-1):
-*.alpha: 0.93
-
 !! Set a default font and font size as below:
-*.font: monospace:size=12
+st.font: JetBrainsMono Nerd Font:style:medium:pixelsize=18
+
+! window padding
+st.borderbox: 0
+
+!! Transparency (0-1):
+st.alpha: 0.93
 
 /* name		dark	light */
 /* black	0	    8 */
