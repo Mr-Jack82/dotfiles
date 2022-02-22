@@ -6,9 +6,9 @@ M.options, M.ui, M.mappings, M.plugins = {}, {}, {}, {}
 -- make sure you maintain the structure of `core/default_config.lua` here,
 -- example of changing theme:
 
--- M.ui = {
---   theme = "onedark",
--- }
+M.ui = {
+  theme = "gruvchad",
+}
 --------------------------------------------------------------------
 
 M.options = {
@@ -49,8 +49,8 @@ M.plugins = {
    -- enable/disable plugins (false for disable)
    status = {
       colorizer = true, -- color RGB, HEX, CSS, NAME color codes
-      dashboard = true,
-      shippets = true,
+      alpha = true,
+      snippets = true,
    },
    options = {
         lspconfig = {
@@ -66,6 +66,7 @@ M.plugins = {
    default_plugin_config_replace = {
       nvim_tree = "custom.plugins.nvimtree",
       indent_blankline = "custom.plugins.indentLine",
+      nvim_treesitter  = "custom.plugins.treesitter",
    },
 }
 

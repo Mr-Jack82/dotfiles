@@ -18,6 +18,7 @@ map("n", "'", ",")
 map("n", "Y", "y$")
 map("v", "Y", "<Esc>y$gv")
 map("n", "J", "mzJ`z")
+map("n", "<leader>", "<cmd>w<CR>")
 
 -- TODO: this does't work I need to find why
 -- Quick save
