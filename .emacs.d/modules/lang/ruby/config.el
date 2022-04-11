@@ -19,7 +19,7 @@
   (set-repl-handler! 'ruby-mode #'inf-ruby)
 
   (when (featurep! +lsp)
-    (add-hook 'ruby-mode-local-vars-hook #'lsp!))
+    (add-hook 'ruby-mode-local-vars-hook #'lsp! 'append))
 
   (after! inf-ruby
     (add-hook 'inf-ruby-mode-hook #'doom-mark-buffer-as-real-h)
@@ -97,7 +97,7 @@
   (setq rake-completion-system 'default)
   (map! :after ruby-mode
         :localleader
-        :map ruby-mode-map 
+        :map ruby-mode-map
         :prefix ("k" . "rake")
         "k" #'rake
         "r" #'rake-rerun
@@ -185,7 +185,6 @@
   :hook (projectile-rails-mode . auto-insert-mode)
   :init
   (setq auto-insert-query nil)
-  (setq projectile-rails-custom-server-command "bundle exec spring rails server --no-log-to-stdout")
   (setq inf-ruby-console-environment "development")
   (when (featurep! :lang web)
     (add-hook 'web-mode-hook #'projectile-rails-mode))

@@ -1,9 +1,9 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; lang/raku/packages.el
 
-(package! raku-mode :pin "e0639c89a3a29e9196e298951da6c3a79fb944e8")
+(package! raku-mode :pin "977b14a7c1295ebf2aad2f807d3f8e7c27aeb47f")
 
 (when (featurep! :checkers syntax)
   (package! flycheck-raku
     :recipe (:host github :repo "widefox/flycheck-raku")
-    :pin "046f35abe0c61967157e151126e4dd7ec5d1c004"))
+    :pin "b1acccd6e9d9753022571ee96d18b8e9f3227c65"))

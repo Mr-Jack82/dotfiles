@@ -3,7 +3,16 @@
 (after! crystal-mode
   (set-lookup-handlers! 'crystal-mode
     :definition #'crystal-def-jump
-    :references #'crystal-tool-imp))
+    :references #'crystal-tool-imp)
+  (when (featurep! +lsp)
+    (add-hook 'crystal-mode-local-vars-hook #'lsp! 'append))
+  (map! :localleader
+        :map crystal-mode-map
+        :prefix "t"
+        "a" #'crystal-spec-all
+        "v" #'crystal-spec-buffer
+        "s" #'crystal-spec-line
+        "t" #'crystal-spec-switch))
 
 
 (use-package! flycheck-crystal

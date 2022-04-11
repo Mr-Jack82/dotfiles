@@ -28,7 +28,7 @@
       (switch-to-buffer (doom-fallback-buffer)))
     (when +eshell-enable-new-shell-on-split
       (let ((default-directory directory))
-        (when-let (win (get-buffer-window (+eshell/here t)))
+        (when-let (win (get-buffer-window (+eshell/here)))
           (set-window-dedicated-p win dedicated-p))))))
 
 (defun +eshell--setup-window (window &optional flag)
@@ -99,25 +99,21 @@
           (fundamental-mode)
           (erase-buffer))))
     (if-let (win (get-buffer-window eshell-buffer))
-        (if (eq (selected-window) win)
-            (let (confirm-kill-processes)
-              (delete-window win)
-              (ignore-errors (kill-buffer eshell-buffer)))
-          (select-window win)
-          (when (bound-and-true-p evil-local-mode)
-            (evil-change-to-initial-state))
-          (goto-char (point-max)))
-      (with-current-buffer (pop-to-buffer eshell-buffer)
+        (let (confirm-kill-processes)
+          (delete-window win)
+          (ignore-errors (kill-buffer eshell-buffer)))
+      (with-current-buffer eshell-buffer
         (doom-mark-buffer-as-real-h)
         (if (eq major-mode 'eshell-mode)
             (run-hooks 'eshell-mode-hook)
           (eshell-mode))
         (when command
-          (+eshell-run-command command eshell-buffer))))))
+          (+eshell-run-command command eshell-buffer)))
+      (pop-to-buffer eshell-buffer))))
 
 ;;;###autoload
 (defun +eshell/here (&optional command)
-  "Open eshell in the current buffer."
+  "Open eshell in the current window."
   (interactive "P")
   (let ((buf (+eshell--unused-buffer)))
     (with-current-buffer (switch-to-buffer buf)
@@ -169,6 +165,9 @@ Once the eshell process is killed, the previous frame layout is restored."
                      :action #'ivy-completion-in-region-action)))
         ((featurep! :completion helm)
          (helm-eshell-history))
+        ((featurep! :completion vertico)
+         (forward-char 1) ;; Move outside of read only prompt text.
+         (consult-history))
         ((eshell-list-history))))
 
 ;;;###autoload

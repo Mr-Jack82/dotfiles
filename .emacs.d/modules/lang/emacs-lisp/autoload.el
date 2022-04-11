@@ -11,12 +11,14 @@ to a pop up buffer."
    (string-trim-right
     (condition-case-unless-debug e
         (let ((result
-               (let ((debug-on-error t))
-                 (eval (read (format "(progn %s)" (buffer-substring-no-properties beg end)))
-                       `((buffer-file-name . ,(buffer-file-name (buffer-base-buffer)))
-                         (doom--current-module
-                          . ,(ignore-errors
-                               (doom-module-from-path buffer-file-name))))))))
+               (let* ((buffer-file-name (buffer-file-name (buffer-base-buffer)))
+                      (buffer-file-truename (file-truename buffer-file-name))
+                      (doom--current-module
+                       (ignore-errors (doom-module-from-path buffer-file-name)))
+                      (debug-on-error t))
+                 (eval (read (format "(progn %s)"
+                                     (buffer-substring-no-properties beg end)))
+                       lexical-binding))))
           (require 'pp)
           (replace-regexp-in-string "\\\\n" "\n" (pp-to-string result)))
       (error (error-message-string e))))
@@ -27,35 +29,54 @@ to a pop up buffer."
 ;;; Handlers
 
 (defun +emacs-lisp--module-at-point ()
-  (let ((origin (point)))
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward "(doom! " nil 'noerror)
-        (goto-char (match-beginning 0))
-        (cl-destructuring-bind (beg . end)
-            (bounds-of-thing-at-point 'sexp)
-          (when (and (>= origin beg)
-                     (<= origin end))
+  "Return (CATEGORY MODULE FLAG) at point inside a `doom!' block."
+  (let ((origin (point))
+        (syntax (syntax-ppss)))
+    (when (and (> (ppss-depth syntax) 0) (not (ppss-string-terminator syntax)))
+      (save-excursion
+        (let ((parens (ppss-open-parens syntax))
+              (doom-depth 1))
+          (while (and parens (progn (goto-char (car parens))
+                                    (not (looking-at "(doom!\\_>"))))
+            (setq parens (cdr parens)
+                  doom-depth (1+ doom-depth)))
+          (when parens ;; Are we inside a `doom!' block?
             (goto-char origin)
-            (while (not (sexp-at-point))
-              (forward-symbol -1))
-            (let (category module flag)
-              (cond ((keywordp (setq category (sexp-at-point)))
-                     (while (keywordp (sexp-at-point))
-                       (forward-sexp 1))
-                     (setq module (car (doom-enlist (sexp-at-point)))))
-                    ((and (symbolp (setq module (sexp-at-point)))
-                          (string-prefix-p "+" (symbol-name module)))
-                     (while (symbolp (sexp-at-point))
-                       (thing-at-point--beginning-of-sexp))
-                     (setq flag module
-                           module (car (sexp-at-point)))
-                     (when (re-search-backward "\\_<:\\w+\\_>" nil t)
-                       (setq category (sexp-at-point))))
-                    ((symbolp module)
-                     (when (re-search-backward "\\_<:\\w+\\_>" nil t)
-                       (setq category (sexp-at-point)))))
-              (list category module flag))))))))
+            (let* ((doom-start (car parens))
+                   (bare-symbol
+                    (if (ppss-comment-depth syntax)
+                        (= (save-excursion (beginning-of-thing 'list)) doom-start)
+                      (null (cdr parens))))
+                   (sexp-start (if bare-symbol
+                                   (beginning-of-thing 'symbol)
+                                 (or (cadr parens) (beginning-of-thing 'list))))
+                   (match-start nil))
+              (goto-char sexp-start)
+              (while (and (not match-start)
+                          (re-search-backward
+                           "\\_<:\\(?:\\sw\\|\\s_\\)+\\_>" ;; Find a keyword.
+                           doom-start 'noerror))
+                (unless (looking-back "(")
+                  (let ((kw-syntax (syntax-ppss)))
+                    (when (and (= (ppss-depth kw-syntax) doom-depth)
+                               (not (ppss-string-terminator kw-syntax))
+                               (not (ppss-comment-depth kw-syntax)))
+                      (setq match-start (point))))))
+              (when match-start
+                (let (category module flag)
+                  ;; `point' is already at `match-start'.
+                  (setq category (symbol-at-point))
+                  (goto-char origin)
+                  (if bare-symbol
+                      (setq module (symbol-at-point))
+                    (let ((symbol (symbol-at-point))
+                          (head (car (list-at-point))))
+                      (if (and (symbolp head) (not (keywordp head))
+                               (not (eq head symbol)))
+                          (setq module head
+                                flag symbol)
+                        (setq module symbol))))
+                  (list category module flag))))))))))
 
 ;;;###autoload
 (defun +emacs-lisp-lookup-definition (_thing)
@@ -151,10 +172,12 @@ https://emacs.stackexchange.com/questions/10230/how-to-indent-keywords-aligned"
 (defun +emacs-lisp/buttercup-run-file ()
   "Run all buttercup tests in the focused buffer."
   (interactive)
-  (let ((load-path (append (list (doom-path (dir!) "..")
-                                 (or (doom-project-root)
-                                     default-directory))
-                           load-path)))
+  (let ((load-path
+         (append (list (doom-path (dir!) "..")
+                       (or (doom-project-root)
+                           default-directory))
+                 load-path))
+        (buttercup-suites nil))
     (save-selected-window
       (eval-buffer)
       (buttercup-run))
@@ -167,7 +190,8 @@ https://emacs.stackexchange.com/questions/10230/how-to-indent-keywords-aligned"
   (let* ((default-directory (doom-project-root))
          (load-path (append (list (doom-path "test")
                                   default-directory)
-                            load-path)))
+                            load-path))
+         (buttercup-suites nil))
     (buttercup-run-discover)))
 
 ;;;###autoload
@@ -201,7 +225,7 @@ https://emacs.stackexchange.com/questions/10230/how-to-indent-keywords-aligned"
         `(("Section" "^[ \t]*;;;;*[ \t]+\\([^\n]+\\)" 1)
           ("Evil commands" "^\\s-*(evil-define-\\(?:command\\|operator\\|motion\\) +\\(\\_<[^ ()\n]+\\_>\\)" 1)
           ("Unit tests" "^\\s-*(\\(?:ert-deftest\\|describe\\) +\"\\([^\")]+\\)\"" 1)
-          ("Package" "^\\s-*(\\(?:;;;###package\\|package!\\|use-package!?\\|after!\\) +\\(\\_<[^ ()\n]+\\_>\\)" 1)
+          ("Package" "^\\s-*\\(?:;;;###package\\|(\\(?:package!\\|use-package!?\\|after!\\)\\) +\\(\\_<[^ ()\n]+\\_>\\)" 1)
           ("Major modes" "^\\s-*(define-derived-mode +\\([^ ()\n]+\\)" 1)
           ("Minor modes" "^\\s-*(define-\\(?:global\\(?:ized\\)?-minor\\|generic\\|minor\\)-mode +\\([^ ()\n]+\\)" 1)
           ("Modelines" "^\\s-*(def-modeline! +\\([^ ()\n]+\\)" 1)
@@ -220,6 +244,7 @@ verbosity when editing a file in `doom-private-dir' or `doom-emacs-dir'."
   (when (and (bound-and-true-p flycheck-mode)
              (eq major-mode 'emacs-lisp-mode)
              (or (not default-directory)
+                 (null (buffer-file-name (buffer-base-buffer)))
                  (cl-find-if (doom-partial #'file-in-directory-p default-directory)
                              +emacs-lisp-disable-flycheck-in-dirs)))
     (add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
@@ -250,7 +275,7 @@ verbosity when editing a file in `doom-private-dir' or `doom-emacs-dir'."
     (goto-char (match-beginning 0))
     (and (stringp (plist-get (sexp-at-point) :pin))
          (search-forward ":pin" nil t)
-         (let ((start (re-search-forward "\"[^\"\n]\\{10\\}" nil t))
+         (let ((start (re-search-forward "\"[^\"\n]\\{12\\}" nil t))
                (finish (and (re-search-forward "\"" (line-end-position) t)
                             (match-beginning 0))))
            (when (and start finish)
@@ -274,6 +299,7 @@ library/userland functions"
               ((let ((symbol (intern-soft (match-string-no-properties 0))))
                  (and (cond ((null symbol) nil)
                             ((eq symbol t) nil)
+                            ((keywordp symbol) nil)
                             ((special-variable-p symbol)
                              (setq +emacs-lisp--face 'font-lock-variable-name-face))
                             ((and (fboundp symbol)

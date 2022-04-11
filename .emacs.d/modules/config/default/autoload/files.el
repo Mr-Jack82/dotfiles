@@ -16,15 +16,6 @@
   (interactive) (doom-project-find-file +file-templates-dir))
 
 ;;;###autoload
-(defun +default/browse-emacsd ()
-  "Browse files from `doom-emacs-dir'."
-  (interactive) (doom-project-browse doom-emacs-dir))
-;;;###autoload
-(defun +default/find-in-emacsd ()
-  "Find a file under `doom-emacs-dir', recursively."
-  (interactive) (doom-project-find-file doom-emacs-dir))
-
-;;;###autoload
 (defun +default/browse-notes ()
   "Browse files from `org-directory'."
   (interactive)
@@ -43,9 +34,7 @@
 (defun +default/find-file-under-here ()
   "Perform a recursive file search from the current directory."
   (interactive)
-  (if (featurep! :completion ivy)
-      (call-interactively #'counsel-file-jump)
-    (cmd! (doom-project-find-file default-directory))))
+  (doom-project-find-file default-directory))
 
 ;;;###autoload
 (defun +default/discover-projects (arg)
@@ -54,9 +43,17 @@ If prefix ARG is non-nil, prompt for the search path."
   (interactive "P")
   (if arg
       (call-interactively #'projectile-discover-projects-in-directory)
-    (if projectile-project-search-path
-        (mapc #'projectile-discover-projects-in-directory projectile-project-search-path)
-      (user-error "`projectile-project-search-path' is empty; don't know where to search"))))
+    (if (not projectile-project-search-path)
+        (user-error "`projectile-project-search-path' is empty; don't know where to search")
+      (letf! (defun projectile-add-known-project (project-root)
+               (unless (projectile-ignored-project-p project-root)
+                 (funcall projectile-add-known-project project-root)
+                 (message "Added %S to known project roots" project-root)))
+        (dolist (dir projectile-project-search-path)
+          (cl-destructuring-bind (dir . depth) (if (consp dir) dir (cons dir nil))
+            (if (not (file-accessible-directory-p dir))
+                (message "%S was inaccessible and couldn't be searched" dir)
+              (projectile-discover-projects-in-directory dir depth))))))))
 
 ;;;###autoload
 (defun +default/dired (arg)

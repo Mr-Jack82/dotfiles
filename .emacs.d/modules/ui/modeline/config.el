@@ -4,15 +4,6 @@
   (load! "+light"))
 
 
-(defvar +modeline--redisplayed-p nil)
-(defadvice! modeline-recalculate-height-a (&optional _force &rest _ignored)
-  "Ensure that window resizing functions take modeline height into account."
-  :before '(fit-window-to-buffer resize-temp-buffer-window)
-  (unless +modeline--redisplayed-p
-    (setq-local +modeline--redisplayed-p t)
-    (redisplay t)))
-
-
 (use-package! doom-modeline
   :unless (featurep! +light)
   :hook (after-init . doom-modeline-mode)
@@ -31,7 +22,14 @@
         doom-modeline-persp-name nil
         doom-modeline-minor-modes nil
         doom-modeline-major-mode-icon nil
-        doom-modeline-buffer-file-name-style 'relative-from-project)
+        doom-modeline-buffer-file-name-style 'relative-from-project
+        ;; Only show file encoding if it's non-UTF-8 and different line endings
+        ;; than the current OSes preference
+        doom-modeline-buffer-encoding 'nondefault
+        doom-modeline-default-eol-type
+        (cond (IS-MAC 2)
+              (IS-WINDOWS 1)
+              (0)))
 
   ;; Fix modeline icons in daemon-spawned graphical frames. We have our own
   ;; mechanism for disabling all-the-icons, so we don't need doom-modeline to do
@@ -41,6 +39,13 @@
   (when (daemonp)
     (setq doom-modeline-icon t))
   :config
+  ;; HACK Fix #4102 due to empty all-the-icons return value (caused by
+  ;;      `doom--disable-all-the-icons-in-tty-a' advice) in tty daemon frames.
+  (defadvice! +modeline-disable-icon-in-daemon-a (fn &rest args)
+    :around #'doom-modeline-propertize-icon
+    (when (display-graphic-p)
+      (apply fn args)))
+
   ;; Fix an issue where these two variables aren't defined in TTY Emacs on MacOS
   (defvar mouse-wheel-down-event nil)
   (defvar mouse-wheel-up-event nil)
@@ -59,9 +64,9 @@
 
   ;; Some functions modify the buffer, causing the modeline to show a false
   ;; modified state, so force them to behave.
-  (defadvice! +modeline--inhibit-modification-hooks-a (orig-fn &rest args)
+  (defadvice! +modeline--inhibit-modification-hooks-a (fn &rest args)
     :around #'ws-butler-after-save
-    (with-silent-modifications (apply orig-fn args)))
+    (with-silent-modifications (apply fn args)))
 
 
   ;;

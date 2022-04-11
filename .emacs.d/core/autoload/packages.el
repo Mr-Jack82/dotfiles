@@ -13,19 +13,25 @@
 ;;
 ;;; Bump commands
 
-(defun doom--package-full-recipe (package plist)
+(defun doom--package-merge-recipes (package plist)
   (require 'straight)
   (doom-plist-merge
    (plist-get plist :recipe)
-   (or (cdr (straight-recipes-retrieve package))
-       (plist-get (cdr (assq package doom-packages))
-                  :recipe))))
+   (if-let (recipe (straight-recipes-retrieve package))
+       (cdr (if (memq (car recipe) '(quote \`))
+                (eval recipe t)
+              recipe))
+     (let ((recipe (plist-get (cdr (assq package doom-packages))
+                              :recipe)))
+       (if (keywordp (car recipe))
+           recipe
+         (cdr recipe))))))
 
 (defun doom--package-to-bump-string (package plist)
   "Return a PACKAGE and its PLIST in 'username/repo@commit' format."
   (format "%s@%s"
-          (plist-get (doom--package-full-recipe package plist) :repo)
-          (substring-no-properties (plist-get plist :pin) 0 7)))
+          (plist-get (doom--package-merge-recipes package plist) :repo)
+          (substring-no-properties (plist-get plist :pin) 0 12)))
 
 (defun doom--package-at-point (&optional point)
   "Return the package and plist from the (package! PACKAGE PLIST...) at point."
@@ -78,9 +84,8 @@ Grabs the latest commit id of the package using 'git'."
   (cl-destructuring-bind (&key package plist beg end)
       (or (doom--package-at-point)
           (user-error "Not on a `package!' call"))
-    (let* ((recipe (doom--package-full-recipe package plist))
-           (branch (or (plist-get recipe :branch)
-                       straight-vc-git-default-branch))
+    (let* ((recipe (doom--package-merge-recipes package plist))
+           (branch (plist-get recipe :branch))
            (oldid (or (plist-get plist :pin)
                       (doom-package-get package :pin)))
            (url (straight-vc-git--destructure recipe (upstream-repo upstream-host)
@@ -88,8 +93,7 @@ Grabs the latest commit id of the package using 'git'."
            (id (or (when url
                      (cdr (doom-call-process
                            "git" "ls-remote" url
-                           (unless select
-                             (or branch straight-vc-git-default-branch)))))
+                           (unless select branch))))
                    (user-error "Couldn't find a recipe for %s" package)))
            (id (car (split-string
                      (if select
@@ -115,8 +119,9 @@ Grabs the latest commit id of the package using 'git'."
 
 ;;;###autoload
 (defun doom/bump-packages-in-buffer (&optional select)
-  "Inserts or updates a `:pin' for the `package!' statement at point.
-Grabs the latest commit id of the package using 'git'."
+  "Inserts or updates a `:pin' to all `package!' statements in current buffer.
+If SELECT (prefix arg) is non-nil, prompt you to choose a specific commit for
+each package."
   (interactive "P")
   (save-excursion
     (goto-char (point-min))
@@ -130,7 +135,7 @@ Grabs the latest commit id of the package using 'git'."
                         (and (goto-char (match-beginning 0))
                              (not (plist-member (sexp-at-point) :pin))))))
           (condition-case e
-              (push (doom/bump-package-at-point) packages)
+              (push (doom/bump-package-at-point select) packages)
             (user-error (message "%s" (error-message-string e))))))
       (if packages
           (message "Updated %d packages\n- %s" (length packages) (string-join packages "\n- "))
@@ -160,8 +165,8 @@ each package."
   (mapc (fn! ((cat . mod))
           (if-let (packages-file
                    (pcase cat
-                     (:private (doom-glob doom-private-dir "packages.el"))
-                     (:core    (doom-glob doom-core-dir "packages.el"))
+                     (:private (car (doom-glob doom-private-dir "packages.el")))
+                     (:core    (car (doom-glob doom-core-dir "packages.el")))
                      (_ (doom-module-locate-path cat mod "packages.el"))))
               (with-current-buffer
                   (or (get-file-buffer packages-file)
@@ -179,8 +184,8 @@ each package."
 (defun doom/bump-package (package)
   "Bump PACKAGE in all modules that install it."
   (interactive
-   (list (completing-read "Bump package: "
-                          (mapcar #'car (doom-package-list 'all)))))
+   (list (intern (completing-read "Bump package: "
+                          (mapcar #'car (doom-package-list 'all))))))
   (let* ((packages (doom-package-list 'all))
          (modules (plist-get (alist-get package packages) :modules)))
     (unless modules
@@ -194,5 +199,109 @@ each package."
 ;;; Bump commits
 
 ;;;###autoload
+(defun doom/bumpify-diff (&optional interactive)
+  "Copy user/repo@hash -> user/repo@hash's of changed packages to clipboard.
+
+Must be run from a magit diff buffer."
+  (interactive (list 'interactive))
+  (save-window-excursion
+    (magit-diff-staged)
+    (unless (eq major-mode 'magit-diff-mode)
+      (user-error "Not in a magit diff buffer"))
+    (goto-char (point-min))
+    (let (targets lines)
+      (save-excursion
+        (while (re-search-forward "^modified +\\(.+\\)$" nil t)
+          (cl-pushnew (doom-module-from-path (match-string 1)) targets
+                      :test #'equal)))
+      (while (re-search-forward "^-" nil t)
+        (let ((file (magit-file-at-point))
+              before after)
+          (and (save-window-excursion
+                 (call-interactively #'magit-diff-visit-file)
+                 (when (or (looking-at-p "(package!")
+                           (re-search-forward "(package! " (line-end-position) t)
+                           (re-search-backward "(package! " nil t))
+                   (let ((buffer-file-name file))
+                     (cl-destructuring-bind (&key package plist _beg _end)
+                         (doom--package-at-point)
+                       (setq before (doom--package-to-bump-string package plist))))))
+               (re-search-forward "^+" nil t)
+               (save-window-excursion
+                 (call-interactively #'magit-diff-visit-file)
+                 (or (looking-at-p "(package!")
+                     (re-search-forward "(package! " (line-end-position) t)
+                     (re-search-backward "(package! "))
+                 (let ((buffer-file-name file))
+                   (cl-destructuring-bind (&key package plist _beg _end)
+                       (doom--package-at-point)
+                     (setq after (doom--package-to-bump-string package plist)))))
+               (cl-pushnew (format "%s -> %s" before after) lines))))
+      (if (null lines)
+          (user-error "No bumps to bumpify")
+        (prog1 (funcall (if interactive #'kill-new #'identity)
+                        (format "bump: %s\n\n%s"
+                                (mapconcat (lambda (x)
+                                             (mapconcat #'symbol-name x " "))
+                                           (cl-loop with alist = ()
+                                                    for (category . module) in (reverse targets)
+                                                    do (setf (alist-get category alist)
+                                                             (append (alist-get category alist) (list module)))
+                                                    finally return alist)
+                                           " ")
+                                (string-join (sort (reverse lines) #'string-lessp)
+                                             "\n")))
+          (when interactive
+            (message "Copied to clipboard")))))))
+
+;;;###autoload
 (defun doom/commit-bumps ()
-  (interactive))
+  "Create a pre-filled magit commit for currently bumped packages."
+  (interactive)
+  (magit-commit-create
+   (list "-e" "-m" (doom/bumpify-diff))))
+
+
+;;
+;;; Package metadata
+
+;;;###autoload
+(defun doom-package-homepage (package)
+  "Return the url to PACKAGE's homepage (usually a repo)."
+  (doom-initialize-packages)
+  (or (get package 'homepage)
+      (put package 'homepage
+           (cond ((when-let (location (locate-library (symbol-name package)))
+                    (with-temp-buffer
+                      (if (string-match-p "\\.gz$" location)
+                          (jka-compr-insert-file-contents location)
+                        (insert-file-contents (concat (file-name-sans-extension location) ".el")
+                                              nil 0 4096))
+                      (let ((case-fold-search t))
+                        (when (re-search-forward " \\(?:URL\\|homepage\\|Website\\): \\(http[^\n]+\\)\n" nil t)
+                          (match-string-no-properties 1))))))
+                 ((when-let ((recipe (straight-recipes-retrieve package)))
+                    (straight--with-plist (straight--convert-recipe recipe)
+                        (host repo)
+                      (pcase host
+                        (`github (format "https://github.com/%s" repo))
+                        (`gitlab (format "https://gitlab.com/%s" repo))
+                        (`bitbucket (format "https://bitbucket.com/%s" (plist-get plist :repo)))
+                        (`git repo)
+                        (_ nil)))))
+                 ((or package-archive-contents
+                      (progn (package-refresh-contents)
+                             package-archive-contents))
+                  (pcase (ignore-errors (package-desc-archive (cadr (assq package package-archive-contents))))
+                    (`nil nil)
+                    ("org" "https://orgmode.org")
+                    ((or "melpa" "melpa-mirror")
+                     (format "https://melpa.org/#/%s" package))
+                    ("gnu"
+                     (format "https://elpa.gnu.org/packages/%s.html" package))
+                    (archive
+                     (if-let (src (cdr (assoc package package-archives)))
+                         (format "%s" src)
+                       (user-error "%S isn't installed through any known source (%s)"
+                                   package archive)))))
+                 ((user-error "Can't get homepage for %S package" package))))))

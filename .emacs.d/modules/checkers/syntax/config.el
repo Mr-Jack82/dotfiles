@@ -9,10 +9,10 @@
   :config
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
-  ;; Check only when saving or opening files. Newline & idle checks are a mote
-  ;; excessive and can catch code in an incomplete state, producing false
-  ;; positives, so we removed them.
-  (setq flycheck-check-syntax-automatically '(save mode-enabled idle-buffer-switch))
+  ;; Rerunning checks on every newline is a mote excessive.
+  (delq 'new-line flycheck-check-syntax-automatically)
+  ;; And don't recheck on idle as often
+  (setq flycheck-idle-change-delay 1.0)
 
   ;; For the above functionality, check syntax in a buffer that you switched to
   ;; only briefly. This allows "refreshing" the syntax check state for several
@@ -24,7 +24,9 @@
 
   ;; Don't commandeer input focus if the error message pops up (happens when
   ;; tooltips and childframes are disabled).
-  (set-popup-rule! "^\\*Flycheck error messages\\*" :select nil)
+  (set-popup-rules!
+    '(("^\\*Flycheck error messages\\*" :select nil)
+      ("^\\*Flycheck errors\\*" :size 0.25)))
 
   (add-hook! 'doom-escape-hook :append
     (defun +syntax-check-buffer-h ()
@@ -46,7 +48,7 @@
   :commands flycheck-popup-tip-show-popup flycheck-popup-tip-delete-popup
   :hook (flycheck-mode . +syntax-init-popups-h)
   :config
-  (setq flycheck-popup-tip-error-prefix "✕ ")
+  (setq flycheck-popup-tip-error-prefix "X ")
   (after! evil
     ;; Don't display popups while in insert or replace mode, as it can affect
     ;; the cursor's position or cause disruptive input delays.
@@ -63,9 +65,9 @@
   :when (featurep! +childframe)
   :hook (flycheck-mode . +syntax-init-popups-h)
   :config
-  (setq flycheck-posframe-warning-prefix "⚠ "
+  (setq flycheck-posframe-warning-prefix "! "
         flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix "✕ ")
+        flycheck-posframe-error-prefix "X ")
   (after! company
     ;; Don't display popups if company is open
     (add-hook 'flycheck-posframe-inhibit-functions #'company--active-p))

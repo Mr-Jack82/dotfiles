@@ -8,6 +8,9 @@
   "The default yasnippet trigger key (a string) for file template rules that
 don't have a :trigger property in `+file-templates-alist'.")
 
+(defvar +file-templates-inhibit nil
+  "If non-nil, inhibit file template expansion.")
+
 (defvar +file-templates-alist
   '(;; General
     (gitignore-mode)
@@ -57,7 +60,6 @@ don't have a :trigger property in `+file-templates-alist'.")
     ("/bower\\.json$"          :trigger "__bower.json" :mode json-mode)
     ("/gulpfile\\.js$"         :trigger "__gulpfile.js" :mode js-mode)
     ("/webpack\\.config\\.js$" :trigger "__webpack.config.js" :mode js-mode)
-    ("\\.js\\(?:on\\|hintrc\\)$" :mode json-mode)
     ;; Lua
     ("/main\\.lua$" :trigger "__main.lua" :mode love-mode)
     ("/conf\\.lua$" :trigger "__conf.lua" :mode love-mode)
@@ -133,12 +135,14 @@ information.")
   "Check if the current buffer is a candidate for file template expansion. It
 must be non-read-only, empty, and there must be a rule in
 `+file-templates-alist' that applies to it."
-  (and buffer-file-name
+  (and (not +file-templates-inhibit)
+       buffer-file-name
        (not buffer-read-only)
        (bobp) (eobp)
        (not (member (substring (buffer-name) 0 1) '("*" " ")))
        (not (file-exists-p buffer-file-name))
        (not (buffer-modified-p))
+       (null (buffer-base-buffer))
        (when-let (rule (cl-find-if #'+file-template-p +file-templates-alist))
          (apply #'+file-templates--expand rule))))
 

@@ -5,10 +5,11 @@
 [Install](#install) • [Documentation] • [FAQ] • [Screenshots] • [Contribute](#contribute)
 
 ![Made with Doom Emacs](https://img.shields.io/github/tag/hlissner/doom-emacs.svg?style=flat-square&label=release&color=58839b)
-![Supports Emacs 26-27](https://img.shields.io/badge/Supports-Emacs_26.1_--_27.x-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white)
-![Latest commit](https://img.shields.io/github/last-commit/hlissner/doom-emacs/develop?style=flat-square)
-![Build status: develop](https://img.shields.io/github/workflow/status/hlissner/doom-emacs/CI/develop?style=flat-square)
-[![Discord Server](https://img.shields.io/discord/406534637242810369?color=blue&label=Discord%20Chat&logo=discord&logoColor=white&style=flat-square)][Discord]
+![Supports Emacs 27.1 - 28.0.91](https://img.shields.io/badge/Supports-Emacs_27.1--28.0.91-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white)
+![Latest commit](https://img.shields.io/github/last-commit/hlissner/doom-emacs/master?style=flat-square)
+![Build status: master](https://img.shields.io/github/workflow/status/hlissner/doom-emacs/CI/master?style=flat-square)
+[![Discord Server](https://img.shields.io/discord/406534637242810369?color=738adb&label=Discord&logo=discord&logoColor=white&style=flat-square)][Discord]
+[![Discourse server](https://img.shields.io/discourse/users?server=https%3A%2F%2Fdiscourse.doomemacs.org&logo=discourse&label=Discourse&style=flat-square&color=9cf)][Discourse]
 
 ![Doom Emacs Screenshot](https://raw.githubusercontent.com/hlissner/doom-emacs/screenshots/main.png)
 
@@ -98,7 +99,7 @@ Check out [the FAQ][FAQ] for answers to common questions about the project.
 
 # Prerequisites
 + Git 2.23+
-+ Emacs 26.1+ (*27 is recommended*) with GNUTLS support
++ Emacs 27.1+ (*27.2 is recommended*, or [native-comp](https://www.emacswiki.org/emacs/GccEmacs). **29+ is not supported**).
 + [ripgrep] 11.0+
 + GNU `find`
 + *OPTIONAL:* [fd] 7.3.0+ (improves file indexing performance for some commands)
@@ -138,13 +139,13 @@ Doom is an active and ongoing project. To make that development more
 transparent, its roadmap (and other concerns) are published across three github
 project boards and a newsletter:
 
-+ [Development Roadmap](https://github.com/hlissner/doom-emacs/projects/3):
++ [Development Roadmap](https://github.com/orgs/doomemacs/projects/6):
   roughly outlines our goals between release milestones and their progress.
-+ [Plugins under review](https://github.com/hlissner/doom-emacs/projects/2):
++ [Plugins under review](https://github.com/orgs/doomemacs/projects/5):
   lists plugins we are watching and considering for inclusion, and what their
   status for inclusion is. Please consult this list before requesting new
   packages/features.
-+ [Upstream bugs](https://github.com/hlissner/doom-emacs/projects/5): lists
++ [Upstream bugs](https://github.com/orgs/doomemacs/projects/7): lists
   issues that originate from elsewhere, and whether or not we have local
   workarounds or temporary fixes for them.
 + ~~Doom's newsletter~~ (not finished) will contain changelogs in between
@@ -176,7 +177,7 @@ mysterious errors. When you do, here are some places you can look for help:
 + Run `bin/doom doctor` to detect common issues with your development
   environment and private config.
 + Check out the [FAQ], in case your question has already been answered.
-+ Search [Doom's issue tracker](/issues) in case your issue was already
++ Search [Doom's issue tracker](https://github.com/hlissner/doom-emacs/issues) in case your issue was already
   reported.
 + Hop on [our Discord server][discord]; it's active and friendly! Keep an eye on
   the #announcements channel, where I announce breaking updates and releases.
@@ -204,21 +205,13 @@ kind!
   [liberapay] or [paypal]. My work contends with studies, adventures in indie
   gamedev and freelance work. Donations help me allocate more time to my Emacs
   and OSS capers.
-  
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/0)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/0)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/1)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/1)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/2)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/2)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/3)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/3)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/4)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/4)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/5)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/5)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/6)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/6)
-[![](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/images/7)](https://sourcerer.io/fame/hlissner/hlissner/doom-emacs/links/7)
 
 
 [contribute]: docs/contributing.org
 [discord]: https://discord.gg/qvGgnVx
+[discourse]: https://discourse.doomemacs.org
 [documentation]: docs/index.org
-[faq]: docs/faq.org
+[faq]: https://discourse.doomemacs.org/t/doom-emacs-faq/45
 [getting-started]: docs/getting_started.org
 [install]: docs/getting_started.org#install
 [backtrace]: docs/getting_started.org#how-to-extract-a-backtrace-from-an-error

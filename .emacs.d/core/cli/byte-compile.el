@@ -16,16 +16,21 @@ and your private config files, respectively. To recompile your packages, use
 'doom build' instead."
   (doom-cli-byte-compile
    (if (or core-p private-p)
-       (append (when core-p
-                 (list (doom-glob doom-emacs-dir "init.el")
-                       doom-core-dir))
-               (when private-p
-                 (list doom-private-dir)))
-     (append (list (doom-glob doom-emacs-dir "init.el")
-                   doom-core-dir)
-             (cl-remove-if-not
+       (append (if core-p    (doom-glob doom-emacs-dir "init.el"))
+               (if core-p    (list doom-core-dir))
+               (if private-p (list doom-private-dir)))
+     (or (y-or-n-p
+          (concat "WARNING: Changes made to your config after compiling it won't take effect until\n"
+                  "this command is rerun or you run 'doom clean'! It will also make error backtraces\n"
+                  "much more difficult to decipher.\n\n"
+                  "If you intend to use it anyway, remember this or it will come back to bite you!\n\n"
+                  "Continue anyway?"))
+         (user-error "Aborted"))
+     (append (doom-glob doom-emacs-dir "init.el")
+             (list doom-core-dir)
+             (seq-filter
               ;; Only compile Doom's modules
-              (lambda (path) (file-in-directory-p path doom-emacs-dir))
+              (doom-rpartial #'file-in-directory-p doom-emacs-dir)
               ;; Omit `doom-private-dir', which is always first
               (cdr (doom-module-load-path)))))
    recompile-p
@@ -94,7 +99,8 @@ If RECOMPILE-P is non-nil, only recompile out-of-date files."
             (noninteractive t)
             doom-interactive-p)
         (doom-initialize 'force)
-        (quiet! (doom-initialize-packages))))
+        (quiet! (doom-initialize-packages))
+        (quiet! (doom-initialize-modules))))
 
     (if (null targets)
         (print! (info "No targets to %scompile" (if recompile-p "re" "")))
@@ -146,8 +152,13 @@ If RECOMPILE-P is non-nil, only recompile out-of-date files."
                       (pcase (if (not (doom-file-cookie-p target "if" t))
                                  'no-byte-compile
                                (unless (equal last-module (car module-files))
-                                 (print! (success "(% 3d/%d) Compiling %s %s module...")
-                                         i total-modules (caar module-files) (cdar module-files))
+                                 (print! (success "(% 3d/%d) Compiling %s")
+                                         i total-modules
+                                         (if-let (m (caar module-files))
+                                             (format "%s %s module..." m (cdar module-files))
+                                           (format "%d stand alone elisp files..."
+                                                   (length (cdr module-files))))
+                                         (caar module-files) (cdar module-files))
                                  (setq last-module (car module-files)))
                                (if verbose-p
                                    (byte-compile-file target)

@@ -34,9 +34,17 @@
   :hook (clojure-mode-local-vars . cider-mode)
   :init
   (after! clojure-mode
-    (set-repl-handler! 'clojure-mode #'+clojure/open-repl :persist t)
+    (set-repl-handler! '(clojure-mode clojurec-mode) #'+clojure/open-repl :persist t)
     (set-repl-handler! 'clojurescript-mode #'+clojure/open-cljs-repl :persist t)
-    (set-eval-handler! '(clojure-mode clojurescript-mode) #'cider-eval-region))
+    (set-eval-handler! '(clojure-mode clojurescript-mode clojurec-mode) #'cider-eval-region))
+
+  ;; HACK Fix raxod502/radian#446: CIDER tries to calculate the frame's
+  ;;   background too early; sometimes before the initial frame has been
+  ;;   initialized, causing errors.
+  (defvar cider-docview-code-background-color nil)
+  (defvar cider-stacktrace-frames-background-color nil)
+  (add-transient-hook! #'cider-docview-fontify-code-blocks (cider--docview-adapt-to-theme))
+  (add-transient-hook! #'cider-stacktrace-render-cause     (cider--stacktrace-adapt-to-theme))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (set-lookup-handlers! '(cider-mode cider-repl-mode)
@@ -44,7 +52,7 @@
     :documentation #'cider-doc)
   (set-popup-rules!
     '(("^\\*cider-error*" :ignore t)
-      ("^\\*cider-repl" :quit nil)
+      ("^\\*cider-repl" :quit nil :ttl nil)
       ("^\\*cider-repl-history" :vslot 2 :ttl nil)))
 
   (setq nrepl-hide-special-buffers t
@@ -86,18 +94,71 @@
            (with-current-buffer nrepl-server-buffer
              (buffer-string)))))))
 
+  ;; When in cider-debug-mode, override evil keys to not interfere with debug keys
+  (after! evil
+    (add-hook! cider--debug-mode
+      (defun +clojure--cider-setup-debug ()
+        "Setup cider debug to override evil keys cleanly"
+        (evil-make-overriding-map cider--debug-mode-map 'normal)
+        (evil-normalize-keymaps))))
+
+  (when (featurep! :ui modeline +light)
+    (defvar-local cider-modeline-icon nil)
+
+    (defun +clojure--cider-set-modeline (face label)
+      "Update repl icon on modeline with cider information."
+      (setq cider-modeline-icon (concat
+                                 " "
+                                 (+modeline-format-icon 'faicon "terminal" "" face label -0.0575)
+                                 " "))
+      (add-to-list 'global-mode-string
+                   '(t (:eval cider-modeline-icon))
+                   'append))
+
+    (add-hook! '(cider-connected-hook
+                 cider-disconnected-hook
+                 cider-mode-hook)
+      (defun +clojure--cider-connected-update-modeline ()
+        "Update modeline with cider connection state."
+        (let* ((connected (cider-connected-p))
+               (face (if connected 'warning 'breakpoint-disabled))
+               (label (if connected "Cider connected" "Cider disconnected")))
+          (+clojure--cider-set-modeline face label))))
+
+    (add-hook! '(cider-before-eval-hook)
+      (defun +clojure--cider-before-eval-hook-update-modeline ()
+        "Update modeline with cider state before eval."
+        (+clojure--cider-set-modeline 'warning "Cider evaluating")))
+
+    (add-hook! '(cider-after-eval-done-hook)
+      (defun +clojure--cider-after-eval-done-hook-update-modeline ()
+        "Update modeline with cider state after eval."
+        (+clojure--cider-set-modeline 'success "Cider syncronized")))
+
+    (add-hook! '(cider-file-loaded-hook)
+      (defun +clojure--cider-file-loaded-update-modeline ()
+        "Update modeline with cider file loaded state."
+        (+clojure--cider-set-modeline 'success "Cider syncronized"))))
+
+  ;; Ensure that CIDER is used for sessions in org buffers.
+  (when (featurep! :lang org)
+    (after! ob-clojure
+      (setq! org-babel-clojure-backend 'cider)))
+
   ;; The CIDER welcome message obscures error messages that the above code is
   ;; supposed to be make visible.
   (setq cider-repl-display-help-banner nil)
 
   (map! (:localleader
-          (:map (clojure-mode-map clojurescript-mode-map)
+          (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
             "'"  #'cider-jack-in-clj
             "\"" #'cider-jack-in-cljs
             "c"  #'cider-connect-clj
             "C"  #'cider-connect-cljs
             "m"  #'cider-macroexpand-1
             "M"  #'cider-macroexpand-all
+            (:prefix ("d" . "debug")
+             "d" #'cider-debug-defun-at-point)
             (:prefix ("e" . "eval")
               "b" #'cider-eval-buffer
               "d" #'cider-eval-defun-at-point
@@ -126,6 +187,12 @@
               "n" #'cider-browse-ns
               "N" #'cider-browse-ns-all
               "r" #'cider-ns-refresh)
+            (:prefix ("p" . "print")
+              "p" #'cider-pprint-eval-last-sexp
+              "P" #'cider-pprint-eval-last-sexp-to-comment
+              "d" #'cider-pprint-eval-defun-at-point
+              "D" #'cider-pprint-eval-defun-to-comment
+              "r" #'cider-pprint-eval-last-sexp-to-repl)
             (:prefix ("r" . "repl")
               "n" #'cider-repl-set-ns
               "q" #'cider-quit
@@ -162,25 +229,6 @@
           :i "s"  #'cider-repl-history-search-forward
           :i "r"  #'cider-repl-history-search-backward
           :i "U"  #'cider-repl-history-undo-other-window)))
-
-
-(after! cider-doc
-  ;; Fixes raxod502/radian#446: CIDER tries to do color calculations when it's
-  ;; loaded, sometimes too early, causing errors. Better to wait until something
-  ;; is actually rendered.
-  (setq cider-docview-code-background-color nil)
-
-  (defadvice! +clojure--defer-color-calculation-a (&rest _)
-    "Set `cider-docview-code-background-color'.
-This is needed because we have ripped out the code that would normally set it
-(since that code will run during early init, which is a problem)."
-    :before #'cider-docview-fontify-code-blocks
-    (setq cider-docview-code-background-color (cider-scale-background-color)))
-
-  ;; HACK Disable cider's advice on these; and hope no one else is using these
-  ;;      old-style advice.
-  (ad-deactivate #'enable-theme)
-  (ad-deactivate #'disable-theme))
 
 
 (use-package! clj-refactor

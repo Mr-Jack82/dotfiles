@@ -5,6 +5,10 @@
     org-find-file org-find-file-at-mouse)
   "A list of commands that should not trigger nav-flash.")
 
+(defvar +nav-flash-exclude-modes
+  '(so-long-mode special-mode comint-mode term-mode vterm-mode)
+  "List of major modes where nav-flash won't automatically trigger.")
+
 
 ;;
 ;;; Packages
@@ -34,8 +38,4 @@
   (advice-add #'evil-window-bottom :after #'+nav-flash-blink-cursor-a)
 
   ;; Bound to `ga' for evil users
-  (advice-add #'what-cursor-position :after #'+nav-flash-blink-cursor-a)
-
-  :config
-  (when (fboundp 'set-face-extend)
-    (set-face-extend 'nav-flash-face t)))
+  (advice-add #'what-cursor-position :after #'+nav-flash-blink-cursor-a))

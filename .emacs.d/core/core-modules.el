@@ -39,7 +39,8 @@ run before `doom-init-modules-hook'. Relevant to `doom-module-init-file'.")
               (vterm            (:term vterm))
               (password-store   (:tools pass))
               (flycheck         (:checkers syntax))
-              (flyspell         (:checkers spell)))
+              (flyspell         (:checkers spell))
+              (macos            (:os macos)))
     (:emacs   (electric-indent  (:emacs electric))
               (hideshow         (:editor fold))
               (eshell           (:term eshell))
@@ -47,7 +48,8 @@ run before `doom-init-modules-hook'. Relevant to `doom-module-init-file'.")
     (:ui      (doom-modeline    (:ui modeline))
               (fci              (:ui fill-column))
               (evil-goggles     (:ui ophints))
-              (tabbar           (:ui tabs)))
+              (tabbar           (:ui tabs))
+              (pretty-code      (:ui ligatures)))
     (:app     (email            (:email mu4e))
               (notmuch          (:email notmuch)))
     (:lang    (perl             (:lang raku))))
@@ -100,7 +102,8 @@ symbols, and that module's plist."
   (declare (pure t) (side-effect-free t))
   (lambda (module plist)
     (let ((doom--current-module module)
-          (doom--current-flags (plist-get plist :flags)))
+          (doom--current-flags (plist-get plist :flags))
+          (inhibit-redisplay t))
       (load! file (plist-get plist :path) t))))
 
 (defun doom-initialize-modules (&optional force-p no-config-p)
@@ -115,12 +118,13 @@ non-nil."
     (when-let (init-p (load! doom-module-init-file doom-private-dir t))
       (doom-log "Initializing user config")
       (maphash (doom-module-loader doom-module-init-file) doom-modules)
-      (run-hook-wrapped 'doom-before-init-modules-hook #'doom-try-run-hook)
+      (doom-run-hooks 'doom-before-init-modules-hook)
       (unless no-config-p
         (maphash (doom-module-loader doom-module-config-file) doom-modules)
-        (run-hook-wrapped 'doom-init-modules-hook #'doom-try-run-hook)
+        (doom-run-hooks 'doom-init-modules-hook)
         (load! "config" doom-private-dir t)
-        (load custom-file 'noerror (not doom-debug-mode))))))
+        (when custom-file
+          (load custom-file 'noerror (not doom-debug-mode)))))))
 
 
 ;;
@@ -169,7 +173,7 @@ following properties:
   :path  [STRING]       path to category root directory
 
 Example:
-  (doom-module-set :lang 'haskell :flags '(+dante))"
+  (doom-module-set :lang 'haskell :flags '(+lsp))"
   (puthash (cons category module) plist doom-modules))
 
 (defun doom-module-path (category module &optional file)
@@ -201,7 +205,7 @@ This doesn't require modules to be enabled. For enabled modules us
            for default-directory in doom-modules-dirs
            for path = (concat category "/" module "/" file)
            if (file-exists-p path)
-           return (file-truename path)))
+           return (expand-file-name path)))
 
 (defun doom-module-from-path (&optional path enabled-only)
   "Returns a cons cell (CATEGORY . MODULE) derived from PATH (a file path).
@@ -216,7 +220,7 @@ If ENABLED-ONLY, return nil if the containing module isn't enabled."
         (ignore-errors
           (doom-module-from-path (file!))))
     (let* ((file-name-handler-alist nil)
-           (path (file-truename (or path (file!)))))
+           (path (expand-file-name (or path (file!)))))
       (save-match-data
         (cond ((string-match "/modules/\\([^/]+\\)/\\([^/]+\\)\\(?:/.*\\)?$" path)
                (when-let* ((category (doom-keyword-intern (match-string 1 path)))
@@ -224,9 +228,11 @@ If ENABLED-ONLY, return nil if the containing module isn't enabled."
                  (and (or (null enabled-only)
                           (doom-module-p category module))
                       (cons category module))))
-              ((file-in-directory-p path doom-core-dir)
+              ((or (string-match-p (concat "^" (regexp-quote doom-core-dir)) path)
+                   (file-in-directory-p path doom-core-dir))
                (cons :core (intern (file-name-base path))))
-              ((file-in-directory-p path doom-private-dir)
+              ((or (string-match-p (concat "^" (regexp-quote doom-private-dir)) path)
+                   (file-in-directory-p path doom-private-dir))
                (cons :private (intern (file-name-base path)))))))))
 
 (defun doom-module-load-path (&optional module-dirs)
@@ -247,8 +253,9 @@ those directories. The first returned path is always `doom-private-dir'."
                                       :type 'dirs
                                       :mindepth 1
                                       :depth 1)))
-            (cl-loop for plist being the hash-values of doom-modules
-                     collect (plist-get plist :path)))
+            (delq
+             nil (cl-loop for plist being the hash-values of doom-modules
+                          collect (plist-get plist :path)) ))
           nil))
 
 (defun doom-module-mplist-map (fn mplist)
@@ -274,8 +281,8 @@ those directories. The first returned path is always `doom-private-dir'."
                (:if (if (eval (cadr m) t)
                         (push (caddr m) mplist)
                       (prependq! mplist (cdddr m))))
-               (test (if (or (eval (cadr m) t)
-                             (eq test :unless))
+               (test (if (xor (eval (cadr m) t)
+                              (eq test :unless))
                          (prependq! mplist (cddr m))))))
             ((catch 'doom-modules
                (let* ((module (if (listp m) (car m) m))
@@ -283,7 +290,7 @@ those directories. The first returned path is always `doom-private-dir'."
                  (when-let (new (assq module obsolete))
                    (let ((newkeys (cdr new)))
                      (if (null newkeys)
-                         (message "WARNING %s module was removed" key)
+                         (message "WARNING %s module was removed" (list category module))
                        (if (cdr newkeys)
                            (message "WARNING %s module was removed and split into the %s modules"
                                     (list category module) (mapconcat #'prin1-to-string newkeys ", "))
@@ -297,10 +304,11 @@ those directories. The first returned path is always `doom-private-dir'."
                                mplist)
                          (push (car key) mplist))
                        (throw 'doom-modules t))))
-                 (push (funcall fn category module
-                                :flags (if (listp m) (cdr m))
-                                :path (doom-module-locate-path category module))
-                       results))))))
+                 (let ((path (doom-module-locate-path category module)))
+                   (push (funcall fn category module
+                                  :flags (if (listp m) (cdr m))
+                                  :path (if (stringp path) (file-truename path)))
+                         results)))))))
     (unless doom-interactive-p
       (setq doom-inhibit-module-warnings t))
     (nreverse results)))
@@ -309,8 +317,7 @@ those directories. The first returned path is always `doom-private-dir'."
   "Minimally initialize `doom-modules' (a hash table) and return it.
 This value is cached. If REFRESH-P, then don't use the cached value."
   (if all-p
-      (cl-loop for path in (cdr (doom-module-load-path 'all))
-               collect (doom-module-from-path path))
+      (mapcar #'doom-module-from-path (cdr (doom-module-load-path 'all)))
     doom-modules))
 
 
@@ -326,7 +333,7 @@ This value is cached. If REFRESH-P, then don't use the cached value."
       use-package-minimum-reported-time (if doom-debug-p 0 0.1)
       use-package-expand-minimally doom-interactive-p)
 
-;; A common mistake for new users is that they inadvertantly install their
+;; A common mistake for new users is that they inadvertently install their
 ;; packages with package.el, by copying over old `use-package' declarations with
 ;; an :ensure t property. Doom doesn't use package.el, so this will throw an
 ;; error that will confuse beginners, so we disable `:ensure'.
@@ -361,13 +368,17 @@ This value is cached. If REFRESH-P, then don't use the cached value."
   ;; HACK Fix `:load-path' so it resolves relative paths to the containing file,
   ;;      rather than `user-emacs-directory'. This is a done as a convenience
   ;;      for users, wanting to specify a local directory.
-  (defadvice! doom--resolve-load-path-from-containg-file-a (orig-fn label arg &optional recursed)
+  (defadvice! doom--resolve-load-path-from-containg-file-a (fn label arg &optional recursed)
     "Resolve :load-path from the current directory."
     :around #'use-package-normalize-paths
     ;; `use-package-normalize-paths' resolves paths relative to
     ;; `user-emacs-directory', so we change that.
-    (let ((user-emacs-directory (if (stringp arg) (dir!))))
-      (funcall orig-fn label arg recursed)))
+    (let ((user-emacs-directory
+           (or (and (stringp arg)
+                    (not (file-name-absolute-p arg))
+                    (ignore-errors (dir!)))
+               user-emacs-directory)))
+      (funcall fn label arg recursed)))
 
   ;; Adds two keywords to `use-package' to expand its lazy-loading capabilities:
   ;;
@@ -441,7 +452,7 @@ otherwise, MODULES is a multiple-property list (a plist where each key can have
 multiple, linear values).
 
 The bootstrap process involves making sure the essential directories exist, core
-packages are installed, `doom-autoload-file' is loaded, `doom-packages-file'
+packages are installed, `doom-autoloads-file' is loaded, `doom-packages-file'
 cache exists (and is loaded) and, finally, loads your private init.el (which
 should contain your `doom!' block).
 

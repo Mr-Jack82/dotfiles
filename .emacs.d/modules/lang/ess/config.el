@@ -21,7 +21,7 @@
 
   (set-docsets! 'ess-r-mode "R")
   (when (featurep! +lsp)
-    (add-hook 'ess-r-mode-local-vars-hook #'lsp!))
+    (add-hook 'ess-r-mode-local-vars-hook #'lsp! 'append))
 
   (set-repl-handler! 'ess-r-mode #'+ess/open-r-repl)
   (set-repl-handler! 'ess-julia-mode #'+ess/open-julia-repl)
@@ -31,6 +31,9 @@
   (set-evil-initial-state! 'ess-r-help-mode 'normal)
   (set-eval-handler! 'ess-help-mode #'ess-eval-region-and-go)
   (set-eval-handler! 'ess-r-help-mode #'ess-eval-region-and-go)
+
+  (set-company-backend! 'ess-r-mode
+    '(company-R-args company-R-objects company-dabbrev-code :separate))
 
   (setq-hook! 'ess-r-mode-hook
     ;; HACK Fix #2233: Doom continues comments on RET, but ess-r-mode doesn't
@@ -86,3 +89,18 @@
         "m" #'ess-noweb-mark-chunk
         "p" #'ess-noweb-previous-chunk
         "n" #'ess-noweb-next-chunk))
+
+
+(use-package! stan-mode
+  :when (featurep! +stan)
+  :hook (stan-mode . stan-mode-setup)
+  :hook (stan-mode . eldoc-stan-setup)
+  :init
+  (use-package! company-stan
+    :when (featurep! :completion company)
+    :hook (stan-mode . company-stan-setup))
+
+  (use-package! flycheck-stan
+    :when (featurep! :checkers syntax)
+    :hook (stan-mode . flycheck-stan-stanc2-setup)
+    :hook (stan-mode . flycheck-stan-stanc3-setup)))

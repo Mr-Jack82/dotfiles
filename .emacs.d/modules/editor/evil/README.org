@@ -1,4 +1,4 @@
-#+TITLE:   feature/evil
+#+TITLE:   editor/evil
 #+DATE:    February 2, 2017
 #+SINCE:   v2.0
 #+STARTUP: inlineimages nofold
@@ -106,6 +106,8 @@ And these are text objects added by this module:
 + =g= The entire buffer
 + =i j k= by indentation (=k= includes one line above; =j= includes one line
   above and below) (provided by ~evil-indent-plus~)
++ =q= For quotes (any kind)
++ =u= For URLs
 + =x= XML attributes (provided by ~exato~)
 
 ** Custom Ex Commands
@@ -170,8 +172,8 @@ vim-seek/vim-sneak for 2-character versions of f/F/t/T).
 
 To disable evil-snipe on s/S, you can either:
 
-1. Disable ~evil-snipe-mode~ by adding ~(after! evil-snipe (evil-snipe-mode
-   -1))~ to =$DOOMDIR/config.el=,
+1. Disable ~evil-snipe-mode~ by adding ~(remove-hook 'doom-first-input-hook
+   #'evil-snipe-mode)~ to =$DOOMDIR/config.el=,
 2. Or disable =evil-snipe= completely with ~(package! evil-snipe :disable t)~
    added to =$DOOMDIR/packages.el=, but this will also disable incremental
    highlighting for the f/F/t/T motions keys.

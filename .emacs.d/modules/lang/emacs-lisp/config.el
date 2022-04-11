@@ -33,7 +33,7 @@ employed so that flycheck still does *some* helpful linting.")
     :definition    #'+emacs-lisp-lookup-definition
     :documentation #'+emacs-lisp-lookup-documentation)
   (set-docsets! '(emacs-lisp-mode lisp-interaction-mode) "Emacs Lisp")
-  (set-pretty-symbols! 'emacs-lisp-mode :lambda "lambda")
+  (set-ligatures! 'emacs-lisp-mode :lambda "lambda")
   (set-rotate-patterns! 'emacs-lisp-mode
     :symbols '(("t" "nil")
                ("let" "let*")
@@ -95,22 +95,24 @@ employed so that flycheck still does *some* helpful linting.")
   ;; Recenter window after following definition
   (advice-add #'elisp-def :after #'doom-recenter-a)
 
-  (defadvice! +emacs-lisp-append-value-to-eldoc-a (orig-fn sym)
+  (defadvice! +emacs-lisp-append-value-to-eldoc-a (fn sym)
     "Display variable value next to documentation in eldoc."
     :around #'elisp-get-var-docstring
-    (when-let (ret (funcall orig-fn sym))
-      (concat ret " "
-              (let* ((truncated " [...]")
-                     (print-escape-newlines t)
-                     (str (symbol-value sym))
-                     (str (prin1-to-string str))
-                     (limit (- (frame-width) (length ret) (length truncated) 1)))
-                (format (format "%%0.%ds%%s" limit)
-                        (propertize str 'face 'warning)
-                        (if (< (length str) limit) "" truncated))))))
+    (when-let (ret (funcall fn sym))
+      (if (boundp sym)
+          (concat ret " "
+                  (let* ((truncated " [...]")
+                         (print-escape-newlines t)
+                         (str (symbol-value sym))
+                         (str (prin1-to-string str))
+                         (limit (- (frame-width) (length ret) (length truncated) 1)))
+                    (format (format "%%0.%ds%%s" (max limit 0))
+                            (propertize str 'face 'warning)
+                            (if (< (length str) limit) "" truncated))))
+        ret)))
 
   (map! :localleader
-        :map emacs-lisp-mode-map
+        :map (emacs-lisp-mode-map lisp-interaction-mode-map)
         :desc "Expand macro" "m" #'macrostep-expand
         (:prefix ("d" . "debug")
           "f" #'+emacs-lisp/edebug-instrument-defun-on
@@ -131,27 +133,31 @@ employed so that flycheck still does *some* helpful linting.")
   :config
   (set-lookup-handlers! 'inferior-emacs-lisp-mode
     :definition    #'+emacs-lisp-lookup-definition
-    :documentation #'+emacs-lisp-lookup-documentation))
+    :documentation #'+emacs-lisp-lookup-documentation)
 
-;; Adapted from http://www.modernemacs.com/post/comint-highlighting/ to add
-;; syntax highlighting to ielm REPLs.
-(add-hook! 'ielm-mode-hook
-  (defun +emacs-lisp-init-syntax-highlighting-h ()
-    (font-lock-add-keywords
-     nil (cl-loop for (matcher . match-highlights)
-                  in (append lisp-el-font-lock-keywords-2 lisp-cl-font-lock-keywords-2)
-                  collect
-                  `((lambda (limit)
-                      (and ,(if (symbolp matcher)
-                                `(,matcher limit)
-                              `(re-search-forward ,matcher limit t))
-                           ;; Only highlight matches after the prompt
-                           (> (match-beginning 0) (car comint-last-prompt))
-                           ;; Make sure we're not in a comment or string
-                           (let ((state (sp--syntax-ppss)))
-                             (not (or (nth 3 state)
-                                      (nth 4 state))))))
-                    ,@match-highlights)))))
+  ;; Adapted from http://www.modernemacs.com/post/comint-highlighting/ to add
+  ;; syntax highlighting to ielm REPLs.
+  (setq ielm-font-lock-keywords
+        (append '(("\\(^\\*\\*\\*[^*]+\\*\\*\\*\\)\\(.*$\\)"
+                   (1 font-lock-comment-face)
+                   (2 font-lock-constant-face)))
+                (when (require 'highlight-numbers nil t)
+                  (highlight-numbers--get-regexp-for-mode 'emacs-lisp-mode))
+                (cl-loop for (matcher . match-highlights)
+                         in (append lisp-el-font-lock-keywords-2
+                                    lisp-cl-font-lock-keywords-2)
+                         collect
+                         `((lambda (limit)
+                             (when ,(if (symbolp matcher)
+                                        `(,matcher limit)
+                                      `(re-search-forward ,matcher limit t))
+                               ;; Only highlight matches after the prompt
+                               (> (match-beginning 0) (car comint-last-prompt))
+                               ;; Make sure we're not in a comment or string
+                               (let ((state (syntax-ppss)))
+                                 (not (or (nth 3 state)
+                                          (nth 4 state))))))
+                           ,@match-highlights)))))
 
 
 ;;
@@ -171,22 +177,28 @@ employed so that flycheck still does *some* helpful linting.")
     (add-hook 'flycheck-mode-hook #'flycheck-cask-setup nil t)))
 
 
+(use-package! flycheck-package
+  :when (featurep! :checkers syntax)
+  :after flycheck
+  :config (flycheck-package-setup))
+
+
 (use-package! elisp-demos
   :defer t
   :init
   (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   :config
-  (defadvice! +emacs-lisp--add-doom-elisp-demos-a (orig-fn symbol)
+  (defadvice! +emacs-lisp--add-doom-elisp-demos-a (fn symbol)
     "Add Doom's own demos to help buffers."
     :around #'elisp-demos--search
-    (or (funcall orig-fn symbol)
-        (when-let (demos-file (doom-glob doom-docs-dir "api.org"))
+    (or (funcall fn symbol)
+        (when-let (demos-file (doom-module-locate-path :lang 'emacs-lisp "demos.org"))
           (with-temp-buffer
             (insert-file-contents demos-file)
             (goto-char (point-min))
             (when (re-search-forward
-                   (format "^\\*\\*\\* %s$" (regexp-quote (symbol-name symbol)))
+                   (format "^\\*\\* %s$" (regexp-quote (symbol-name symbol)))
                    nil t)
               (let (beg end)
                 (forward-line 1)

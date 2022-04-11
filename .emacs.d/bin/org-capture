@@ -14,10 +14,10 @@ cleanup() {
 }
 
 # If emacs isn't running, we start a temporary daemon, solely for this window.
-if ! emacsclient --suppress-output --eval nil; then
+if ! emacsclient --suppress-output --eval nil 2>/dev/null; then
+  echo "No Emacs daemon/server is available! Starting one..."
   emacs --daemon
   trap cleanup EXIT INT TERM
-  daemon=1
 fi
 
 # org-capture key mapped to argument flags
@@ -28,15 +28,16 @@ while getopts "hk:" opt; do
 done
 shift $((OPTIND-1))
 
-[ -t 0 ] && str="$*" || str=$(cat)
+# use remaining args, else read from stdin if passed a single dash
+str="$*"
+case "$str" in
+  -) str=$(cat) ;;
+esac
 
-if [ $daemon ]; then
-  emacsclient -a "" \
-    -c -F '((name . "doom-capture") (width . 70) (height . 25) (transient . t))' \
-    -e "(+org-capture/open-frame \"$str\" ${key:-nil})"
-else
-  # Non-daemon servers flicker a lot if frames are created from terminal, so we
-  # do it internally instead.
-  emacsclient -a "" \
-    -e "(+org-capture/open-frame \"$str\" ${key:-nil})"
-fi
+# Fix incompatible terminals that cause odd 'not a valid terminal' errors
+[ "$TERM" = "alacritty" ] && export TERM=xterm-256color
+
+# Non-daemon servers flicker a lot if frames are created from terminal, so we do
+# it internally instead.
+emacsclient -a "" \
+  -e "(+org-capture/open-frame \"$str\" ${key:-nil})"

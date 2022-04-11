@@ -6,6 +6,7 @@
   org-download-dnd
   org-download-yank
   org-download-screenshot
+  org-download-clipboard
   org-download-dnd-base64
   :init
   ;; HACK We add these manually so that org-download is truly lazy-loaded
@@ -61,7 +62,7 @@
       (save-excursion
         (org-display-inline-images
          t t
-         (progn (org-back-to-heading t) (point))
+         (progn (org-back-to-heading-or-point-min t) (point))
          (progn (org-end-of-subtree t t)
                 (when (and (org-at-heading-p) (not (eobp))) (backward-char 1))
                 (point)))))))

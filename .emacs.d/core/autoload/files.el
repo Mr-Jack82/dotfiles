@@ -36,39 +36,37 @@ This is used by `file-exists-p!' and `project-file-exists-p!'."
                  `(file-exists-p ,filevar))
               ,filevar)))))
 
-(defun doom--path (&rest segments)
-  (let ((dir (pop segments)))
-    (unless segments
-      (setq dir (expand-file-name dir)))
+;;;###autoload
+(defun doom-path (&rest segments)
+  "Constructs a file path from SEGMENTS.
+Ignores `nil' elements in SEGMENTS."
+  (let ((segments (remq nil segments))
+        file-name-handler-alist
+        dir)
     (while segments
-      (setq dir (expand-file-name (car segments) dir)
-            segments (cdr segments)))
+      (setq segment (pop segments)
+            dir (expand-file-name
+                 (if (listp segment)
+                     (apply #'doom-path dir segment)
+                   segment)
+                 dir)))
     dir))
 
 ;;;###autoload
 (defun doom-glob (&rest segments)
   "Construct a path from SEGMENTS and expand glob patterns.
-Returns nil if the path doesn't exist."
-  (let* (case-fold-search
-         (dir (apply #'doom--path segments)))
-    (if (string-match-p "[[*?]" dir)
-        (file-expand-wildcards dir t)
-      (if (file-exists-p dir)
-          dir))))
-
-;;;###autoload
-(defun doom-path (&rest segments)
-  "Constructs a file path from SEGMENTS."
-  (if segments
-      (apply #'doom--path segments)
-    (file!)))
+Returns nil if the path doesn't exist.
+Ignores `nil' elements in SEGMENTS."
+  (let (case-fold-search)
+    (file-expand-wildcards (apply #'doom-path segments) t)))
 
 ;;;###autoload
 (defun doom-dir (&rest segments)
   "Constructs a path from SEGMENTS.
-See `doom-path'."
-  (when-let (path (apply #'doom-path segments))
-    (directory-file-name (file-name-directory path))))
+See `doom-path'.
+Ignores `nil' elements in SEGMENTS."
+  (when-let (path (doom-path segments))
+    (directory-file-name path)))
 
 ;;;###autoload
 (cl-defun doom-files-in
@@ -137,7 +135,8 @@ MATCH is a string regexp. Only entries that match it will be included."
   "Returns the evaluated result of FORM in a ;;;###COOKIE FORM at the top of
 FILE.
 
-If COOKIE doesn't exist, return NULL-VALUE."
+If COOKIE doesn't exist, or cookie isn't within the first 256 bytes of FILE,
+return NULL-VALUE."
   (unless (file-exists-p file)
     (signal 'file-missing file))
   (unless (file-readable-p file)
@@ -245,7 +244,7 @@ If FORCE-P, delete without confirmation."
       (user-error "Aborted"))
     (let ((buf (current-buffer)))
       (unwind-protect
-          (progn (delete-file path) t)
+          (progn (delete-file path t) t)
         (if (file-exists-p path)
             (error "Failed to delete %S" short-path)
           ;; Ensures that windows displaying this buffer will be switched to
@@ -283,6 +282,8 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
     (user-error "Buffer is not visiting any file"))
   (let ((old-path (buffer-file-name (buffer-base-buffer)))
         (new-path (expand-file-name new-path)))
+    (when (directory-name-p new-path)
+      (setq new-path (concat new-path (file-name-nondirectory old-path))))
     (make-directory (file-name-directory new-path) 't)
     (rename-file old-path new-path (or force-p 1))
     (set-visited-file-name new-path t t)
@@ -334,3 +335,13 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
             (with-current-buffer origin
               (revert-buffer t t))))
       (user-error "Unable to open %S" file))))
+
+;;;###autoload
+(defun doom/remove-recent-file (file)
+  "Remove FILE from your recently-opened-files list."
+  (interactive
+   (list (completing-read "Remove recent file: " recentf-list
+                          nil t)))
+  (setq recentf-list (delete file recentf-list))
+  (recentf-save-list)
+  (message "Removed %S from `recentf-list'" (abbreviate-file-name file)))

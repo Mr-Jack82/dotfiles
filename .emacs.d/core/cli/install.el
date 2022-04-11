@@ -4,7 +4,8 @@
     ((noconfig-p  ["--no-config"]  "Don't create DOOMDIR or dummy files therein")
      (noenv-p     ["--no-env"]     "Don't generate an envvars file (see 'doom help env')")
      (noinstall-p ["--no-install"] "Don't auto-install packages")
-     (nofonts-p   ["--no-fonts"]   "Don't install (or prompt to install) all-the-icons fonts"))
+     (nofonts-p   ["--no-fonts"]   "Don't install (or prompt to install) all-the-icons fonts")
+     (nohooks-p   ["--no-hooks"]   "Don't deploy git hooks"))
   "Installs and sets up Doom Emacs for the first time.
 
 This command does the following:
@@ -18,16 +19,21 @@ This command does the following:
 
 This command is idempotent and safe to reuse.
 
-The location of DOOMDIR can be changed with the -p option, or by setting the
-DOOMDIR environment variable. e.g.
+The location of DOOMDIR can be changed with the environment variable of the same
+name. e.g.
 
-  doom -p ~/.config/doom install
   DOOMDIR=~/.config/doom doom install"
   (print! (green "Installing Doom Emacs!\n"))
   (let ((default-directory (doom-path "~")))
     ;; Create `doom-private-dir'
     (if noconfig-p
         (print! (warn "Not copying private config template, as requested"))
+      ;; Create DOOMDIR in ~/.config/doom if ~/.config/emacs exists.
+      (when (and (not (file-directory-p doom-private-dir))
+                 (not (getenv "DOOMDIR")))
+        (let ((xdg-config-dir (or (getenv "XDG_CONFIG_HOME") "~/.config")))
+          (when (file-in-directory-p doom-emacs-dir xdg-config-dir)
+            (setq doom-private-dir (expand-file-name "doom/" xdg-config-dir)))))
       (print! (start "Creating %s") (relpath doom-private-dir))
       (make-directory doom-private-dir 'parents)
       (print-group!
@@ -68,6 +74,11 @@ DOOMDIR environment variable. e.g.
     (print! "Regenerating autoloads files")
     (doom-autoloads-reload)
 
+    (if nohooks-p
+        (print! (warn "Not deploying commit-msg and pre-push git hooks, as requested"))
+      (print! "Deploying commit-msg and pre-push git hooks")
+      (doom-cli--ci-deploy-hooks))
+
     (cond (nofonts-p)
           (IS-WINDOWS
            (print! (warn "Doom cannot install all-the-icons' fonts on Windows!\n"))
@@ -90,5 +101,5 @@ DOOMDIR environment variable. e.g.
 
     (print! (success "\nFinished! Doom is ready to go!\n"))
     (with-temp-buffer
-      (insert-file-contents (doom-glob doom-core-dir "templates/QUICKSTART_INTRO"))
+      (insert-file-contents (doom-path doom-core-dir "templates/QUICKSTART_INTRO"))
       (print! "%s" (buffer-string)))))

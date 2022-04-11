@@ -15,7 +15,7 @@
                    ivy-switch-buffer-map))
                 ((featurep! :completion helm)
                  '(helm-map
-                   helm-ag-map
+                   helm-rg-map
                    helm-read-file-map))))
   "A list of all the keymaps used for the minibuffer.")
 
@@ -34,17 +34,19 @@
 (after! epa
   ;; With GPG 2.1+, this forces gpg-agent to use the Emacs minibuffer to prompt
   ;; for the key passphrase.
-  (set (if EMACS27+
-           'epg-pinentry-mode
-         'epa-pinentry-mode) ; DEPRECATED `epa-pinentry-mode'
-       'loopback)
-  ;; Default to the first secret key available in your keyring.
+  (set 'epg-pinentry-mode 'loopback)
+  ;; Default to the first enabled and non-expired key in your keyring.
   (setq-default
    epa-file-encrypt-to
    (or (default-value 'epa-file-encrypt-to)
        (unless (string-empty-p user-full-name)
-         (cl-loop for key in (ignore-errors (epg-list-keys (epg-make-context) user-full-name))
-                  collect (epg-sub-key-id (car (epg-key-sub-key-list key)))))
+         (when-let (context (ignore-errors (epg-make-context)))
+           (cl-loop for key in (epg-list-keys context user-full-name 'public)
+                    for subkey = (car (epg-key-sub-key-list key))
+                    if (not (memq 'disabled (epg-sub-key-capability subkey)))
+                    if (< (or (epg-sub-key-expiration-time subkey) 0)
+                          (time-to-seconds))
+                    collect (epg-sub-key-fingerprint subkey))))
        user-mail-address))
    ;; And suppress prompts if epa-file-encrypt-to has a default value (without
    ;; overwriting file-local values).
@@ -52,6 +54,16 @@
     :before #'epa-file-write-region
     (unless (local-variable-p 'epa-file-encrypt-to)
       (setq-local epa-file-encrypt-to (default-value 'epa-file-encrypt-to)))))
+
+
+(after! woman
+  ;; The woman-manpath default value does not necessarily match man. If we have
+  ;; man available but aren't using it for performance reasons, we can extract
+  ;; it's manpath.
+  (when (executable-find "man")
+    (setq woman-manpath
+          (split-string (cdr (doom-call-process "man" "--path"))
+                        path-separator t))))
 
 
 (use-package! drag-stuff
@@ -100,7 +112,11 @@
     (dolist (brace '("(" "{" "["))
       (sp-pair brace nil
                :post-handlers '(("||\n[i]" "RET") ("| " "SPC"))
-               ;; I likely don't want a new pair if adjacent to a word or opening brace
+               ;; Don't autopair opening braces if before a word character or
+               ;; other opening brace. The rationale: it interferes with manual
+               ;; balancing of braces, and is odd form to have s-exps with no
+               ;; whitespace in between, e.g. ()()(). Insert whitespace if
+               ;; genuinely want to start a new form in the middle of a word.
                :unless '(sp-point-before-word-p sp-point-before-same-p)))
 
     ;; In lisps ( should open a new form if before another parenthesis
@@ -162,16 +178,11 @@
                      "/*!" "*/"
                      :post-handlers '(("||\n[i]" "RET") ("[d-1]< | " "SPC"))))
 
-    ;; Expand C-style doc comment blocks. Must be done manually because some of
-    ;; these languages use specialized (and deferred) parsers, whose state we
-    ;; can't access while smartparens is doing its thing.
-    (defun +default-expand-asterix-doc-comment-block (&rest _ignored)
-      (let ((indent (current-indentation)))
-        (newline-and-indent)
-        (save-excursion
-          (newline)
-          (insert (make-string indent 32) " */")
-          (delete-char 2))))
+    ;; Expand C-style comment blocks.
+    (defun +default-open-doc-comments-block (&rest _ignored)
+      (save-excursion
+        (newline)
+        (indent-according-to-mode)))
     (sp-local-pair
      '(js2-mode typescript-mode rjsx-mode rust-mode c-mode c++-mode objc-mode
        csharp-mode java-mode php-mode css-mode scss-mode less-css-mode
@@ -179,8 +190,8 @@
      "/*" "*/"
      :actions '(insert)
      :post-handlers '(("| " "SPC")
-                      ("|\n[i]*/[d-2]" "RET")
-                      (+default-expand-asterix-doc-comment-block "*")))
+                      (" | " "*")
+                      ("|[i]\n[i]" "RET")))
 
     (after! smartparens-ml
       (sp-with-modes '(tuareg-mode fsharp-mode)
@@ -209,7 +220,30 @@
       (map! :map markdown-mode-map
             :ig "*" (general-predicate-dispatch nil
                       (looking-at-p "\\*\\* *")
-                      (cmd! (forward-char 2)))))))
+                      (cmd! (forward-char 2)))))
+
+    ;; Removes haskell-mode trailing braces
+    (after! smartparens-haskell
+      (sp-with-modes '(haskell-mode haskell-interactive-mode)
+        (sp-local-pair "{-" "-}" :actions :rem)
+        (sp-local-pair "{-#" "#-}" :actions :rem)
+        (sp-local-pair "{-@" "@-}" :actions :rem)
+        (sp-local-pair "{-" "-")
+        (sp-local-pair "{-#" "#-")
+        (sp-local-pair "{-@" "@-")))
+
+    (after! smartparens-python
+      (sp-with-modes 'python-mode
+        ;; Automatically close f-strings
+        (sp-local-pair "f\"" "\"")
+        (sp-local-pair "f\"\"\"" "\"\"\"")
+        (sp-local-pair "f'''" "'''")
+        (sp-local-pair "f'" "'"))
+      ;; Original keybind interferes with smartparens rules
+      (define-key python-mode-map (kbd "DEL") nil)
+      ;; Interferes with the def snippet in doom-snippets
+      ;; TODO Fix this upstream, in doom-snippets, instead
+      (setq sp-python-insert-colon-in-function-definitions nil))))
 
 
 ;;
@@ -249,7 +283,7 @@ Continues comments if executed from a commented line. Consults
   (interactive "*")
   (when (and +default-want-RET-continue-comments
              (doom-point-in-comment-p)
-             (fboundp comment-line-break-function))
+             (functionp comment-line-break-function))
     (funcall comment-line-break-function nil)
     t))
 
@@ -277,7 +311,7 @@ Continues comments if executed from a commented line. Consults
         "s-l" #'goto-line
         ;; Restore OS undo, save, copy, & paste keys (without cua-mode, because
         ;; it imposes some other functionality and overhead we don't need)
-        "s-f" #'swiper
+        "s-f" (if (featurep! :completion vertico) #'consult-line #'swiper)
         "s-z" #'undo
         "s-Z" #'redo
         "s-c" (if (featurep 'evil) #'evil-yank #'copy-region-as-kill)
@@ -315,7 +349,7 @@ Continues comments if executed from a commented line. Consults
   "M"    #'doom/describe-active-minor-mode
   "O"    #'+lookup/online
   "T"    #'doom/toggle-profiler
-  "V"    #'set-variable
+  "V"    #'doom/help-custom-variable
   "W"    #'+default/man-or-woman
   "C-k"  #'describe-key-briefly
   "C-l"  #'describe-language-environment
@@ -406,11 +440,13 @@ Continues comments if executed from a commented line. Consults
     "A-x" #'execute-extended-command)
 
   ;; A Doom convention where C-s on popups and interactive searches will invoke
-  ;; ivy/helm for their superior filtering.
+  ;; ivy/helm/vertico for their superior filtering.
   (when-let (command (cond ((featurep! :completion ivy)
                             #'counsel-minibuffer-history)
                            ((featurep! :completion helm)
-                            #'helm-minibuffer-history)))
+                            #'helm-minibuffer-history)
+                           ((featurep! :completion vertico)
+                            #'consult-history)))
     (define-key!
       :keymaps (append +default-minibuffer-maps
                        (when (featurep! :editor evil +everywhere)
@@ -435,9 +471,9 @@ Continues comments if executed from a commented line. Consults
         ;; auto-indent on newline by default
         :gi [remap newline] #'newline-and-indent
         ;; insert literal newline
-        :gi "S-RET"         #'+default/newline
-        :gi [S-return]      #'+default/newline
-        :gi "C-j"           #'+default/newline
+        :i  "S-RET"         #'+default/newline
+        :i  [S-return]      #'+default/newline
+        :i  "C-j"           #'+default/newline
 
         ;; Add new item below current (without splitting current line).
         :gi "C-RET"         #'+default/newline-below

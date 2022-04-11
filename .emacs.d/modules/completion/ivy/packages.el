@@ -1,23 +1,24 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; completion/ivy/packages.el
 
-(package! swiper :pin "c6b60d34ac37bf4d91a25f16d22e528f85e06938")
+(package! swiper :pin "764e0d35ba63adb893743f27a979144477d9bfb9")
 (package! ivy)
 (package! ivy-hydra)
+(package! ivy-avy)
 (package! counsel)
 
-(package! amx :pin "ccfc92c600df681df5e8b5fecec328c462ceb71e")
-(package! counsel-projectile :pin "77392cbbc42e98fc137b43f1db1b111ba6e2dd75")
-(package! ivy-rich :pin "10970130b41c6ef9570893cdab8dfbe720e2b1a9")
-(package! wgrep :pin "f0ef9bfa44db503cdb2f83fcfbd2fa4e2382ef1f")
+(package! amx :pin "37f9c7ae55eb0331b27200fb745206fc58ceffc0")
+(package! counsel-projectile :pin "40d1e1d4bb70acb00fddd6f4df9778bf2c52734b")
+(package! ivy-rich :pin "600b8183ed0be8668dcc548cc2c8cb94b001363b")
+(package! wgrep :pin "f9687c28bbc2e84f87a479b6ce04407bb97cfb23")
 
 (if (featurep! +prescient)
-    (package! ivy-prescient :pin "b11d79b10df12c58edc3487371c2c47dfb9b50e6")
+    (package! ivy-prescient :pin "c5295a9eecbd2935bb57684a4422638e03bf738c")
   (when (featurep! +fuzzy)
-    (package! flx :pin "17f5c9cb2af18aa6f52910ff4a5a63591261ced5")))
+    (package! flx :pin "e3b3f0533e44c5250ce73d728b59a7e96c692b5d")))
 
 (when (featurep! +childframe)
-  (package! ivy-posframe :pin "44749562a9e68bd43ccaa225b31311476fab1251"))
+  (package! ivy-posframe :pin "533a8e368fcabfd534761a5c685ce713376fa594"))
 
 (when (featurep! +icons)
   (package! all-the-icons-ivy :pin "a70cbfa1effe36efc946a823a580cec686d5e88d"))

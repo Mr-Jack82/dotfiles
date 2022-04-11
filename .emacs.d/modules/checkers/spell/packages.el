@@ -1,11 +1,13 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; checkers/spell/packages.el
 
-(package! flyspell-correct :pin "dea1290a371c540dde7b8d0eef7a12d92f7a0b83")
-(cond ((featurep! :completion ivy)
-       (package! flyspell-correct-ivy))
-      ((featurep! :completion helm)
-       (package! flyspell-correct-helm))
-      ((package! flyspell-correct-popup)))
-
-(package! flyspell-lazy :pin "3ebf68cc9eb10c972a2de8d7861cbabbbce69570")
+(if (not (featurep! +flyspell))
+    (package! spell-fu :pin "8185467b24f05bceb428a0e9909651ec083cc54e")
+  (package! flyspell-correct :pin "e9fde6f93af991b0528d6ed47d44bed470dc70af")
+  (cond ((featurep! :completion ivy)
+         (package! flyspell-correct-ivy))
+        ((featurep! :completion helm)
+         (package! flyspell-correct-helm))
+        ((not (featurep! :completion vertico))
+         (package! flyspell-correct-popup)))
+  (package! flyspell-lazy :pin "0fc5996bcee20b46cbd227ae948d343c3bef7339"))

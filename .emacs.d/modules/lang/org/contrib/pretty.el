@@ -1,12 +1,11 @@
 ;;; lang/org/contrib/pretty.el -*- lexical-binding: t; -*-
-
+;;;###if (featurep! +pretty)
 (after! org
   (setq org-highlight-latex-and-related '(native script entities)))
 
 
 (use-package! org-superstar ; "prettier" bullets
   :hook (org-mode . org-superstar-mode)
-  :init
   :config
   ;; Make leading stars truly invisible, by rendering them as spaces!
   (setq org-superstar-leading-bullet ?\s
@@ -21,4 +20,5 @@
 
 (use-package! org-fancy-priorities ; priority icons
   :hook (org-mode . org-fancy-priorities-mode)
+  :hook (org-agenda-mode . org-fancy-priorities-mode)
   :config (setq org-fancy-priorities-list '("⚑" "⬆" "■")))

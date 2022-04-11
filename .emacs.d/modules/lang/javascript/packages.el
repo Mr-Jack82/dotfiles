@@ -2,21 +2,19 @@
 ;;; lang/javascript/packages.el
 
 ;; Major modes
-(package! coffee-mode :pin "35a41c7d8233eac0b267d9593e67fb8b6235e134")
-(package! js2-mode :pin "5049e543b52099e6ea3e9bc915fc023d5a9b2644")
-(package! rjsx-mode :pin "0061587a06cdc2579a8d0e90863498d96bf982d8")
-(package! typescript-mode :pin "0fc729787007b5111f3584034af0f3ef2389098f")
+(package! rjsx-mode :pin "b697fe4d92cc84fa99a7bcb476f815935ea0d919")
+(package! typescript-mode :pin "88f317f0b6aef8f8d232e912fdbc679799580c56")
 
 ;; Tools
-(package! js2-refactor :pin "d4c40b5fc86d3edd7c6a7d83ac86483ee1cb7a28")
+(package! js2-refactor :pin "a0977c4ce1918cc266db9d6cd7a2ab63f3a76b9a")
 (package! npm-mode :pin "3ee7c0bad5b7a041d4739ef3aaa06a3dc764e5eb")
-(package! add-node-modules-path :pin "f31e69ccb681f882aebb806ce6e9478e3ac39708")
+(package! add-node-modules-path :pin "63f047fd84b825876152743f66de7ee6f9ed203b")
 
 ;; Eval
-(package! nodejs-repl :pin "f5ce3d5b7b4e0d06f6e9d4930d9ecc417633586b")
+(package! nodejs-repl :pin "3b841055cad00f442e4a9159b1056f59411b6646")
 (package! skewer-mode :pin "e5bed351939c92a1f788f78398583c2f83f1bb3c")
 
 ;; Programming environment
-(package! tide :pin "13e7af77b6867ffca6eecc5b3b3b5e315518f49c")
+(package! tide :pin "b93e555858edc331ba33d1d8bd4582d578c7ca31")
 (when (featurep! :tools lookup)
-  (package! xref-js2 :pin "6f1ed5dae0c2485416196a51f2fa92f32e4b8262"))
+  (package! xref-js2 :pin "fd6b723e7f1f9793d189a815e1904364dc026b03"))

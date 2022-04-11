@@ -1,5 +1,8 @@
 ;;; core-lib.el -*- lexical-binding: t; -*-
 
+(require 'cl-lib)
+
+
 ;;
 ;;; Helpers
 
@@ -51,7 +54,7 @@ list is returned as-is."
 (defun doom-enlist (exp)
   "Return EXP wrapped in a list, or as-is if already a list."
   (declare (pure t) (side-effect-free t))
-  (if (listp exp) exp (list exp)))
+  (if (proper-list-p exp) exp (list exp)))
 
 (defun doom-keyword-intern (str)
   "Converts STR (a string) into a keyword (`keywordp')."
@@ -67,10 +70,10 @@ list is returned as-is."
 
 (defmacro doom-log (format-string &rest args)
   "Log to *Messages* if `doom-debug-p' is on.
-Does not interrupt the minibuffer if it is in use, but still logs to *Messages*.
-Accepts the same arguments as `message'."
+Does not display text in echo area, but still logs to *Messages*. Accepts the
+same arguments as `message'."
   `(when doom-debug-p
-     (let ((inhibit-message (active-minibuffer-window)))
+     (let ((inhibit-message t))
        (message
         ,(concat (propertize "DOOM " 'face 'font-lock-comment-face)
                  (when (bound-and-true-p doom--current-module)
@@ -82,57 +85,10 @@ Accepts the same arguments as `message'."
                  format-string)
         ,@args))))
 
-(defun doom-try-run-hook (hook)
-  "Run HOOK (a hook function) with better error handling.
-Meant to be used with `run-hook-wrapped'."
-  (doom-log "Running doom hook: %s" hook)
-  (condition-case e
-      (funcall hook)
-    ((debug error)
-     (signal 'doom-hook-error (list hook e))))
-  ;; return nil so `run-hook-wrapped' won't short circuit
-  nil)
-
-(defun doom-load-envvars-file (file &optional noerror)
-  "Read and set envvars from FILE.
-If NOERROR is non-nil, don't throw an error if the file doesn't exist or is
-unreadable. Returns the names of envvars that were changed."
-  (if (null (file-exists-p file))
-      (unless noerror
-        (signal 'file-error (list "No envvar file exists" file)))
-    (when-let
-        (env
-         (with-temp-buffer
-           (save-excursion
-             (setq-local coding-system-for-read 'utf-8)
-             (insert "\0\n") ; to prevent off-by-one
-             (insert-file-contents file))
-           (save-match-data
-             (when (re-search-forward "\0\n *\\([^#= \n]*\\)=" nil t)
-               (setq
-                env (split-string (buffer-substring (match-beginning 1) (point-max))
-                                  "\0\n"
-                                  'omit-nulls))))))
-      (setq-default
-       process-environment
-       (append (nreverse env)
-               (default-value 'process-environment))
-       exec-path
-       (append (split-string (getenv "PATH") path-separator t)
-               (list exec-directory))
-       shell-file-name
-       (or (getenv "SHELL")
-           (default-value 'shell-file-name)))
-      env)))
-
-
-;;
-;;; Functional library
-
 (defalias 'doom-partial #'apply-partially)
 
 (defun doom-rpartial (fn &rest args)
-  "Return a function that is a partial application of FUN to right-hand ARGS.
+  "Return a partial application of FUN to right-hand ARGS.
 
 ARGS is a list of the last N arguments to pass to FUN. The result is a new
 function which does the same as FUN, except that the last N arguments are fixed
@@ -141,17 +97,120 @@ at the values with which this function was called."
   (lambda (&rest pre-args)
     (apply fn (append pre-args args))))
 
+(defun doom-lookup-key (keys &rest keymaps)
+  "Like `lookup-key', but search active keymaps if KEYMAP is omitted."
+  (if keymaps
+      (cl-some (doom-rpartial #'lookup-key keys) keymaps)
+    (cl-loop for keymap
+             in (append (cl-loop for alist in emulation-mode-map-alists
+                                 append (mapcar #'cdr
+                                                (if (symbolp alist)
+                                                    (if (boundp alist) (symbol-value alist))
+                                                  alist)))
+                        (list (current-local-map))
+                        (mapcar #'cdr minor-mode-overriding-map-alist)
+                        (mapcar #'cdr minor-mode-map-alist)
+                        (list (current-global-map)))
+             if (keymapp keymap)
+             if (lookup-key keymap keys)
+             return it)))
+
+(defun doom-load-envvars-file (file &optional noerror)
+  "Read and set envvars from FILE.
+If NOERROR is non-nil, don't throw an error if the file doesn't exist or is
+unreadable. Returns the names of envvars that were changed."
+  (if (null (file-exists-p file))
+      (unless noerror
+        (signal 'file-error (list "No envvar file exists" file)))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (when-let (env (read (current-buffer)))
+        (let ((tz (getenv-internal "TZ")))
+          (setq-default
+           process-environment
+           (append env (default-value 'process-environment))
+           exec-path
+           (append (split-string (getenv "PATH") path-separator t)
+                   (list exec-directory))
+           shell-file-name
+           (or (getenv "SHELL")
+               (default-value 'shell-file-name)))
+          (when-let (newtz (getenv-internal "TZ"))
+            (unless (equal tz newtz)
+              (set-time-zone-rule newtz))))
+        env))))
+
+(defun doom-run-hook (hook)
+  "Run HOOK (a hook function) with better error handling.
+Meant to be used with `run-hook-wrapped'."
+  (condition-case-unless-debug e
+      (funcall hook)
+    (error
+     (signal 'doom-hook-error (list hook e))))
+  ;; return nil so `run-hook-wrapped' won't short circuit
+  nil)
+
+(defun doom-run-hooks (&rest hooks)
+  "Run HOOKS (a list of hook variable symbols) with better error handling.
+Is used as advice to replace `run-hooks'."
+  (dolist (hook hooks)
+    (condition-case-unless-debug e
+        (run-hook-wrapped hook #'doom-run-hook)
+      (doom-hook-error
+       (unless debug-on-error
+         (lwarn hook :error "Error running hook %S because: %s"
+                (if (symbolp (cadr e))
+                    (symbol-name (cadr e))
+                  (cadr e))
+                (caddr e)))
+       (signal 'doom-hook-error (cons hook (cdr e)))))))
+
+(defun doom-run-hook-on (hook-var trigger-hooks)
+  "Configure HOOK-VAR to be invoked exactly once when any of the TRIGGER-HOOKS
+are invoked *after* Emacs has initialized (to reduce false positives). Once
+HOOK-VAR is triggered, it is reset to nil.
+
+HOOK-VAR is a quoted hook.
+TRIGGER-HOOK is a list of quoted hooks and/or sharp-quoted functions."
+  (dolist (hook trigger-hooks)
+    (let ((fn (intern (format "%s-init-on-%s-h" hook-var hook))))
+      (fset
+       fn (lambda (&rest _)
+            ;; Only trigger this after Emacs has initialized.
+            (when (and after-init-time
+                       (or (daemonp)
+                           ;; In some cases, hooks may be lexically unset to
+                           ;; inhibit them during expensive batch operations on
+                           ;; buffers (such as when processing buffers
+                           ;; internally). In these cases we should assume this
+                           ;; hook wasn't invoked interactively.
+                           (and (boundp hook)
+                                (symbol-value hook))))
+              (doom-run-hooks hook-var)
+              (set hook-var nil))))
+      (cond ((daemonp)
+             ;; In a daemon session we don't need all these lazy loading
+             ;; shenanigans. Just load everything immediately.
+             (add-hook 'after-init-hook fn 'append))
+            ((eq hook 'find-file-hook)
+             ;; Advise `after-find-file' instead of using `find-file-hook'
+             ;; because the latter is triggered too late (after the file has
+             ;; opened and modes are all set up).
+             (advice-add 'after-find-file :before fn '((depth . -101))))
+            ((add-hook hook fn -101)))
+      fn)))
+
 
 ;;
 ;;; Sugars
 
 (defun dir! ()
-  "Returns the directory of the emacs lisp file this macro is called from."
+  "Returns the directory of the emacs lisp file this function is called from."
   (when-let (path (file!))
     (directory-file-name (file-name-directory path))))
 
 (defun file! ()
-  "Return the emacs lisp file this macro is called from."
+  "Return the emacs lisp file this function is called from."
   (cond ((bound-and-true-p byte-compile-current-file))
         (load-file-name)
         ((stringp (car-safe current-load-list))
@@ -163,38 +222,52 @@ at the values with which this function was called."
   "Lexically bind ENVVARS in BODY, like `let' but for `process-environment'."
   (declare (indent 1))
   `(let ((process-environment (copy-sequence process-environment)))
-     (dolist (var (list ,@(cl-loop for (var val) in envvars
-                                   collect `(cons ,var ,val))))
-       (setenv (car var) (cdr var)))
+     ,@(cl-loop for (var val) in envvars
+                collect `(setenv ,var ,val))
      ,@body))
 
 (defmacro letf! (bindings &rest body)
-  "Temporarily rebind function and macros in BODY.
+  "Temporarily rebind function, macros, and advice in BODY.
 
-BINDINGS is either a) a list of, or a single, `defun' or `defmacro'-ish form, or
-b) a list of (PLACE VALUE) bindings as `cl-letf*' would accept.
+Intended as syntax sugar for `cl-letf', `cl-labels', `cl-macrolet', and
+temporary advice.
 
-TYPE is either `defun' or `defmacro'. NAME is the name of the function. If an
-original definition for NAME exists, it can be accessed as a lexical variable by
-the same name, for use with `funcall' or `apply'. ARGLIST and BODY are as in
-`defun'.
+BINDINGS is either:
+
+  A list of, or a single, `defun', `defun*', `defmacro', or `defadvice' forms.
+  A list of (PLACE VALUE) bindings as `cl-letf*' would accept.
+
+TYPE is one of:
+
+  `defun' (uses `cl-letf')
+  `defun*' (uses `cl-labels'; allows recursive references),
+  `defmacro' (uses `cl-macrolet')
+  `defadvice' (uses `defadvice!' before BODY, then `undefadvice!' after)
+
+NAME, ARGLIST, and BODY are the same as `defun', `defun*', `defmacro', and
+`defadvice!', respectively.
 
 \(fn ((TYPE NAME ARGLIST &rest BODY) ...) BODY...)"
   (declare (indent defun))
   (setq body (macroexp-progn body))
-  (when (memq (car bindings) '(defun defmacro))
+  (when (memq (car bindings) '(defun defun* defmacro defadvice))
     (setq bindings (list bindings)))
-  (dolist (binding (reverse bindings) (macroexpand body))
+  (dolist (binding (reverse bindings) body)
     (let ((type (car binding))
           (rest (cdr binding)))
       (setq
        body (pcase type
               (`defmacro `(cl-macrolet ((,@rest)) ,body))
-              (`defun `(cl-letf* ((,(car rest) (symbol-function #',(car rest)))
-                                  ((symbol-function #',(car rest))
-                                   (lambda ,(cadr rest) ,@(cddr rest))))
-                         (ignore ,(car rest))
-                         ,body))
+              (`defadvice `(progn (defadvice! ,@rest)
+                                  (unwind-protect ,body (undefadvice! ,@rest))))
+              ((or `defun `defun*)
+               `(cl-letf ((,(car rest) (symbol-function #',(car rest))))
+                  (ignore ,(car rest))
+                  ,(if (eq type 'defun*)
+                       `(cl-labels ((,@rest)) ,body)
+                     `(cl-letf (((symbol-function #',(car rest))
+                                 (fn! ,(cadr rest) ,@(cddr rest))))
+                        ,body))))
               (_
                (when (eq (car-safe type) 'function)
                  (setq type (list 'symbol-function type)))
@@ -204,7 +277,8 @@ the same name, for use with `funcall' or `apply'. ARGLIST and BODY are as in
   "Run FORMS without generating any output.
 
 This silences calls to `message', `load', `write-region' and anything that
-writes to `standard-output'."
+writes to `standard-output'. In interactive sessions this won't suppress writing
+to *Messages*, only inhibit output in the echo area."
   `(if doom-debug-p
        (progn ,@forms)
      ,(if doom-interactive-p
@@ -220,19 +294,19 @@ writes to `standard-output'."
                    (funcall write-region start end filename append visit lockname mustbenew)))
            ,@forms))))
 
-(defmacro if! (cond then &rest body)
+(defmacro eval-if! (cond then &rest body)
   "Expands to THEN if COND is non-nil, to BODY otherwise.
-COND is checked at compile/expansion time, allowing BODY to be omitted
-entirely when the elisp is byte-compiled. Use this for forms that contain
-expensive macros that could safely be removed at compile time."
+COND is checked at compile/expansion time, allowing BODY to be omitted entirely
+when the elisp is byte-compiled. Use this for forms that contain expensive
+macros that could safely be removed at compile time."
   (declare (indent 2))
   (if (eval cond)
       then
     (macroexp-progn body)))
 
-(defmacro when! (cond &rest body)
+(defmacro eval-when! (cond &rest body)
   "Expands to BODY if CONDITION is non-nil at compile/expansion time.
-See `if!' for details on this macro's purpose."
+See `eval-if!' for details on this macro's purpose."
   (declare (indent 1))
   (when (eval cond)
     (macroexp-progn body)))
@@ -240,21 +314,100 @@ See `if!' for details on this macro's purpose."
 
 ;;; Closure factories
 (defmacro fn! (arglist &rest body)
-  "Expands to (cl-function (lambda ARGLIST BODY...))"
+  "Returns (cl-function (lambda ARGLIST BODY...))
+The closure is wrapped in `cl-function', meaning ARGLIST will accept anything
+`cl-defun' will. Implicitly adds `&allow-other-keys' if `&key' is present in
+ARGLIST."
   (declare (indent defun) (doc-string 1) (pure t) (side-effect-free t))
-  `(cl-function (lambda ,arglist ,@body)))
+  `(cl-function
+    (lambda
+      ,(letf! (defun* allow-other-keys (args)
+                (mapcar
+                 (lambda (arg)
+                   (cond ((nlistp (cdr-safe arg)) arg)
+                         ((listp arg) (allow-other-keys arg))
+                         (arg)))
+                 (if (and (memq '&key args)
+                          (not (memq '&allow-other-keys args)))
+                     (if (memq '&aux args)
+                         (let (newargs arg)
+                           (while args
+                             (setq arg (pop args))
+                             (when (eq arg '&aux)
+                               (push '&allow-other-keys newargs))
+                             (push arg newargs))
+                           (nreverse newargs))
+                       (append args (list '&allow-other-keys)))
+                   args)))
+         (allow-other-keys arglist))
+      ,@body)))
+
+(defun doom--fn-crawl (data args)
+  (cond ((symbolp data)
+         (when-let*
+             ((lookup '(_ _ %2 %3 %4 %5 %6 %7 %8 %9))
+              (pos (cond ((eq data '%*) 0)
+                         ((memq data '(% %1)) 1)
+                         ((cdr (assq data (seq-map-indexed #'cons lookup)))))))
+           (when (and (= pos 1)
+                      (aref args 1)
+                      (not (eq data (aref args 1))))
+             (error "%% and %%1 are mutually exclusive"))
+           (aset args pos data)))
+        ((and (not (eq (car-safe data) '!))
+              (or (listp data)
+                  (vectorp data)))
+         (seq-doseq (elt data)
+           (doom--fn-crawl elt args)))))
+
+(defmacro fn!! (&rest args)
+  "Return an lambda with implicit, positional arguments.
+
+The function's arguments are determined recursively from ARGS.  Each symbol from
+`%1' through `%9' that appears in ARGS is treated as a positional argument.
+Missing arguments are named `_%N', which keeps the byte-compiler quiet.  `%' is
+a shorthand for `%1'; only one of these can appear in ARGS.  `%*' represents
+extra `&rest' arguments.
+
+Instead of:
+
+  (lambda (a _ c &rest d)
+    (if a c (cadr d)))
+
+you can use this macro and write:
+
+  (fn!! (if %1 %3 (cadr %*)))
+
+which expands to:
+
+  (lambda (%1 _%2 %3 &rest %*)
+    (if %1 %3 (cadr %*)))
+
+This macro was adapted from llama.el (see https://git.sr.ht/~tarsius/llama),
+minus font-locking, the outer function call, and minor optimizations."
+  `(lambda ,(let ((argv (make-vector 10 nil)))
+              (doom--fn-crawl args argv)
+              `(,@(let ((n 0))
+                    (mapcar (lambda (sym)
+                              (cl-incf n)
+                              (or sym (intern (format "_%%%s" n))))
+                            (reverse (seq-drop-while
+                                      #'null (reverse (seq-subseq argv 1))))))
+                ,@(and (aref argv 0) '(&rest %*))))
+     ,@args))
 
 (defmacro cmd! (&rest body)
-  "Expands to (lambda () (interactive) ,@body).
+  "Returns (lambda () (interactive) ,@body)
 A factory for quickly producing interaction commands, particularly for keybinds
 or aliases."
   (declare (doc-string 1) (pure t) (side-effect-free t))
   `(lambda (&rest _) (interactive) ,@body))
 
 (defmacro cmd!! (command &optional prefix-arg &rest args)
-  "Expands to a closure that interactively calls COMMAND with ARGS.
-A factory for quickly producing interactive, prefixed commands for keybinds or
-aliases."
+  "Returns a closure that interactively calls COMMAND with ARGS and PREFIX-ARG.
+Like `cmd!', but allows you to change `current-prefix-arg' or pass arguments to
+COMMAND. This macro is meant to be used as a target for keybinds (e.g. with
+`define-key' or `map!')."
   (declare (doc-string 1) (pure t) (side-effect-free t))
   `(lambda (arg &rest _) (interactive "P")
      (let ((current-prefix-arg (or ,prefix-arg arg)))
@@ -264,23 +417,44 @@ aliases."
         ,command ,@args))))
 
 (defmacro cmds! (&rest branches)
-  "Expands to a `menu-item' dispatcher for keybinds."
+  "Returns a dispatcher that runs the a command in BRANCHES.
+Meant to be used as a target for keybinds (e.g. with `define-key' or `map!').
+
+BRANCHES is a flat list of CONDITION COMMAND pairs. CONDITION is a lisp form
+that is evaluated when (and each time) the dispatcher is invoked. If it returns
+non-nil, COMMAND is invoked, otherwise it falls through to the next pair.
+
+The last element of BRANCHES can be a COMMANd with no CONDITION. This acts as
+the fallback if all other conditions fail.
+
+Otherwise, Emacs will fall through the keybind and search the next keymap for a
+keybind (as if this keybind never existed).
+
+See `general-key-dispatch' for what other arguments it accepts in BRANCHES."
   (declare (doc-string 1))
   (let ((docstring (if (stringp (car branches)) (pop branches) ""))
         fallback)
     (when (cl-oddp (length branches))
       (setq fallback (car (last branches))
             branches (butlast branches)))
-    `(general-predicate-dispatch ,fallback
-       :docstring ,docstring
-       ,@branches)))
+    (let ((defs (cl-loop for (key value) on branches by 'cddr
+                         unless (keywordp key)
+                         collect (list key value))))
+      `'(menu-item
+         ,(or docstring "") nil
+         :filter (lambda (&optional _)
+                   (let (it)
+                     (cond ,@(mapcar (lambda (pred-def)
+                                       `((setq it ,(car pred-def))
+                                         ,(cadr pred-def)))
+                                     defs)
+                           (t ,fallback))))))))
+
+(defalias 'kbd! #'general-simulate-key)
 
 ;; For backwards compatibility
-(defalias 'λ! 'cmd!)
-(defalias 'λ!! 'cmd!!)
-;; DEPRECATED These have been superseded by `cmd!' and `cmd!!'
-(define-obsolete-function-alias 'lambda! 'cmd! "3.0.0")
-(define-obsolete-function-alias 'lambda!! 'cmd!! "3.0.0")
+(defalias 'λ!  #'cmd!)
+(defalias 'λ!! #'cmd!!)
 
 
 ;;; Mutation
@@ -289,11 +463,11 @@ aliases."
   `(setq ,sym (append ,sym ,@lists)))
 
 (defmacro setq! (&rest settings)
-  "A stripped-down `customize-set-variable' with the syntax of `setq'.
+  "A more sensible `setopt' for setting customizable variables.
 
-This can be used as a drop-in replacement for `setq'. Particularly when you know
-a variable has a custom setter (a :set property in its `defcustom' declaration).
-This triggers setters. `setq' does not."
+This can be used as a drop-in replacement for `setq' and *should* be used
+instead of `setopt'. Unlike `setq', this triggers custom setters on variables.
+Unlike `setopt', this won't needlessly pull in dependencies."
   (macroexp-progn
    (cl-loop for (var val) on settings by 'cddr
             collect `(funcall (or (get ',var 'custom-set) #'set)
@@ -303,11 +477,10 @@ This triggers setters. `setq' does not."
   "`delq' ELT from LIST in-place.
 
 If FETCHER is a function, ELT is used as the key in LIST (an alist)."
-  `(setq ,list
-         (delq ,(if fetcher
-                    `(funcall ,fetcher ,elt ,list)
-                  elt)
-               ,list)))
+  `(setq ,list (delq ,(if fetcher
+                          `(funcall ,fetcher ,elt ,list)
+                        elt)
+                     ,list)))
 
 (defmacro pushnew! (place &rest values)
   "Push VALUES sequentially into PLACE, if they aren't already present.
@@ -361,24 +534,19 @@ This is a wrapper around `eval-after-load' that:
                       (require package nil 'noerror))
                   #'progn
                 #'with-no-warnings)
-              (let ((body (macroexp-progn body)))
-                `(if (featurep ',package)
-                     ,body
-                   ;; We intentionally avoid `with-eval-after-load' to prevent
-                   ;; eager macro expansion from pulling (or failing to pull) in
-                   ;; autoloaded macros/packages.
-                   (eval-after-load ',package ',body)))))
+              ;; We intentionally avoid `with-eval-after-load' to prevent eager
+              ;; macro expansion from pulling (or failing to pull) in autoloaded
+              ;; macros/packages.
+              `(eval-after-load ',package ',(macroexp-progn body))))
     (let ((p (car package)))
-      (cond ((not (keywordp p))
-             `(after! (:and ,@package) ,@body))
-            ((memq p '(:or :any))
+      (cond ((memq p '(:or :any))
              (macroexp-progn
               (cl-loop for next in (cdr package)
                        collect `(after! ,next ,@body))))
             ((memq p '(:and :all))
-             (dolist (next (cdr package))
-               (setq body `((after! ,next ,@body))))
-             (car body))))))
+             (dolist (next (reverse (cdr package)) (car body))
+               (setq body `((after! ,next ,@body)))))
+            (`(after! (:and ,@package) ,@body))))))
 
 (defun doom--handle-load-error (e target path)
   (let* ((source (file-name-sans-extension target))
@@ -459,7 +627,6 @@ reverse this and trigger `after!' blocks at a more reasonable time."
 
 
 ;;; Hooks
-(defvar doom--transient-counter 0)
 (defmacro add-transient-hook! (hook-or-function &rest forms)
   "Attaches a self-removing function to HOOK-OR-FUNCTION.
 
@@ -472,7 +639,10 @@ advised)."
   (let ((append (if (eq (car forms) :after) (pop forms)))
         ;; Avoid `make-symbol' and `gensym' here because an interned symbol is
         ;; easier to debug in backtraces (and is visible to `describe-function')
-        (fn (intern (format "doom--transient-%d-h" (cl-incf doom--transient-counter)))))
+        (fn (intern (format "doom--transient-%d-h"
+                            (put 'add-transient-hook! 'counter
+                                 (1+ (or (get 'add-transient-hook! 'counter)
+                                         0)))))))
     `(let ((sym ,hook-or-function))
        (defun ,fn (&rest _)
          ,(format "Transient hook for %S" (doom-unquote hook-or-function))
@@ -487,19 +657,6 @@ advised)."
               (put ',fn 'permanent-local-hook t)
               (add-hook sym #',fn ,append))))))
 
-(defmacro add-hook-trigger! (hook-var &rest targets)
-  "TODO"
-  `(let ((fn (intern (format "%s-h" ,hook-var))))
-     (fset
-      fn (lambda (&rest _)
-           (run-hook-wrapped ,hook-var #'doom-try-run-hook)
-           (set ,hook-var nil)))
-     (put ,hook-var 'permanent-local t)
-     (dolist (on (list ,@targets))
-       (if (functionp on)
-           (advice-add on :before fn)
-         (add-hook on fn)))))
-
 (defmacro add-hook! (hooks &rest rest)
   "A convenience macro for adding N functions to M hooks.
 
@@ -508,13 +665,13 @@ This macro accepts, in order:
   1. The mode(s) or hook(s) to add to. This is either an unquoted mode, an
      unquoted list of modes, a quoted hook variable or a quoted list of hook
      variables.
-  2. Optional properties :local and/or :append, which will make the hook
-     buffer-local or append to the list of hooks (respectively),
-  3. The function(s) to be added: this can be one function, a quoted list
-     thereof, a list of `defun's, or body forms (implicitly wrapped in a
-     lambda).
+  2. Optional properties :local, :append, and/or :depth [N], which will make the
+     hook buffer-local or append to the list of hooks (respectively),
+  3. The function(s) to be added: this can be a quoted function, a quoted list
+     thereof, a list of `defun' or `cl-defun' forms, or arbitrary forms (will
+     implicitly be wrapped in a lambda).
 
-\(fn HOOKS [:append :local] FUNCTIONS)"
+\(fn HOOKS [:append :local [:depth N]] FUNCTIONS-OR-FORMS...)"
   (declare (indent (lambda (indent-point state)
                      (goto-char indent-point)
                      (when (looking-at-p "\\s-*(")
@@ -523,41 +680,38 @@ This macro accepts, in order:
   (let* ((hook-forms (doom--resolve-hook-forms hooks))
          (func-forms ())
          (defn-forms ())
-         append-p
-         local-p
-         remove-p
-         forms)
+         append-p local-p remove-p depth)
     (while (keywordp (car rest))
       (pcase (pop rest)
         (:append (setq append-p t))
+        (:depth  (setq depth (pop rest)))
         (:local  (setq local-p t))
         (:remove (setq remove-p t))))
-    (let ((first (car-safe (car rest))))
-      (cond ((null first)
-             (setq func-forms rest))
-
-            ((eq first 'defun)
-             (setq func-forms (mapcar #'cadr rest)
-                   defn-forms rest))
-
-            ((memq first '(quote function))
-             (setq func-forms
-                   (if (cdr rest)
-                       (mapcar #'doom-unquote rest)
-                     (doom-enlist (doom-unquote (car rest))))))
-
-            ((setq func-forms (list `(lambda (&rest _) ,@rest)))))
-      (dolist (hook hook-forms)
-        (dolist (func func-forms)
-          (push (if remove-p
-                    `(remove-hook ',hook #',func ,local-p)
-                  `(add-hook ',hook #',func ,append-p ,local-p))
-                forms)))
-      (macroexp-progn
-       (append defn-forms
-               (if append-p
-                   (nreverse forms)
-                 forms))))))
+    (while rest
+      (let* ((next (pop rest))
+             (first (car-safe next)))
+        (push (cond ((memq first '(function nil))
+                     next)
+                    ((eq first 'quote)
+                     (let ((quoted (cadr next)))
+                       (if (atom quoted)
+                           next
+                         (when (cdr quoted)
+                           (setq rest (cons (list first (cdr quoted)) rest)))
+                         (list first (car quoted)))))
+                    ((memq first '(defun cl-defun))
+                     (push next defn-forms)
+                     (list 'function (cadr next)))
+                    ((prog1 `(lambda (&rest _) ,@(cons next rest))
+                       (setq rest nil))))
+              func-forms)))
+    `(progn
+       ,@defn-forms
+       (dolist (hook (nreverse ',hook-forms))
+         (dolist (func (list ,@func-forms))
+           ,(if remove-p
+                `(remove-hook hook func ,local-p)
+              `(add-hook hook func ,(or depth append-p) ,local-p)))))))
 
 (defmacro remove-hook! (hooks &rest rest)
   "A convenience macro for removing N functions from M hooks.
@@ -639,37 +793,7 @@ testing advice (when combined with `rotate-text').
 ;;
 ;;; Backports
 
-(when! (version< emacs-version "27.0.90")
-  ;; DEPRECATED Backported from Emacs 27
-  (defmacro setq-local (&rest pairs)
-    "Make variables in PAIRS buffer-local and assign them the corresponding values.
-
-PAIRS is a list of variable/value pairs.  For each variable, make
-it buffer-local and assign it the corresponding value.  The
-variables are literal symbols and should not be quoted.
-
-The second VALUE is not computed until after the first VARIABLE
-is set, and so on; each VALUE can use the new value of variables
-set earlier in the ‘setq-local’.  The return value of the
-‘setq-local’ form is the value of the last VALUE.
-
-\(fn [VARIABLE VALUE]...)"
-    (declare (debug setq))
-    (unless (zerop (mod (length pairs) 2))
-      (error "PAIRS must have an even number of variable/value members"))
-    (let ((expr nil))
-      (while pairs
-        (unless (symbolp (car pairs))
-          (error "Attempting to set a non-symbol: %s" (car pairs)))
-        ;; Can't use backquote here, it's too early in the bootstrap.
-        (setq expr
-              (cons
-               (list 'set
-                     (list 'make-local-variable (list 'quote (car pairs)))
-                     (car (cdr pairs)))
-               expr))
-        (setq pairs (cdr (cdr pairs))))
-      (macroexp-progn (nreverse expr)))))
+;; None at the moment!
 
 (provide 'core-lib)
 ;;; core-lib.el ends here

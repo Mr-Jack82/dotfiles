@@ -85,7 +85,8 @@ If no project is active, return all buffers."
 ;;;###autoload
 (defun doom-dired-buffer-p (buf)
   "Returns non-nil if BUF is a dired buffer."
-  (with-current-buffer buf (derived-mode-p 'dired-mode)))
+  (provided-mode-derived-p (buffer-local-value 'major-mode buf)
+                           'dired-mode))
 
 ;;;###autoload
 (defun doom-special-buffer-p (buf)
@@ -114,7 +115,7 @@ If no project is active, return all buffers."
 
 ;;;###autoload
 (defun doom-real-buffer-list (&optional buffer-list)
-  "Return a list of buffers that satify `doom-real-buffer-p'."
+  "Return a list of buffers that satisfy `doom-real-buffer-p'."
   (cl-remove-if-not #'doom-real-buffer-p (or buffer-list (doom-buffer-list))))
 
 ;;;###autoload
@@ -162,8 +163,9 @@ If DERIVED-P, test with `derived-mode-p', otherwise use `eq'."
   (let ((modes (doom-enlist modes)))
     (cl-remove-if-not (if derived-p
                           (lambda (buf)
-                            (with-current-buffer buf
-                              (apply #'derived-mode-p modes)))
+                            (apply #'provided-mode-derived-p
+                                   (buffer-local-value 'major-mode buf)
+                                   modes))
                         (lambda (buf)
                           (memq (buffer-local-value 'major-mode buf) modes)))
                       (or buffer-list (doom-buffer-list)))))

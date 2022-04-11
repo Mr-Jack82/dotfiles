@@ -1,4 +1,4 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; ui/hl-todo/packages.el
 
-(package! hl-todo :pin "3bba4591c54951d2abab113ec5e58a6319808ca9")
+(package! hl-todo :pin "e52285965b5ee89c18080661d4f80270143ae8dc")

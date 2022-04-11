@@ -4,14 +4,17 @@
   :mode "\\.[px]?html?\\'"
   :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
   :mode "\\.erb\\'"
-  :mode "\\.l?eex\\'"
+  :mode "\\.[lh]?eex\\'"
+  :mode "\\.sface\\'"
   :mode "\\.jsp\\'"
   :mode "\\.as[cp]x\\'"
+  :mode "\\.ejs\\'"
   :mode "\\.hbs\\'"
   :mode "\\.mustache\\'"
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
   :mode "\\.jinja2?\\'"
+  :mode "\\.eco\\'"
   :mode "wp-content/themes/.+/.+\\.php\\'"
   :mode "templates/.+\\.php\\'"
   :init
@@ -63,13 +66,11 @@
     (delq! nil web-mode-engines-auto-pairs))
 
   (add-to-list 'web-mode-engines-alist '("elixir" . "\\.eex\\'"))
+  (add-to-list 'web-mode-engines-alist '("phoenix" . "\\.[lh]eex\\'"))
 
-  (let ((types '("javascript" "jsx")))
-    (setq web-mode-comment-formats
-          (cl-remove-if (lambda (item) (member (car item) types))
-                        web-mode-comment-formats))
-    (dolist (type types)
-      (push (cons type "//") web-mode-comment-formats)))
+  ;; Use // instead of /* as the default comment delimited in JS
+  (setf (alist-get "javascript" web-mode-comment-formats nil nil #'equal)
+        "//")
 
   (add-hook! 'web-mode-hook
     (defun +web--fix-js-comments-h ()
@@ -87,7 +88,7 @@
 
   (map! :map web-mode-map
         (:localleader
-          :desc "Rehighlight buffer" "h" #'web-mode-buffer-highlight
+          :desc "Rehighlight buffer" "h" #'web-mode-reload
           :desc "Indent buffer"      "i" #'web-mode-buffer-indent
           (:prefix ("a" . "attribute")
             "b" #'web-mode-attribute-beginning
@@ -97,7 +98,7 @@
             "s" #'web-mode-attribute-select
             "k" #'web-mode-attribute-kill
             "p" #'web-mode-attribute-previous
-            "p" #'web-mode-attribute-transpose)
+            "t" #'web-mode-attribute-transpose)
           (:prefix ("b" . "block")
             "b" #'web-mode-block-beginning
             "c" #'web-mode-block-close
@@ -164,5 +165,6 @@
 
 (when (featurep! +lsp)
   (add-hook! '(html-mode-local-vars-hook
-               web-mode-local-vars-hook)
+               web-mode-local-vars-hook
+               nxml-mode-local-vars-hook)
              #'lsp!))

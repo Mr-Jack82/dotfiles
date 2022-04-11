@@ -1,10 +1,10 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; tools/debugger/packages.el
 
-(when (package! realgud :pin "5b0ed08364b1f5e2df2f3f7d5a6e7a2fedb5189a")
+(when (package! realgud :pin "3c88611c4ed59069093187c2a039b8d05cbe53e8")
   (when (featurep! :lang javascript)
-    (package! realgud-trepan-ni :pin "6e38cf838c7b47b5f1353d00901b939ffa36d707")))
+    (package! realgud-trepan-ni :pin "0ec088ea343835e24ae73da09bea96bfb02a3130")))
 
 (when (featurep! +lsp)
-  (package! dap-mode :pin "85a61630499bb836bdb378fb62ea4ddd4f61a2dd")
-  (package! posframe :pin "6d604a71deb45295f7b6ff3f98e06aeece9888be"))
+  (package! dap-mode :pin "f918c0580bd17105cbe50aa701a2375abca5a6ab")
+  (package! posframe :pin "c91d4d53fa479ceb604071008ce0a901770eff57"))

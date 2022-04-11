@@ -15,18 +15,18 @@
 ;;; Interactive commands
 
 ;;;###autoload
-(defun +evil/visual-indent ()
+(defun +evil/shift-right ()
   "vnoremap < <gv"
   (interactive)
-  (evil-shift-right (region-beginning) (region-end))
+  (call-interactively #'evil-shift-right)
   (evil-normal-state)
   (evil-visual-restore))
 
 ;;;###autoload
-(defun +evil/visual-dedent ()
+(defun +evil/shift-left ()
   "vnoremap > >gv"
   (interactive)
-  (evil-shift-left (region-beginning) (region-end))
+  (call-interactively #'evil-shift-left)
   (evil-normal-state)
   (evil-visual-restore))
 
@@ -69,10 +69,7 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
         (with-selected-window that-window
           (switch-to-buffer (doom-fallback-buffer)))
         (setq that-buffer (window-buffer that-window)))
-      (with-selected-window this-window
-        (switch-to-buffer that-buffer))
-      (with-selected-window that-window
-        (switch-to-buffer this-buffer))
+      (window-swap-states this-window that-window)
       (select-window that-window))))
 
 ;;;###autoload
@@ -91,6 +88,22 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 (defun +evil/window-move-down ()
   "Swap windows downward."
   (interactive) (+evil--window-swap 'down))
+
+;;;###autoload
+(defun +evil/window-split-and-follow ()
+  "Split current window horizontally, then focus new window.
+If `evil-split-window-below' is non-nil, the new window isn't focused."
+  (interactive)
+  (let ((evil-split-window-below (not evil-split-window-below)))
+    (call-interactively #'evil-window-split)))
+
+;;;###autoload
+(defun +evil/window-vsplit-and-follow ()
+  "Split current window vertically, then focus new window.
+If `evil-vsplit-window-right' is non-nil, the new window isn't focused."
+  (interactive)
+  (let ((evil-vsplit-window-right (not evil-vsplit-window-right)))
+    (call-interactively #'evil-window-vsplit)))
 
 ;;;###autoload (autoload '+evil:apply-macro "editor/evil/autoload/evil" nil t)
 (evil-define-operator +evil:apply-macro (beg end)
@@ -123,7 +136,7 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   "Wrapper around `doom/retab'."
   :motion nil :move-point nil :type line
   (interactive "<r>")
-  (doom/retab beg end))
+  (doom/retab nil beg end))
 
 ;;;###autoload (autoload '+evil:narrow-buffer "editor/evil/autoload/evil" nil t)
 (evil-define-operator +evil:narrow-buffer (beg end &optional bang)

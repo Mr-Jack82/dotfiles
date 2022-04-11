@@ -1,15 +1,13 @@
 ;;; lang/python/config.el -*- lexical-binding: t; -*-
 
-(defvar +python-ipython-repl-args '("-i" "--simple-prompt" "--no-color-info")
-  "CLI arguments to initialize ipython with when `+python/open-ipython-repl' is
-called.")
+(defvar +python-ipython-command '("ipython" "-i" "--simple-prompt" "--no-color-info")
+  "Command to initialize the ipython REPL for `+python/open-ipython-repl'.")
 
-(defvar +python-jupyter-repl-args '("--simple-prompt")
-  "CLI arguments to initialize 'jupiter console %s' with when
-`+python/open-ipython-repl' is called.")
+(defvar +python-jupyter-command '("jupyter" "console" "--simple-prompt")
+  "Command to initialize the jupyter REPL for `+python/open-jupyter-repl'.")
 
 (after! projectile
-  (pushnew! projectile-project-root-files "setup.py" "requirements.txt"))
+  (pushnew! projectile-project-root-files "pyproject.toml" "requirements.txt" "setup.py"))
 
 
 ;;
@@ -23,15 +21,18 @@ called.")
         python-indent-guess-indent-offset-verbose nil)
 
   (when (featurep! +lsp)
-    (add-hook 'python-mode-local-vars-hook #'lsp!)
+    (add-hook 'python-mode-local-vars-hook #'lsp! 'append)
     ;; Use "mspyls" in eglot if in PATH
     (when (executable-find "Microsoft.Python.LanguageServer")
       (set-eglot-client! 'python-mode '("Microsoft.Python.LanguageServer"))))
   :config
-  (set-repl-handler! 'python-mode #'+python/open-repl :persist t)
-  (set-docsets! 'python-mode "Python 3" "NumPy" "SciPy")
+  (set-repl-handler! 'python-mode #'+python/open-repl
+    :persist t
+    :send-region #'python-shell-send-region
+    :send-buffer #'python-shell-send-buffer)
+  (set-docsets! '(python-mode inferior-python-mode) "Python 3" "NumPy" "SciPy" "Pandas")
 
-  (set-pretty-symbols! 'python-mode
+  (set-ligatures! 'python-mode
     ;; Functional
     :def "def"
     :lambda "lambda"
@@ -77,12 +78,6 @@ called.")
         (setq-local flycheck-python-pylint-executable "pylint")
         (setq-local flycheck-python-flake8-executable "flake8"))))
 
-  (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
-  (sp-local-pair 'python-mode "'" nil
-                 :unless '(sp-point-before-word-p
-                           sp-point-after-word-p
-                           sp-point-before-same-p))
-
   ;; Affects pyenv and conda
   (when (featurep! :ui modeline)
     (advice-add #'pythonic-activate :after-while #'+modeline-update-env-in-all-windows-h)
@@ -104,7 +99,7 @@ called.")
       (unless (or (bound-and-true-p lsp-mode)
                   (bound-and-true-p eglot--managed-mode)
                   (bound-and-true-p lsp--buffer-deferred)
-                  (not (executable-find python-shell-interpreter)))
+                  (not (executable-find python-shell-interpreter t)))
         (anaconda-mode +1))))
   :config
   (set-company-backend! 'anaconda-mode '(company-anaconda))
@@ -183,18 +178,19 @@ called.")
 
 
 (use-package! python-pytest
-  :defer t
+  :commands python-pytest-dispatch
   :init
   (map! :after python
         :localleader
         :map python-mode-map
         :prefix ("t" . "test")
+        "a" #'python-pytest
         "f" #'python-pytest-file-dwim
         "F" #'python-pytest-file
         "t" #'python-pytest-function-dwim
         "T" #'python-pytest-function
         "r" #'python-pytest-repeat
-        "p" #'python-pytest-popup))
+        "p" #'python-pytest-dispatch))
 
 
 ;;
@@ -208,7 +204,7 @@ called.")
   (set-eval-handler! 'python-mode
     '((:command . (lambda () python-shell-interpreter))
       (:exec (lambda ()
-               (if-let* ((bin (executable-find "pipenv"))
+               (if-let* ((bin (executable-find "pipenv" t))
                          (_ (pipenv-project-p)))
                    (format "PIPENV_MAX_DEPTH=9999 %s run %%c %%o %%s %%a" bin)
                  "%c %o %s %a")))
@@ -244,10 +240,10 @@ called.")
   :when (featurep! +pyenv)
   :after python
   :config
-  (pyenv-mode +1)
   (when (executable-find "pyenv")
+    (pyenv-mode +1)
     (add-to-list 'exec-path (expand-file-name "shims" (or (getenv "PYENV_ROOT") "~/.pyenv"))))
-  (add-hook 'python-mode-hook #'+python-pyenv-mode-set-auto-h)
+  (add-hook 'python-mode-local-vars-hook #'+python-pyenv-mode-set-auto-h)
   (add-hook 'doom-switch-buffer-hook #'+python-pyenv-mode-set-auto-h))
 
 
@@ -266,12 +262,16 @@ called.")
                                 "~/.anaconda"
                                 "~/.miniconda"
                                 "~/.miniconda3"
+                                "~/.miniforge3"
                                 "~/anaconda3"
                                 "~/miniconda3"
+                                "~/miniforge3"
+                                "~/opt/miniconda3"
                                 "/usr/bin/anaconda3"
                                 "/usr/local/anaconda3"
                                 "/usr/local/miniconda3"
-                                "/usr/local/Caskroom/miniconda/base")
+                                "/usr/local/Caskroom/miniconda/base"
+                                "~/.conda")
                if (file-directory-p dir)
                return (setq conda-anaconda-home (expand-file-name dir)
                             conda-env-home-directory (expand-file-name dir)))
@@ -288,7 +288,10 @@ called.")
 
 (use-package! poetry
   :when (featurep! +poetry)
-  :after python)
+  :after python
+  :init
+  (setq poetry-tracking-strategy 'switch-buffer)
+  (add-hook 'python-mode-hook #'poetry-tracking-mode))
 
 
 (use-package! cython-mode
@@ -311,16 +314,16 @@ called.")
 ;;
 ;;; LSP
 
-(when! (and (featurep! +lsp)
-            (not (featurep! :tools lsp +eglot)))
+(eval-when! (and (featurep! +lsp)
+                 (not (featurep! :tools lsp +eglot)))
 
   (use-package! lsp-python-ms
     :unless (featurep! +pyright)
-    :after lsp-clients
+    :after lsp-mode
     :preface
     (after! python
       (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)))
 
   (use-package! lsp-pyright
     :when (featurep! +pyright)
-    :after lsp-clients))
+    :after lsp-mode))

@@ -2,10 +2,10 @@
 ;;; lang/java/packages.el
 
 (package! android-mode :pin "d5332e339a1f5e30559a53feffb8442ca79265d6")
-(package! groovy-mode :pin "26da902d1158c0312628d57578109be54eca2415")
+(package! groovy-mode :pin "bf732d367b16887f81d404481c11ed1a58671d4e")
 
 (when (featurep! +meghanada)
-  (package! meghanada :pin "e119c7b3271281d60892b80a0cc6488503baf38f"))
+  (package! meghanada :pin "59c46cabb7eee715fe810ce59424934a1286df84"))
 
 (when (featurep! +eclim)
   (package! eclim :pin "222ddd48fcf0ee01592dec77c58e0cf3f2ea1100")
@@ -13,4 +13,5 @@
     (package! company-emacs-eclim :pin "222ddd48fcf0ee01592dec77c58e0cf3f2ea1100")))
 
 (when (featurep! +lsp)
-  (package! lsp-java :pin "260016236fa0520b5b6ec7f51ca2086288524cba"))
+  (unless (featurep! :tools lsp +eglot)
+    (package! lsp-java :pin "0968038b9aea52ef3bf499e597cf3800d913c059")))

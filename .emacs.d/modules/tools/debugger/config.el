@@ -13,7 +13,7 @@
     (realgud:trepan2   :modes (python-mode))
     (realgud:trepan3k  :modes (python-mode))
     (realgud:trepanjs  :modes (javascript-mode js2-mode js3-mode))
-    (realgud:trepanpl  :modes (perl-mode perl6-mode))
+    (realgud:trepanpl  :modes (perl-mode perl6-mode raku-mode))
     (realgud:zshdb     :modes (sh-mode))))
 
 (defvar +debugger--dap-alist
@@ -24,7 +24,7 @@
     ((:lang php +lsp)        :after php-mode    :require dap-php)
     ((:lang python +lsp)     :after python      :require dap-python)
     ((:lang ruby +lsp)       :after ruby-mode   :require dap-ruby)
-    ((:lang rust +lsp)       :after rust-mode   :require dap-lldb)
+    ((:lang rust +lsp)       :after rustic-mode :require (dap-lldb dap-cpptools))
     ((:lang javascript +lsp)
      :after (js2-mode typescript-mode)
      :require (dap-node dap-chrome dap-firefox ,@(if IS-WINDOWS '(dap-edge)))))
@@ -38,6 +38,12 @@
 (setq gdb-show-main t
       gdb-many-windows t)
 
+(use-package! projectile-variable
+  :defer t
+  :commands (projectile-variable-put
+             projectile-variable-get
+             projectile-variable-alist
+             projectile-variable-plist))
 
 (use-package! realgud
   :defer t
@@ -105,11 +111,10 @@
 (use-package! dap-mode
   :when (and (featurep! +lsp) (not (featurep! :tools lsp +eglot)))
   :hook (dap-mode . dap-tooltip-mode)
-  :after lsp-mode
-  :demand t
-  :preface
+  :init
   (setq dap-breakpoints-file (concat doom-etc-dir "dap-breakpoints")
         dap-utils-extension-path (concat doom-etc-dir "dap-extension/"))
+  (after! lsp-mode (require 'dap-mode))
   :config
   (pcase-dolist (`((,category . ,modules) :after ,after :require ,libs)
                  +debugger--dap-alist)
@@ -120,8 +125,32 @@
 
   (dap-mode 1)
 
+  (define-minor-mode +dap-running-session-mode
+    "A mode for adding keybindings to running sessions"
+    :init-value nil
+    :keymap (make-sparse-keymap)
+    (when (bound-and-true-p evil-mode)
+      (evil-normalize-keymaps))  ; if you use evil, this is necessary to update the keymaps
+    ;; The following code adds to the dap-terminated-hook so that this minor
+    ;; mode will be deactivated when the debugger finishes
+    (when +dap-running-session-mode
+      (let ((session-at-creation (dap--cur-active-session-or-die)))
+        (add-hook 'dap-terminated-hook
+                  (lambda (session)
+                    (when (eq session session-at-creation)
+                      (+dap-running-session-mode -1)))))))
+
+  ;; Activate this minor mode when dap is initialized
+  (add-hook 'dap-session-created-hook #'+dap-running-session-mode)
+  ;; Activate this minor mode when hitting a breakpoint in another file
+  (add-hook 'dap-stopped-hook #'+dap-running-session-mode)
+  ;; Activate this minor mode when stepping into code in another file
+  (add-hook 'dap-stack-frame-changed-hook (lambda (session)
+                                            (when (dap--session-running session)
+                                              (+dap-running-session-mode 1))))
+
   (map! :localleader
-        :map dap-mode-map
+        :map +dap-running-session-mode-map
         "d" #'dap-hydra))
 
 
