@@ -345,6 +345,7 @@ export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
 # Add 'local/bin' folder to the PATH to be able to use
 # custom scripts
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.cargo/bin
 
 alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 fpath=($fpath "/home/leeroy/.zfunctions")
