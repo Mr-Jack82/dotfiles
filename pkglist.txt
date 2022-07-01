@@ -1,5 +1,5 @@
 1password
-7-zip
+7-zip-full
 a2ps
 ack
 akira
@@ -15,7 +15,6 @@ artha
 asciidoc
 aspell-en
 aspell-ru
-atom
 audacious
 autoconf
 automake
@@ -54,6 +53,7 @@ cyrus-sasl
 daemonize
 dbeaver
 deadbeef
+deno
 device-mapper
 dfc
 dhcpcd
@@ -69,6 +69,7 @@ dos2unix
 downgrade
 drkonqi
 dstat
+duf
 dvgrab
 dynalist-desktop
 e2fsprogs
@@ -112,8 +113,8 @@ glances
 glibc
 gnome-tweaks
 gnu-free-fonts
-goldendict
 goldendict-enruen-content
+goldendict-git
 google-chrome
 gparted
 gravit-designer-bin
@@ -152,6 +153,7 @@ jq
 kactivitymanagerd
 kakoune
 kate
+kazam
 kcalc
 kde-cli-tools
 kde-gtk-config
@@ -206,7 +208,7 @@ logrotate
 lshw
 lsof
 ltrace
-luajit-2.1
+luajit
 luit
 lvm2
 lynx
@@ -218,8 +220,11 @@ mc
 mdadm
 meld
 milou
+min
 mlocate
 moc-pulse
+modemmanager
+modemmanager-qt
 mongodb-bin
 mongodb-tools-bin
 mopidy
@@ -248,15 +253,18 @@ ngrep
 nmap
 nmon
 nnn
+noto-fonts-emoji
 noto-fonts-extra
 npm
 ntfs-3g
 numlockx
 nvidia-dkms
+obs-studio
 okular
 opam
 openscad
 openssh
+opera
 os-prober
 otf-fira-sans
 otf-hermit
@@ -266,7 +274,7 @@ p3wm
 pacman
 pacman-contrib
 pacmatic
-pamac-all
+pamac-aur-git
 papirus-maia-icon-theme-git
 par
 paru
@@ -309,6 +317,7 @@ pulseaudio-alsa
 python-certifi
 python-pip
 python-pyaml
+python-pynvim
 python2-yaml
 quassel-monolithic
 qutebrowser
@@ -327,6 +336,7 @@ sed
 shadow
 shfmt
 sierrabreeze-kwin-decoration-git
+simplescreenrecorder
 skim
 sl
 snapd
@@ -353,7 +363,7 @@ termite
 termius
 texinfo
 the_silver_searcher
-thunderbird
+thunderbird-bin
 tig
 tk
 tldr++
@@ -385,6 +395,7 @@ ttf-mononoki
 ttf-ms-fonts
 ttf-opensans
 ttf-roboto
+ttf-symbola
 ttf-ubuntu-font-family
 tunnelbear
 tweetdeck-desktop
