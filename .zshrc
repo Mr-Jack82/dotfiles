@@ -137,19 +137,6 @@ plugins=(git
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
-# aliases
-alias cdi='cd `ls | peco`'
-alias rm='rm -i'
-alias grep='grep --color=auto'
-alias l.='ls -d .* --color=tty'
-alias l='colorls --group-directories-first --almost-all'
-alias ll='colorls --group-directories-first --almost-all --long'
-alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias ldir='ls -d */'
-alias weather="http http://wttr.in/Temruk"
-alias cp='cp -iv'
-alias n=nvim
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -183,6 +170,18 @@ export LC_ALL
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+alias cdi='cd `ls | peco`'
+alias rm='rm -i'
+alias grep='grep --color=auto'
+alias l.='ls -d .* --color=tty'
+alias l='colorls --group-directories-first --almost-all'
+alias ll='colorls --group-directories-first --almost-all --long'
+alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias ldir='ls -d */'
+alias weather="http http://wttr.in/Temruk"
+alias cp='cp -iv'
+alias n=nvim
 
 #Enable Vi mode
 #bindkey -v
@@ -392,5 +391,7 @@ fpath=($fpath "/home/leeroy/.zfunctions")
 # eval "$(starship init zsh)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fpath=($fpath "/home/leeroy/.zfunctions")
 (( ! ${+functions[p10k]} )) || p10k finalize
 fpath=($fpath "/home/leeroy/.zfunctions")
