@@ -2,3 +2,4 @@
 	path = .config/nvim
 	url = git@github.com:Mr-Jack82/NvChad.git
 	branch = mine
+  ignore = dirty
