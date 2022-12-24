@@ -32,7 +32,6 @@ bitlbee
 bleachbit
 bluedevil
 bluemail
-brave-bin
 breeze
 breeze-gtk
 btop
@@ -101,6 +100,7 @@ firefox-i18n-ru
 flashplugin
 flex
 fonts-meta-base
+fsearch
 fzf
 gawk
 gcc
@@ -132,6 +132,7 @@ gvim
 gwenview
 gzip
 haruhi-dl
+helix
 heroku-cli
 hexchat
 htop
@@ -177,6 +178,7 @@ koala-bin
 kodi
 konsole
 konversation
+koreader-bin
 krita
 kscreen
 kscreenlocker
@@ -186,7 +188,9 @@ kwallet-pam
 kwayland-integration
 kwin
 kwrited
+ladybird
 languagetool
+lapce
 latte-dock
 lazygit
 less
@@ -205,6 +209,7 @@ lightdm
 lightdm-webkit-theme-litarvan
 linux
 linux-firmware
+linux-firmware-qlogic
 linux-lts
 linux-lts-headers
 logrotate
@@ -235,6 +240,7 @@ most
 mplayer
 mpv
 msmtp
+musikcube
 mutt-wizard-git
 mythes-en
 namcap
@@ -244,7 +250,6 @@ neofetch
 neomutt
 neovide
 neovim
-nerd-fonts-ibm-plex-mono
 nerd-fonts-jetbrains-mono
 nerd-fonts-noto-sans-regular-complete
 nerd-fonts-roboto-mono
@@ -264,10 +269,10 @@ numlockx
 nvidia-dkms
 obs-studio
 okular
+onlyoffice-bin
 opam
 openscad
 openssh
-opera
 os-prober
 otf-fira-sans
 otf-hermit
@@ -277,6 +282,7 @@ p3wm
 pacman
 pacman-contrib
 pacmatic
+pacutils
 pamac-aur-git
 papirus-maia-icon-theme-git
 par
@@ -294,6 +300,7 @@ pgadmin4
 phpstorm
 phpstorm-jre
 picom
+pikaur
 pkgconf
 pkgstats
 plasma-browser-integration
@@ -311,7 +318,6 @@ potrace
 powerdevil
 powerline-fonts
 powerpill
-prepros-bin
 procps-ng
 psmisc
 pueue
@@ -321,7 +327,6 @@ python-certifi
 python-pip
 python-pyaml
 python-pynvim
-python2-yaml
 quassel-monolithic
 qutebrowser
 ranger
@@ -402,7 +407,6 @@ ttf-roboto
 ttf-symbola
 ttf-ubuntu-font-family
 tunnelbear
-tweetdeck-desktop
 typora
 uget
 unrar
@@ -412,6 +416,7 @@ usb_modeswitch
 usbutils
 util-linux
 vi
+vieb-bin
 vifm
 vimpager
 virtualbox
@@ -424,6 +429,7 @@ wavpack
 weechat
 wezterm
 wget
+wgetpaste
 which
 wireless_tools
 xcape
