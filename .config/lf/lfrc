@@ -19,6 +19,7 @@ set ifs "\n"
 
 set scrolloff 10
 set icons
+set drawbox
 set incsearch
 set hiddenfiles ".*:~/snap"
 
