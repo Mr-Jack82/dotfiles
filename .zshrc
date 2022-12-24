@@ -182,6 +182,7 @@ alias ldir='ls -d */'
 alias weather="http http://wttr.in/Temruk"
 alias cp='cp -iv'
 alias n=nvim
+alias hx=helix
 
 #Enable Vi mode
 #bindkey -v
