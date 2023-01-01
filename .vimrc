@@ -38,7 +38,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'junegunn/vim-easy-align'
 
 " auto-close plugin
-Plug 'jiangmiao/auto-pairs'
+Plug 'cohama/lexima.vim'
 
 " Easy text exchange operator for Vim
 Plug 'tommcdo/vim-exchange'
@@ -51,8 +51,8 @@ Plug 'andymass/vim-matchup', { 'for':
 
 " === Code completion, snippets === "
 
-" Nodejs extension host for vim & neovim, load extensions like VSCode and host 
-" language servers. 
+" Nodejs extension host for vim & neovim, load extensions like VSCode and host
+" language servers.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " A solid language pack for Vim.
@@ -676,6 +676,10 @@ map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
+
+" Easy movement in *INSERT* mode
+inoremap <C-l> <Right>
+inoremap <C-h> <Left>
 
 " ============================================================================ "
 " ===                             KEY MAPPINGS                             === "
