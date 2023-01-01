@@ -13,6 +13,8 @@
     "typescript.tsx"
   ],
   "coc.preferences.hoverTarget": "float",
+  // autocomplete
+  "suggest.noselect": true,
   "eslint.filetypes": [
     "javascript",
     "typescript",
