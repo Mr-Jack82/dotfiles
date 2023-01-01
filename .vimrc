@@ -93,6 +93,9 @@ Plug 'ap/vim-css-color'
 " Make the yanked region apparent!
 Plug 'machakann/vim-highlightedyank'
 
+" A very simple plugin that makes hlsearch more useful
+Plug 'romainl/vim-cool'
+
 " === UI === "
 
 " Colorschemes
