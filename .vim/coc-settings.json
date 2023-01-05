@@ -38,5 +38,7 @@
       "filetypes": ["sh"],
       "ignoredRootPaths": ["~"]
     }
-  }
+  },
+  "Lua.telemetry.enable": true,
+  "sumneko-lua.enableNvimLuaDev": true,
 }
