@@ -5,11 +5,14 @@ ack
 akira
 alacritty
 alpine
+alsa-tools
 alsa-utils
+amberol
 amp
 ansible
 apparmor
 aria2
+aribb25
 ark
 artha
 asciidoc
@@ -19,6 +22,7 @@ audacious
 autoconf
 automake
 avocode
+bandwhich
 base
 bash
 bash-completion
@@ -70,6 +74,7 @@ dos2unix
 downgrade
 drkonqi
 dstat
+dua-cli
 duf
 dvgrab
 dynalist-desktop
@@ -101,7 +106,6 @@ flashplugin
 flex
 fonts-meta-base
 fsearch
-fzf
 gawk
 gcc
 gcc-libs
@@ -143,6 +147,7 @@ hunspell-ru
 hwinfo
 icdiff
 icedtea-web
+imhex
 imwheel
 inetutils
 insomnia-bin
@@ -194,6 +199,7 @@ lapce
 latte-dock
 lazygit
 less
+lesspipe
 lf
 lftp
 libcaca
@@ -212,6 +218,8 @@ linux-firmware
 linux-firmware-qlogic
 linux-lts
 linux-lts-headers
+lite-xl
+live-media
 logrotate
 lshw
 lsof
@@ -250,9 +258,7 @@ neofetch
 neomutt
 neovide
 neovim
-nerd-fonts-jetbrains-mono
 nerd-fonts-noto-sans-regular-complete
-nerd-fonts-roboto-mono
 net-tools
 netctl
 networkmanager
@@ -268,6 +274,7 @@ ntfs-3g
 numlockx
 nvidia-dkms
 obs-studio
+obsidian
 okular
 onlyoffice-bin
 opam
@@ -333,6 +340,7 @@ ranger
 redshift
 reflector
 reiserfsprogs
+rm-improved
 rsync
 ruby
 s-nail
@@ -383,6 +391,7 @@ tmuxp
 tor-browser
 traceroute
 transmission-qt
+tre-command
 tree-sitter
 ttf-bitstream-vera
 ttf-carlito
@@ -397,6 +406,7 @@ ttf-google-fonts-git
 ttf-ibm-plex
 ttf-inconsolata
 ttf-iosevka
+ttf-jetbrains-mono-nerd
 ttf-liberation
 ttf-linux-libertine
 ttf-monaco
@@ -404,6 +414,7 @@ ttf-mononoki
 ttf-ms-fonts
 ttf-opensans
 ttf-roboto
+ttf-roboto-mono-nerd
 ttf-symbola
 ttf-ubuntu-font-family
 tunnelbear
@@ -421,7 +432,7 @@ vifm
 vimpager
 virtualbox
 vis
-vlc
+vlc-git
 vnstat
 vtop
 w3m
@@ -431,6 +442,7 @@ wezterm
 wget
 wgetpaste
 which
+wireguard-tools
 wireless_tools
 xcape
 xclip
@@ -494,6 +506,7 @@ xorg-xwayland
 xorg-xwd
 xorg-xwininfo
 xorg-xwud
+xosd
 xplr
 xterm
 yarn
