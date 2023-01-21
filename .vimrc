@@ -84,8 +84,14 @@ Plug 'yegappan/mru'
 " Tmux/Neovim movement integration
 Plug 'christoomey/vim-tmux-navigator'
 
-" File explorer
-Plug 'preservim/nerdtree'
+" Directory viewer for Vim
+Plug 'justinmk/vim-dirvish'
+
+" File manipulation commands for vim-dirvish
+Plug 'roginfarrer/vim-dirvish-dovish'
+
+" Helpers for UNIX
+Plug 'tpope/vim-eunuch'
 
 " Preview colours in source code while editing
 Plug 'ap/vim-css-color'
