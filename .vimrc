@@ -745,6 +745,13 @@ xnoremap & :&&<CR>
 " Visually select the text that was last edited/pasted
 nmap gV `[v`]
 
+" repeat last command for each line of a visual selection
+xnoremap . :normal .<CR>
+
+" un-join (split) the current line at the cursor position
+nnoremap gj i<c-j><esc>k$
+xnoremap x  "_d
+
 " Vim-Plug shortcut for update all plugins and upgrade itself
 " (:PU instead of :PlugUpdate | PlugUpgrade)
 command! PU PlugUpdate | PlugUpgrade
