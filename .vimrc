@@ -553,6 +553,16 @@ let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 " ===[ highlightedyank ]===
 let g:highlightedyank_highlight_duration = 150
+
+" ===[ EasyAlign ]===
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" make EasyAlign ignore spaces
+let g:easy_align_ignore_groups = []
 " ==============================================================================
 
 " Setting up ignores
