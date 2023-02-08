@@ -136,6 +136,7 @@ gvim
 gwenview
 gzip
 haruhi-dl
+haruna
 helix
 heroku-cli
 hexchat
@@ -343,6 +344,7 @@ reiserfsprogs
 rm-improved
 rsync
 ruby
+rustup
 s-nail
 screen
 scribus
@@ -380,6 +382,7 @@ termite
 termius
 texinfo
 the_silver_searcher
+thunar
 thunderbird-bin
 tig
 tk
