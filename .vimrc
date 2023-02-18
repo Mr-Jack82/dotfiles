@@ -115,7 +115,6 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Icons
 Plug 'ryanoasis/vim-devicons'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " Initialize plugin system
 call plug#end()
@@ -425,43 +424,6 @@ let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
 
-" ===[ NERDTree ] ===
-" Show hidden files/directories
-let g:NERDTreeShowHidden = 1
-
-" Remove bookmarks and help text from NERDTree
-let g:NERDTreeMinimalUI = 1
-
-" Custom icons for expandable/expanded directories
-let g:NERDTreeDirArrowExpandable = '⬏'
-let g:NERDTreeDirArrowCollapsible = '⬎'
-
-" Hide certain files and directories from NERDTree
-let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
-
-" Automatically delete the buffer of the file you just deleted with NerdTree
-let NERDTreeAutoDeleteBuffer = 1
-
-" Automatically close NerdTree when you open a file
-let NERDTreeQuitOnOpen = 1
-
-" Check if NERDTree is open or active
-function! IsNERDTreeOpen()
- return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
-
-" Call NERDTreeFind iff NERDTree is active, current window contains a
-" modifiable file, and we're not in vimdiff
-function! SyncTree()
- if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-   NERDTreeFind
-   wincmd p
- endif
-endfunction
-
-" Highlight currently open buffer in NERDTree
-autocmd BufRead * call SyncTree()
-
 " ===== Vim airline ===== "
 " Enable extensions
 let g:airline_extensions = ['branch', 'hunks', 'coc']
@@ -477,14 +439,6 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " Custom setup that removes filetype/whitespace from default vim airline bar
 let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
-
-" Customize vim airline per filetype
-" 'nerdtree'  - Hide nerdtree status line
-" 'list'      - Only show file type plus current line number out of total
-let g:airline_filetype_overrides = {
-  \ 'nerdtree': [ get(g:, 'NERDTreeStatusline', ''), '' ],
-  \ 'list': [ '%y', '%l/%L'],
-  \ }
 
 " Enable powerline fonts
 let g:airline_powerline_fonts = 1
@@ -698,13 +652,6 @@ inoremap <C-h> <Left>
 " ============================================================================ "
 " ===                             KEY MAPPINGS                             === "
 " ============================================================================ "
-
-" =====[ Nerdtree shorcuts ]=====
-nmap <leader>n :NERDTreeToggle<CR>
-nmap <leader>f :NERDTreeFind<CR>
-
-" Clean search (highlight)
-nnoremap <silent><Space> :noh<CR>
 
 " Make {motion} text uppercase in INSERT mode.
 map! <C-F> <Esc>gUiw`]a
