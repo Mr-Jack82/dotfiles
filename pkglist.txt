@@ -92,6 +92,7 @@ fakeroot
 fasd
 fd
 feh
+ffmpegthumbs
 file
 filelight
 filesystem
@@ -265,6 +266,7 @@ netctl
 networkmanager
 newaita-icons-git
 ngrep
+nix
 nmap
 nmon
 nnn
@@ -335,6 +337,7 @@ python-certifi
 python-pip
 python-pyaml
 python-pynvim
+qmmp
 quassel-monolithic
 qutebrowser
 ranger
@@ -363,9 +366,11 @@ spectacle
 spotify-dev
 squashfs-tools
 sshfs
+stacer
 stow
 strace
 sublime-merge
+sublime-music
 sublime-text
 sudo
 sxhkd
@@ -453,6 +458,7 @@ xdg-desktop-portal-kde
 xdman
 xdotool
 xfsprogs
+xh
 xkb-switch
 xorg-bdftopcf
 xorg-docs
@@ -517,6 +523,8 @@ yay
 youtube-dl
 yt-dlp
 z
+zathura
+zathura-pdf-mupdf
 zeal
 zip
 zsh
