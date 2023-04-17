@@ -1,0 +1,58 @@
+theme = "tokyonight_storm"
+
+[editor]
+line-number = "relative"
+mouse = false
+bufferline = "multiple"
+rulers = [80]
+shell = ["zsh", "-c"]
+true-color = true
+gutters = ["diagnostics", "line-numbers"]
+auto-completion = true
+cursorline = true
+color-modes = true
+idle-timeout = 40
+
+[keys.normal]
+C-p = ["move_line_up", "scroll_up"]
+C-n = ["move_line_down", "scroll_down"]
+esc = ["collapse_selection", "keep_primary_selection"]
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.lsp]
+display-messages = true
+
+[editor.whitespace.render]
+space = "all"
+tab = "all"
+newline = "all"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+
+[editor.indent-guides]
+render = true
+character = "│"
+
+[editor.statusline]
+left = ["mode", "spacer", "spinner", "file-name"]
+center = ["diagnostics"]
+right = [
+  "selections",
+  "position",
+  "position-percentage",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+]
+separator = "│"
+
+[editor.file-picker]
+hidden = false
