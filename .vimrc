@@ -632,7 +632,7 @@ highlight ColorColumn guibg=SlateBlue3
 nmap <leader>v :tabedit $MYVIMRC<CR>
 
 " Allows you to save files you opened without write permissions via sudo
-" cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+cabbrev w!! execute 'silent write !sudo tee % >/dev/null' <bar> edit!
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
