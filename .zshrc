@@ -182,6 +182,7 @@ alias ldir='ls -d */'
 alias weather="http http://wttr.in/Temruk"
 alias cp='cp -iv'
 alias n=nvim
+alias vi=vim
 alias hx=helix
 
 # Using new Neovim feature (appears in neovim v0.9)
