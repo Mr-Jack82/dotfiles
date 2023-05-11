@@ -184,6 +184,31 @@ alias cp='cp -iv'
 alias n=nvim
 alias hx=helix
 
+# Using new Neovim feature (appears in neovim v0.9)
+alias nvim-kick="NVIM_APPNAME=nvim_kickstart nvim"
+# alias nvim-lazy="NVIM_APPNAME=nvim_lazy nvim"
+# alias nvim-1chad="NVIM_APPNAME=nvchad_v1 nvim"
+alias nvim-chad="NVIM_APPNAME=nvchad_v2 nvim"
+alias nvim-heikemen="NVIM_APPNAME=nvim_heikemen nvim"
+alias nvim-astra="NVIM_APPNAME=nvim_astra nvim"
+
+# Config switcher
+# https://gist.github.com/elijahmanor/b279553c0132bfad7eae23e34ceb593b
+function nvims() {
+  items=("default" "nvim-kickstart" "nvim-lazy" "nvchad_v1" "nvchad_v2" "nvim_heikemen" "nvim_astra")
+  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
+  if [[ -z $config ]]; then
+    echo "Nothing selected"
+    return 0
+  elif [[ $config == "default" ]]; then
+    config=""
+  fi
+  NVIM_APPNAME=$config nvim $@
+}
+
+# Note that Ctrl key ('^') must be shielded in single quote
+bindkey -s '^a' "nvims\n"
+
 #Enable Vi mode
 #bindkey -v
 
