@@ -131,7 +131,7 @@ plugins=(git
 	history-substring-search
 	colored-man-pages
 	zsh-autosuggestions
-    vi-mode
+    zsh-vi-mode
     zsh-nvm
     tmuxinator)
 
