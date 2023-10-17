@@ -40,5 +40,5 @@
     }
   },
   "Lua.telemetry.enable": true,
-  "sumneko-lua.enableNvimLuaDev": true,
+  "sumneko-lua.enableNvimLuaDev": true
 }
