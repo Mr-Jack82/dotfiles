@@ -194,9 +194,6 @@ function nvims() {
 # Note that Ctrl key ('^') must be shielded in single quote
 bindkey -s '^a' "nvims\n"
 
-#Enable Vi mode
-#bindkey -v
-
 bindkey '^P' up-history
 bindkey '^N' down-history
 #bindkey '^?' backward-delete-char
