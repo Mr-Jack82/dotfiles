@@ -201,47 +201,6 @@ bindkey '^N' down-history
 #bindkey '^w' backward-kill-word
 #bindkey '^r' history-incremental-search-backward
 
-#function zle-line-init zle-keymap-select {
-    #VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-    #RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}$(git_custom_status) $EPS1"
-    #zle reset-prompt
-#}
-
-#zle -N zle-line-init
-#zle -N zle-keymap-select
-#export KEYTIMEOUT=1
-
-# Re-source the shell configuration with ease
-reread_zshrc () {
-      . ~/.zshrc
-  }
-zle -N reread_zshrc
-bindkey '^Xr' reread_zshrc
-
-# Start tmux on very shell login
-# from Arch wiki https://bit.ly/2pq7rre
-# if [[ -z "$TMUX" ]]; then
-#     ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get id of a deattached sesssion
-#     if [[ -z "$ID" ]]; then # if not available create a new one
-#         tmux new-sesssion
-#     else
-#         tmux attach-sesssion -t "$ID" # if available attach to it
-#     fi
-# fi
-
-# TMUX
-# Automatically start tmux
-ZSH_TMUX_AUTOSTART=true
-
-# Automatically connect to a previous session if it exists
-ZSH_TMUX_AUTOCONNECT=true
-
-# Enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Display red dots whilst for completion.
-COMPLETION_WAITING_DOTS="true"
-
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 
