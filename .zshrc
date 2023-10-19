@@ -112,7 +112,6 @@ plugins=(git
 	colored-man-pages
 	zsh-autosuggestions
     zsh-vi-mode
-    zsh-nvm
     tmuxinator)
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
