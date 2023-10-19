@@ -294,14 +294,9 @@ if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
   fi
 fi
 
-# Mapping edit-command-line to '<C-x><C-e>'
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '^x^e' edit-command-line
-
 # Set default editor to nvim
-export VISUAL='nvim'
-export EDITOR="$VISUAL"
+VISUAL='nvim' ; export VISUAL
+EDITOR="$VISUAL" ; export EDITOR
 
 # Enable true color support for terminals
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
