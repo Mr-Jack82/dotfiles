@@ -116,17 +116,22 @@ plugins=(git
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=yellow'
 
+source $ZSH/oh-my-zsh.sh
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
-source $ZSH/oh-my-zsh.sh
-
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
+# Color man pages. This method isn't work
+# export MANPAGER="less -R --use-color -Dd+r -Du+b"
 
-LC_ALL=ru_RU.UTF-8
-export LC_ALL
+# Get color support for 'less'
+export LESS="--RAW-CONTROL-CHARS"
+
+# Use colors for less, man, etc.
+[[ -f ~/.LESS_TERMCAP ]] && . ~/.LESS_TERMCAP
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
