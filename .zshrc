@@ -1,10 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -366,59 +359,11 @@ export EDITOR="$VISUAL"
 # Enable true color support for terminals
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-# Add JDK/bin folder to be able to use jshell
-export PATH=/usr/lib/jvm/java-13-openjdk/bin:$PATH
-# Add 'local/bin' folder to the PATH to be able to use
-# custom scripts
-export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.cargo/bin
+# Use starship
+eval "$(starship init zsh)"
 
-alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
-fpath=($fpath "/home/leeroy/.zfunctions")
+# Initialize zoxide to make usage of 'z' command
+eval "$(zoxide init zsh)"
 
-# SPACESHIP_PROMPT_ORDER=(
-#   time          # Time stamps section
-#   user          # Username section
-#   host          # Hostname section
-#   dir           # Current directory section
-#   git           # Git section (git_branch + git_status)
-#   package       # Package version
-#   node          # Node.js section
-#   exec_time     # Execution time
-#   line_sep      # Line break
-#   battery       # Battery level and status
-#   vi_mode       # Vi-mode indicator
-#   jobs          # Background jobs indicator
-#   exit_code     # Exit code section
-#   char          # Prompt character
-# )
-
-  # Set Spaceship ZSH as a prompt
-  # autoload -U promptinit; promptinit
-  # prompt spaceship
-
-  # # USER
-  # SPACESHIP_USER_SHOW=always
-  # SPACESHIP_USER_COLOR="166"
-
-  # # HOST
-  # SPACESHIP_HOST_SHOW=always
-  # SPACESHIP_HOST_COLOR="226"
-
-  # # DIR
-  # SPACESHIP_DIR_SHOW=true
-  # SPACESHIP_DIR_COLOR="071"
-
-  # SPACESHIP_PACKAGE_SHOW=false
-  # SPACESHIP_NODE_SHOW=false
-  # SPACESHIP_GIT_STATUS_STASHED=''
-  # SPACESHIP_PHP_SHOW=false
-
-# This is for the starship prompt
-# eval "$(starship init zsh)"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-fpath=($fpath "/home/leeroy/.zfunctions")
-(( ! ${+functions[p10k]} )) || p10k finalize
-fpath=($fpath "/home/leeroy/.zfunctions")
+# Initialize asdf
+. /opt/asdf-vm/asdf.sh
