@@ -305,8 +305,8 @@ export NVIM_TUI_ENABLE_TRUE_COLOR=1
 # Use starship
 eval "$(starship init zsh)"
 
-# Initialize zoxide to make usage of 'z' command
-eval "$(zoxide init zsh)"
+# To activate rupa/z
+. /usr/share/z/z.sh
 
 # Initialize asdf
 . /opt/asdf-vm/asdf.sh
