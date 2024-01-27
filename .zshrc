@@ -154,6 +154,9 @@ alias n=nvim
 # for more info: https://youtu.be/JFr28K65-5E?t=4332
 alias v='vim -c "let g:tty='\''$(tty)'\''"'
 alias hx=helix
+alias las='find . -maxdepth 1 -type l -printf "%p -> %l\n" | sort'
+# Cleanup orphaned packages
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 
 # Using new Neovim feature (appears in neovim v0.9)
 alias nvim-kick="NVIM_APPNAME=nvim_kickstart nvim"
