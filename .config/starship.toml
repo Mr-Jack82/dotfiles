@@ -1,1 +1,21 @@
-/home/leeroy/dotfiles/starship/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
+
+[username]
+show_always = true
+style_user = "bold fg:214"
+style_root = "bg:color_orange fg:color_fg0"
+format = '[$user]($style)'
+
+[hostname]
+ssh_only = false
+format = '[$ssh_symbol](bold blue) at [$hostname](bold red) in '
+trim_at = '.companyname.com'
+disabled = false
+
+[directory]
+truncation_length = 5
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[x](bold red)"
+vimcmd_symbol = "[V](bold green) "
