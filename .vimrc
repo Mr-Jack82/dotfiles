@@ -222,6 +222,8 @@ let &t_EI.="\e[1 q"         " EI = NORMAL mode
 " 4 - just underline
 " 5 - flashing vertical bar
 " 6 - just a vertical bar
+" reset the cursor on start
+autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[1 q"' | redraw!
 
 " Enable mouse support in all modes.
 set mouse=a
