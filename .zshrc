@@ -191,7 +191,8 @@ bindkey '^N' down-history
 #bindkey '^r' history-incremental-search-backward
 
 # Setting rg as the default source for fzf
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 
 # Making fzf a bit more user friendly
 export FZF_DEFAULT_OPTS='--height 96% --reverse --preview  "cat {}"'
