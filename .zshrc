@@ -299,3 +299,25 @@ eval "$(zoxide init zsh)"
 
 # Initialize asdf
 . /opt/asdf-vm/asdf.sh
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Some option to better *history* usage
+# https://zsh.sourceforge.io/Doc/Release/Options.html (16.2.4 History)
+setopt EXTENDED_HISTORY  # Make entries in the history file in the format 1':start:elapsed;command'.
+setopt INC_APPEND_HISTORY  # Write data to the history file immediately, not when the shell exit is performed.
+setopt SHARE_HISTORY  # Use a common history repository in all sessions.
+setopt HIST_IGNORE_DUPS  # Do not re-record the event you just recorded.
+setopt HIST_IGNORE_ALL_DUPS  # Delete the old event record in case the new event is a duplicate of the old one.
+setopt HIST_SAVE_NO_DUPS  # Do not write duplicate events to the history file.
+setopt HIST_IGNORE_SPACE  # Do not make notes on commands that begin with a space.
+setopt HIST_VERIFY  # Before commands are executed, show notes about them from the command history.
+setopt APPEND_HISTORY  # Add records to the history file (default).
+setopt HIST_NO_STORE  # Do not keep records of *history* commands.
+setopt HIST_REDUCE_BLANKS  # Remove extra spaces from command lines added to the history.
+
+HISTSIZE=10000000
+SAVEHIST=10000000
+
+HISTORY_IGNORE="('ls' 'ls *' 'cd' 'cd *' 'pwd' 'exit')"
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
