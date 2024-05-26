@@ -300,6 +300,9 @@ eval "$(starship init zsh)"
 # To activate zoxide
 eval "$(zoxide init zsh)"
 
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --zsh)"
+
 # Initialize asdf
 . /opt/asdf-vm/asdf.sh
 
