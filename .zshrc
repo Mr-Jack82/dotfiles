@@ -324,9 +324,11 @@ setopt HIST_VERIFY  # Before commands are executed, show notes about them from t
 setopt APPEND_HISTORY  # Add records to the history file (default).
 setopt HIST_NO_STORE  # Do not keep records of *history* commands.
 setopt HIST_REDUCE_BLANKS  # Remove extra spaces from command lines added to the history.
+setopt HIST_FIND_NO_DUPS  #  Do not display duplicates of a line previously found, even if the duplicates are not contiguous.
 
 HISTSIZE=10000000
 SAVEHIST=10000000
+HISTDUP=erase
 
 HISTORY_IGNORE="('ls' 'ls *' 'cd' 'cd *' 'pwd' 'exit')"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
