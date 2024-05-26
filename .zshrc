@@ -194,6 +194,9 @@ bindkey '^N' down-history
 #bindkey '^r' history-incremental-search-backward
 
 # Setting rg as the default source for fzf
+# export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 # export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 
