@@ -148,6 +148,7 @@ alias l.='ls -d .* --color=tty'
 alias ls='ls --group-directories-first --color=tty'
 alias l='eza --group-directories-first --almost-all'
 alias ll='eza --group-directories-first --almost-all --long'
+alias lt='eza --tree --level=2 --long --icons --git'
 alias cf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias ldir='ls -d */'
 alias weather="http http://wttr.in/Temruk"
