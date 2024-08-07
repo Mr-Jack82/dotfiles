@@ -59,6 +59,13 @@ cmd zi ${{
 cmd za %zoxide add "$@"
 cmd zr %zoxide remove "$@"
 
+cmd quit-and-cd &{{
+    pwd > "$LF_CD_FILE"
+    lf -remote "send $id quit"
+}}
+
+map Q quit-and-cd
+
 # Bindings
 # Remove some defaults
 map m

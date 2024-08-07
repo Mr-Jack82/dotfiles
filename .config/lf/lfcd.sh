@@ -14,16 +14,16 @@
 #     bindkey -s '^o' 'lfcd\n'  # zsh
 #
 
-lfcd() {
-  tmp="$(mktemp)"
-  lf -last-dir-path="$tmp" "$@"
-  if [ -f "$tmp" ]; then
-    dir="$(cat "$tmp")"
-    rm -f "$tmp"
-    if [ -d "$dir" ]; then
-      if [ "$dir" != "$(pwd)" ]; then
-        cd "$dir"
-      fi
+lf() {
+  export LF_CD_FILE="/var/tmp/.lfcd-$$"
+  command lf "$@"
+  if [ -s "$LF_CD_FILE" ]; then
+    local DIR="$(realpath -- "$(cat -- "$LF_CD_FILE")")"
+    if [ "$DIR" != "$PWD" ]; then
+      printf 'cd to %s\n' "$DIR"
+      cd "$DIR"
     fi
+    rm "$LF_CD_FILE"
   fi
+  unset LF_CD_FILE
 }
