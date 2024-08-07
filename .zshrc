@@ -183,6 +183,9 @@ function nvims() {
   NVIM_APPNAME=$config nvim $@
 }
 
+# Prompt for spelling correction of commands
+setopt CORRECT
+
 # Note that Ctrl key ('^') must be shielded in single quote
 bindkey -s '^a' "nvims\n"
 
