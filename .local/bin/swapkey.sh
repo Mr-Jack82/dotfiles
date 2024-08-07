@@ -7,4 +7,5 @@ sleep 4s #For KDE autostart
 # Left_Control. Then that prog do all the stuff.
 # In particular when you press and hold Esc (or with
 # combinations with other keys) it works like Ctrl.
+killall xcape 2>/dev/null
 xcape -e 'Control_L=Escape' &
